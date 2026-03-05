@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHISHING LAB | Cyber Breaker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #020b1c;
+            color: #e2e8f0;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .terminal-glow {
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+        }
+
+        .hidden-content {
+            display: none;
+        }
+
+        .red-flag {
+            border: 2px dashed #ef4444;
+            position: relative;
+        }
+
+        .red-flag::after {
+            content: "🚩";
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: white;
+            border-radius: 50%;
+            padding: 2px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1.5px solid #00ffff;
+            object-fit: cover;
+        }
+
+        /* Hamburger Menu Icon */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--neon-blue);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        /* Mobile Navigation Overlay */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 250px;
+            height: 100vh;
+            background: rgba(2, 11, 28, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            padding: 80px 20px 20px;
+            transition: left 0.4s ease;
+            z-index: 999;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .mobile-nav.open {
+            left: 0;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-nav a {
+            color: white;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .mobile-nav a:hover {
+            color: #00ffff;
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-desktop-links {
+                display: none !important;
+            }
+
+            .menu-toggle {
+                display: block;
+                color: #00ffff;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center">
+
+    <!-- Header -->
+    <header class="glass border-b border-white/10 p-4 sticky top-0 z-50 w-full">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="simulators.html" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <img src="logo.jpeg" alt="Logo" class="logo-img">
+                <h1 class="orbitron text-base md:text-lg font-bold text-[#00ffff] truncate pr-4">🛡️ PHISHING LAB</h1>
+            </div>
+            <div class="nav-desktop-links flex items-center gap-4">
+                <a href="pguide.html" class="text-xs orbitron text-[#00ffff] hover:underline">View Guide</a>
+                <a href="phishingquiz.html" class="text-xs orbitron text-[#00ffff] hover:underline">Take Quiz</a>
+                <div
+                    class="text-[10px] orbitron tracking-widest text-slate-500 uppercase px-3 py-1 border border-white/10 rounded-full hidden sm:block">
+                    Sandbox</div>
+            </div>
+            <button class="menu-toggle md:hidden" id="menuToggle">☰</button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav orbitron" id="mobileNav">
+        <button class="close-menu" id="closeMenu">&times;</button>
+        <ul>
+            <li><a href="simulators.html" class="mobile-link">Back to Labs</a></li>
+            <li><a href="pguide.html" class="mobile-link">View Guide</a></li>
+            <li><a href="phishingquiz.html" class="mobile-link">Take Quiz</a></li>
+        </ul>
+    </div>
+
+    <main class="max-w-7xl mx-auto p-6 md:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- Left: Attacker Controls -->
+        <aside class="lg:col-span-4 space-y-6">
+            <section class="glass p-6 rounded-3xl border-l-4 border-red-500">
+                <h2 class="orbitron text-sm font-bold mb-6 flex items-center gap-2 text-red-400">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    STEP 1: ATTACKER CONFIG
+                </h2>
+
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Target
+                            Brand Identity</label>
+                        <select id="brandSelect"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#00ffff] outline-none appearance-none">
+                            <option value="bank" class="bg-slate-900">Global Secure Bank</option>
+                            <option value="cloud" class="bg-slate-900">CloudDrive Storage</option>
+                            <option value="it" class="bg-slate-900">Corporate IT Services</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Psychological
+                            Trigger</label>
+                        <select id="lureSelect"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#00ffff] outline-none appearance-none">
+                            <option value="urgency" class="bg-slate-900">Urgency (Account Lockout)</option>
+                            <option value="fear" class="bg-slate-900">Fear (Security Breach)</option>
+                            <option value="curiosity" class="bg-slate-900">Reward (Loyalty Bonus)</option>
+                        </select>
+                    </div>
+
+                    <button onclick="deployPhish()"
+                        class="w-full bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/50 font-bold py-4 rounded-xl transition-all orbitron text-xs tracking-widest">
+                        GENERATE PAYLOAD
+                    </button>
+                </div>
+            </section>
+
+            <!-- Attacker Terminal -->
+            <section
+                class="bg-black/80 rounded-3xl border border-green-500/20 terminal-glow h-80 flex flex-col overflow-hidden">
+                <div class="bg-white/5 px-4 py-2 border-b border-green-900/30 flex items-center justify-between">
+                    <div class="flex gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+                    </div>
+                    <span
+                        class="text-[9px] font-mono text-green-500/50 uppercase tracking-widest">C2_SERVER_LOG_V1.4</span>
+                </div>
+                <div id="logConsole"
+                    class="p-4 font-mono text-[10px] text-green-400 overflow-y-auto space-y-1 flex-1 scrollbar-hide">
+                    <p class="opacity-50">> Initializing listeners on port 80...</p>
+                    <p class="opacity-50">> Ready for inbound traffic.</p>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Right: Victim Pipeline -->
+        <div class="lg:col-span-8 space-y-8">
+
+            <!-- Email Viewer -->
+            <div id="emailView"
+                class="bg-white text-slate-900 rounded-3xl shadow-2xl overflow-hidden min-h-[500px] flex flex-col">
+                <div class="bg-slate-50 p-6 border-b flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span
+                                class="bg-blue-600 text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase">Urgent</span>
+                            <span class="text-[10px] text-slate-400">Received: Just now</span>
+                        </div>
+                        <h3 id="emailSubject" class="text-xl font-bold tracking-tight">Security Alert: Action Required
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="p-8 flex-1">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div
+                            class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-400 text-lg">
+                            ?</div>
+                        <div class="text-sm">
+                            <p id="emailFrom" class="font-bold text-slate-800">Account Security <span
+                                    class="text-slate-400 font-normal">&lt;no-reply@secure-bank-notify.com&gt;</span>
+                            </p>
+                            <p class="text-slate-400">To: user@personal-mail.com</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-slate-600 leading-relaxed text-sm max-w-2xl">
+                        <p id="emailGreeting">Dear Valued Customer,</p>
+                        <p id="emailBodyText">We've identified an unauthorized login attempt on your account from an
+                            unrecognized IP address in Sofia, Bulgaria. For your protection, your access has been
+                            temporarily restricted.</p>
+                        <p>To restore full access to your account and verify your identity, please click the secure
+                            button below.</p>
+
+                        <div class="py-4">
+                            <button onclick="goToLoginPage()"
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-bold transition-all shadow-lg shadow-blue-600/20 active:scale-95">
+                                Verify Account Access
+                            </button>
+                        </div>
+
+                        <div class="pt-8 border-t border-slate-100 text-[11px] text-slate-400 italic">
+                            This is an automated system message. Do not reply to this email. &copy; 2026 Security
+                            Systems Inc.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Red Flag Toggle -->
+                <div class="bg-slate-50 p-4 border-t flex justify-between items-center">
+                    <span class="text-[11px] font-medium text-slate-400 uppercase tracking-widest">Instructor
+                        Mode</span>
+                    <button onclick="toggleRedFlags()" id="flagBtn"
+                        class="text-[10px] bg-white border border-slate-200 hover:bg-slate-100 px-4 py-2 rounded-lg text-slate-600 font-bold transition-all">
+                        SHOW RED FLAGS
+                    </button>
+                </div>
+            </div>
+
+            <!-- Fake Login Page (Initially Hidden) -->
+            <div id="loginView"
+                class="hidden-content glass rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                <!-- Browser Bar -->
+                <div class="bg-white/5 p-3 flex items-center gap-4 border-b border-white/10">
+                    <div class="flex gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                    </div>
+                    <div
+                        class="bg-black/20 rounded-xl px-4 py-1.5 flex-1 flex justify-between items-center text-[11px]">
+                        <span id="fakeUrl"
+                            class="text-slate-400 truncate max-w-[80%]">https://secure.bank-alert-verify.com/auth/login</span>
+                        <span class="text-green-500 font-bold flex items-center gap-1">🔒 <span
+                                class="hidden sm:inline">Secure</span></span>
+                    </div>
+                </div>
+
+                <div class="p-12 max-w-sm mx-auto text-center">
+                    <div id="loginLogo" class="mb-10 text-[#0066ff] font-bold text-2xl tracking-tighter italic">
+                        GLOBAL SECURE BANK
+                    </div>
+
+                    <form onsubmit="captureData(event)" class="text-left space-y-5">
+                        <div class="space-y-2">
+                            <label
+                                class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Account
+                                Identifier</label>
+                            <input type="text" id="victimUser" required
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm focus:border-[#00ffff] outline-none transition-all"
+                                placeholder="Username or Email">
+                        </div>
+                        <div class="space-y-2">
+                            <label
+                                class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Security
+                                Code</label>
+                            <input type="password" id="victimPass" required
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm focus:border-[#00ffff] outline-none transition-all"
+                                placeholder="Password">
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-[#0066ff] hover:bg-[#0052cc] text-white font-bold py-4 rounded-xl transition-all shadow-lg active:scale-95">
+                            SIGN IN
+                        </button>
+                    </form>
+
+                    <div class="mt-8">
+                        <button onclick="backToEmail()"
+                            class="text-xs text-slate-500 hover:text-slate-300 underline underline-offset-4">Return to
+                            Inbox</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education Panel -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass p-6 rounded-3xl">
+                    <h3 class="orbitron text-[10px] font-bold text-[#00ffff] mb-4 tracking-widest">THE PSYCHOLOGY</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Attackers use <strong>Emotional
+                            Hijacking</strong>. By creating a crisis (Urgency/Fear), they force the victim's brain to
+                        switch from "Analytical Mode" to "Survival Mode," making them overlook obvious technical errors.
+                    </p>
+                </div>
+                <div class="glass p-6 rounded-3xl">
+                    <h3 class="orbitron text-[10px] font-bold text-red-400 mb-4 tracking-widest">THE TECHNICAL</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">The "HTTPS Lock" icon only means the connection is
+                        encrypted, NOT that the site is legitimate. Attackers easily obtain free SSL certificates to
+                        make their fake sites look "Secure."</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Hamburger Menu Logic
+        const menuToggle = document.getElementById('menuToggle');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        if (menuToggle && closeMenu && mobileNav) {
+            menuToggle.addEventListener('click', () => {
+                mobileNav.classList.add('open');
+            });
+
+            closeMenu.addEventListener('click', () => {
+                mobileNav.classList.remove('open');
+            });
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileNav.classList.remove('open');
+                });
+            });
+        }
+
+        const config = {
+            bank: {
+                logo: '<h2 class="text-2xl font-black text-blue-600 tracking-tighter italic">GLOBAL SECURE BANK</h2>',
+                sender: 'Security Dept <no-reply@globals-bank-alerts.com>',
+                url: 'https://secure.globals-bank-alerts.com/verify-identity/',
+                subject: 'Action Required: Your Account is on Hold'
+            },
+            cloud: {
+                logo: '<div class="text-2xl font-bold text-blue-400 flex justify-center items-center gap-2">☁️ CLOUDDRIVE</div>',
+                sender: 'Storage Support <no-reply@clouddrive-portal.net>',
+                url: 'https://clouddrive-verify.net/auth/restore-files',
+                subject: 'Storage Suspended: Payment Failed'
+            },
+            it: {
+                logo: '<div class="text-xl font-mono font-bold text-slate-800">CORP IT HELPDESK</div>',
+                sender: 'IT Administrator <admin@company-it-portal.com>',
+                url: 'https://company-it-verify.com/password-reset-2026',
+                subject: 'Urgent: Domain Password Expiring'
+            }
+        };
+
+        const lures = {
+            urgency: "Significant suspicious activity was detected. Your account will be PERMANENTLY DELETED in 24 hours if not verified.",
+            fear: "A new login attempt was blocked from Moscow, Russia. If this was not you, your password has been compromised.",
+            curiosity: "Congratulations! You have earned a $50 reward for continued security excellence. Claim your gift card below."
+        };
+
+        function addLog(msg, type = "info") {
+            const log = document.getElementById('logConsole');
+            const p = document.createElement('p');
+            const now = new Date().toLocaleTimeString();
+
+            if (type === "success") p.className = "text-green-300 font-bold";
+            if (type === "error") {
+                p.className = "text-red-400 font-bold animate-pulse";
+                msg = `!!! ${msg} !!!`;
+            }
+
+            p.innerHTML = `<span class="text-slate-600">[${now}]</span> ${msg}`;
+            log.appendChild(p);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function deployPhish() {
+            const brand = document.getElementById('brandSelect').value;
+            const lure = document.getElementById('lureSelect').value;
+            const data = config[brand];
+
+            // Reset for new campaign
+            backToEmail();
+            if (document.getElementById('emailFrom').classList.contains('red-flag')) toggleRedFlags();
+
+            // Update Email UI
+            document.getElementById('emailSubject').innerText = data.subject;
+            document.getElementById('emailFrom').innerHTML = `${data.sender.split('<')[0]} <span class="text-slate-400 font-normal">&lt;${data.sender.split('<')[1].replace('>', '')}&gt;</span>`;
+            document.getElementById('emailBodyText').innerText = lures[lure];
+
+            // Update Login UI
+            document.getElementById('loginLogo').innerHTML = data.logo;
+            document.getElementById('fakeUrl').innerText = data.url;
+
+            addLog(`> Campaign Initialized: ${brand.toUpperCase()}`);
+            addLog(`> Payload: ${lure.toUpperCase()} trigger.`);
+            addLog(`> Status: Waiting for victim interaction...`, "success");
+        }
+
+        function goToLoginPage() {
+            document.getElementById('emailView').classList.add('hidden-content');
+            document.getElementById('loginView').classList.remove('hidden-content');
+            addLog(`> VICTIM_CLICK: Target redirected to fake portal.`, "success");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function backToEmail() {
+            document.getElementById('emailView').classList.remove('hidden-content');
+            document.getElementById('loginView').classList.add('hidden-content');
+        }
+
+        function captureData(e) {
+            e.preventDefault();
+            const user = document.getElementById('victimUser').value;
+            const pass = document.getElementById('victimPass').value;
+
+            addLog(`DATA INTERCEPTED`, "error");
+            addLog(`CREDENTIALS: ${user} | ${pass}`);
+            addLog(`IP ADDR: 192.168.1.${Math.floor(Math.random() * 255)}`);
+            addLog(`EXFILTRATION COMPLETE`, "error");
+
+            alert(`EXERCISE SUCCESS!\n\nYou've captured the user's login credentials.\n\nIn a real-world scenario, the attacker would now redirect the user back to the ACTUAL site, and they might never realize they were hacked.`);
+
+            document.getElementById('victimUser').value = '';
+            document.getElementById('victimPass').value = '';
+            backToEmail();
+        }
+
+        function toggleRedFlags() {
+            const subjects = [
+                document.getElementById('emailFrom'),
+                document.getElementById('fakeUrl').parentElement,
+                document.getElementById('emailBodyText')
+            ];
+
+            subjects.forEach(el => el.classList.toggle('red-flag'));
+
+            const isShowing = subjects[0].classList.contains('red-flag');
+            document.getElementById('flagBtn').innerText = isShowing ? "HIDE RED FLAGS" : "SHOW RED FLAGS";
+            addLog(`> Instructor Mode: ${isShowing ? 'ENABLED' : 'DISABLED'}`);
+        }
+
+        window.onload = () => deployPhish();
+    </script>
+</body>
+
+</html>

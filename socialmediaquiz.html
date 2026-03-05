@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Security Quiz | Cyber Awareness</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for Social Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0a0a0c;
+            --card-bg: #121217;
+            --accent-blue: #00d2ff;
+            --accent-green: #00ff88;
+            --accent-red: #ff3e3e;
+            --accent-orange: #ff9f43;
+            --text-main: #e0e0e0;
+            --text-dim: #a0a0a0;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(0, 210, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Elements */
+        .bg-glow {
+            position: fixed;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.05) 0%, transparent 70%);
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        .glow-1 {
+            top: -10%;
+            right: -10%;
+        }
+
+        .glow-2 {
+            bottom: -10%;
+            left: -10%;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(rgba(0, 210, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -2;
+            opacity: 0.3;
+        }
+
+        /* Containers */
+        .container {
+            width: 90%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 210, 255, 0.05);
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        /* Introduction Section */
+        #intro-section {
+            text-align: center;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            color: var(--accent-blue);
+        }
+
+        .social-icons i {
+            transition: 0.3s;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+        }
+
+        .social-icons i:hover {
+            transform: translateY(-5px);
+            color: var(--accent-green);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .intro-content {
+            line-height: 1.8;
+            margin-bottom: 30px;
+            text-align: left;
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: var(--accent-red);
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        /* Quiz HUD */
+        #quiz-section {
+            display: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+            object-fit: cover;
+        }
+
+        .hud-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .timer-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--accent-green);
+            transition: width 0.1s linear, background-color 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        .q-progress {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar-wrap {
+            flex-grow: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-blue);
+            transition: width 0.4s ease;
+            box-shadow: 0 0 8px var(--accent-blue);
+        }
+
+        /* Question Box */
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 18px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(0, 210, 255, 0.1);
+            border-color: var(--accent-blue);
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .option.correct {
+            border-color: var(--accent-green) !important;
+            background: rgba(0, 255, 136, 0.1) !important;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .option.wrong {
+            border-color: var(--accent-red) !important;
+            background: rgba(255, 62, 62, 0.1) !important;
+            color: var(--accent-red);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Results Section */
+        #results-section {
+            display: none;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .score-display {
+            font-size: 4rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            margin: 20px 0;
+            text-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+        }
+
+        .explanation-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 30px;
+            padding-right: 10px;
+        }
+
+        .explanation-item {
+            background: var(--glass);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .explanation-item.incorrect {
+            border-left-color: var(--accent-red);
+        }
+
+        .explanation-item h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .explanation-item p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .security-tips {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px dashed var(--accent-green);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .security-tips h3 {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+        }
+
+        .security-tips ul {
+            list-style: none;
+        }
+
+        .security-tips li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .security-tips li::before {
+            content: "🛡️";
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: transparent;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 15px 35px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: var(--accent-blue);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--accent-blue);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        /* Navigation */
+        nav {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            z-index: 100;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .question-text {
+                font-size: 1.1rem;
+            }
+
+            .score-display {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <nav>
+        <button class="btn" onclick="location.href='home.html'"
+            style="padding: 8px 15px; font-size: 0.7rem;">Home</button>
+        <button class="btn" onclick="location.href='lessons.html'"
+            style="padding: 8px 15px; font-size: 0.7rem;">Lessons</button>
+    </nav>
+
+    <div class="container">
+        <!-- Introduction Screen -->
+        <div id="intro-section">
+            <div class="social-icons">
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-x-twitter"></i>
+                <i class="fab fa-linkedin"></i>
+                <i class="fab fa-tiktok"></i>
+            </div>
+            <h1 class="section-title">Social Media Hacking Awareness</h1>
+            <div class="intro-content">
+                <p>
+                    <strong>What is Social Media Hacking?</strong><br>
+                    It is the unauthorized access to personal social media accounts by exploiting technical
+                    vulnerabilities or human psychology. Attackers use these accounts to spread malware, steal
+                    identities, and extort money.
+                    <br><br>
+                    <strong>The Risks:</strong><br>
+                    A hacked account can lead to data theft, reputation damage, and financial loss. Attackers often
+                    "clone" profiles to trick your friends into sending money or clicking malicious links.
+                    <br><br>
+                    Protecting yourself requires more than just a password; it demands constant vigilance and education.
+                </p>
+            </div>
+            <p class="disclaimer">Disclaimer: This quiz is for cybersecurity education purposes only.</p>
+            <button class="btn" id="start-btn">Launch Simulation</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-section">
+            <div class="hud-top" style="display: flex; align-items: center; gap: 15px;">
+                <img src="logo.jpeg" alt="Logo" class="logo-img">
+                <div style="flex-grow: 1; display: flex; justify-content: space-between; align-items: center;">
+                    <div id="timer-text" style="color: var(--accent-green);">TIMER: 30s</div>
+                    <div id="q-count">QUESTION 1/10</div>
+                </div>
+            </div>
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            <div class="q-progress">
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+            </div>
+
+            <div id="quiz-content">
+                <h2 class="question-text" id="q-text">Initialising Protocol...</h2>
+                <div class="options-list" id="options-list"></div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="results-section">
+            <div class="results-header">
+                <h1 class="section-title">Analysis Results</h1>
+                <div class="score-display"><span id="final-score">0</span>/100</div>
+                <p id="verdict">Protocol Terminated.</p>
+            </div>
+
+            <div class="explanation-scroll" id="explanation-log">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="security-tips">
+                <h3>🔒 Critical Defense Tips</h3>
+                <ul>
+                    <li><strong>Unique Passwords:</strong> Never use the same password for Instagram and your Bank.</li>
+                    <li><strong>Activate 2FA:</strong> Use App-based authenticators (like Google Auth) over SMS.</li>
+                    <li><strong>Link Caution:</strong> If a friend DMs you a strange link, verify it via a phone call
+                        first.</li>
+                    <li><strong>Review Apps:</strong> Regularly check "Connected Apps" in your settings and revoke old
+                        permissions.</li>
+                    <li><strong>Profile Privacy:</strong> Set your profiles to 'Private' to prevent automated cloning
+                        bots.</li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" id="retry-btn">Re-engage Simulation</button>
+                <button class="btn" onclick="location.href='lessons.html'">Back to Learn</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Database of Questions ---
+        const originalQuestions = [
+            {
+                q: "You receive a DM from a friend saying 'I can't believe you are in this video!' with a link. What is the most likely scenario?",
+                o: ["Your friend found a funny video of you", "It's a phishing link designed to steal your login session", "A social media algorithm recommended the video", "Your friend's account was upgraded"],
+                a: 1,
+                e: "This is a classic 'Account Takeover' tactic. The link leads to a fake login page that steals your credentials."
+            },
+            {
+                q: "What is 'Profile Cloning' in the context of social media?",
+                o: ["Creating a backup of your own data", "An attacker copying your photos and info to create a fake identical account", "Using a VPN to change your location", "Syncing your Facebook and Instagram accounts"],
+                a: 1,
+                e: "Cloning is used to trick your friends into believing you have a 'new' account so they accept a request and share sensitive info."
+            },
+            {
+                q: "Which of these is the MOST secure form of Two-Factor Authentication (2FA)?",
+                o: ["SMS Text Codes", "Email verification", "Authenticator Apps (like Authy or Google Authenticator)", "Security questions about your first pet"],
+                a: 2,
+                e: "SMS codes can be intercepted via SIM swapping. Authenticator apps generate codes locally on your device, making them much harder to hack."
+            },
+            {
+                q: "A 'Social Media Verification' bot messages you on X (Twitter) asking for your password to give you a Blue Checkmark. What should you do?",
+                o: ["Provide the password immediately", "Check if the bot has a lot of followers", "Report and block the account; platforms never ask for passwords in DMs", "Ask for a discount on the verification fee"],
+                a: 2,
+                e: "Official platforms will never ask for your password via DM. This is a direct credential harvesting attempt."
+            },
+            {
+                q: "You find a 'Personality Quiz' app that requires 'Full Access' to your friend list and posts. Why is this risky?",
+                o: ["It might show you ads", "The app can collect data on your friends or post malicious links on your behalf", "It takes up too much storage on your phone", "The quiz might be too difficult"],
+                a: 1,
+                e: "Third-party apps often request excessive permissions to scrape data for malicious use or targeted social engineering."
+            },
+            {
+                q: "What is 'Credential Stuffing'?",
+                o: ["Adding extra security to your login", "Hackers using passwords leaked from other sites to try and enter your social accounts", "Typing your password very fast", "Saving your passwords in a browser"],
+                a: 1,
+                e: "This is why you should never reuse passwords. If one site is breached, attackers will 'stuff' those credentials into every major social platform."
+            },
+            {
+                q: "How does 'Oversharing' info like your birth city or mother's maiden name help hackers?",
+                o: ["It helps them find your house", "They can answer your security recovery questions and bypass your password", "They use it to send you better birthday gifts", "It doesn't help them at all"],
+                a: 1,
+                e: "Many account recovery systems still rely on 'Security Questions'. Sharing these details publicly is like giving away your backup keys."
+            },
+            {
+                q: "You see a LinkedIn request from a high-level executive at a company you like, but the profile has only 2 connections. What is the danger?",
+                o: ["They are just new to the platform", "It is likely a fake profile used for corporate espionage or spear-phishing", "You might get a job offer too quickly", "There is no danger"],
+                a: 1,
+                e: "Fake 'Professional' profiles are used to gain trust before sending malicious 'Job Description' documents that contain malware."
+            },
+            {
+                q: "What is the danger of logging into your social media on a Public Airport Wi-Fi?",
+                o: ["The Wi-Fi is too slow", "Your battery will drain faster", "Attackers can perform a 'Man-in-the-Middle' attack to intercept your traffic", "You might lose your flight"],
+                a: 2,
+                e: "Public Wi-Fi is often unencrypted. Hackers can set up fake hotspots ('Evil Twin') to capture everything you type."
+            },
+            {
+                q: "What should be your FIRST step if you suspect your account has been hacked?",
+                o: ["Delete the app", "Wait for the platform to notice and fix it", "Change your password immediately and use the 'Log Out of All Devices' feature", "Post a status update about it"],
+                a: 2,
+                e: "Quick action is vital. Changing the password and terminating other active sessions prevents the hacker from maintaining access."
+            }
+        ];
+
+        // --- Logic Variables ---
+        let questions = [];
+        let currentIdx = 0;
+        let score = 0;
+        let timeLeft = 30;
+        let timerInterval;
+        let canClick = true;
+        let feedbackLog = [];
+
+        // Global click sound
+        const btnClickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                btnClickSound.currentTime = 0;
+                btnClickSound.play().catch(() => { });
+            }
+        });
+
+        // Elements
+        const uiIntro = document.getElementById('intro-section');
+        const uiQuiz = document.getElementById('quiz-section');
+        const uiResults = document.getElementById('results-section');
+        const uiQText = document.getElementById('q-text');
+        const uiOptions = document.getElementById('options-list');
+        const uiQCount = document.getElementById('q-count');
+        const uiTimerBar = document.getElementById('timer-bar');
+        const uiTimerText = document.getElementById('timer-text');
+        const uiProgress = document.getElementById('progress-fill');
+        const uiExplanationLog = document.getElementById('explanation-log');
+
+        // --- Fisher-Yates Shuffle ---
+        function shuffle(array) {
+            let m = array.length, t, i;
+            while (m) {
+                i = Math.floor(Math.random() * m--);
+                t = array[m];
+                array[m] = array[i];
+                array[i] = t;
+            }
+            return array;
+        }
+
+        // --- Quiz System ---
+        function startQuiz() {
+            // Prepare and shuffle questions
+            questions = shuffle([...originalQuestions]).map(item => {
+                const options = item.o.map((text, idx) => ({ text, isCorrect: idx === item.a }));
+                return { ...item, shuffledOptions: shuffle(options) };
+            }).slice(0, 10);
+
+            currentIdx = 0;
+            score = 0;
+            feedbackLog = [];
+
+            uiIntro.style.display = 'none';
+            uiResults.style.display = 'none';
+            uiQuiz.style.display = 'block';
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIdx >= questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const activeQ = questions[currentIdx];
+            uiQText.innerText = activeQ.q;
+            uiQCount.innerText = `QUESTION ${currentIdx + 1}/10`;
+            uiProgress.style.width = ((currentIdx + 1) / 10 * 100) + '%';
+
+            uiOptions.innerHTML = '';
+            activeQ.shuffledOptions.forEach((opt) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.innerText = opt.text;
+                div.onclick = () => handleSelection(div, opt.isCorrect);
+                uiOptions.appendChild(div);
+            });
+
+            canClick = true;
+            resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 30;
+            updateTimerUI();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            uiTimerText.innerText = `TIMER: ${timeLeft}s`;
+            uiTimerBar.style.width = (timeLeft / 30 * 100) + '%';
+
+            // Change Colors
+            if (timeLeft > 20) {
+                uiTimerBar.style.backgroundColor = 'var(--accent-green)';
+                uiTimerText.style.color = 'var(--accent-green)';
+            } else if (timeLeft > 10) {
+                uiTimerBar.style.backgroundColor = 'var(--accent-orange)';
+                uiTimerText.style.color = 'var(--accent-orange)';
+            } else {
+                uiTimerBar.style.backgroundColor = 'var(--accent-red)';
+                uiTimerText.style.color = 'var(--accent-red)';
+            }
+        }
+
+        function handleSelection(element, isCorrect) {
+            if (!canClick) return;
+            canClick = false;
+            clearInterval(timerInterval);
+
+            const qData = questions[currentIdx];
+            feedbackLog.push({
+                q: qData.q,
+                correct: isCorrect,
+                correctFull: qData.shuffledOptions.find(o => o.isCorrect).text,
+                explanation: qData.e
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                score += 10;
+            } else {
+                element.classList.add('wrong');
+                // Highlight correct one
+                Array.from(uiOptions.children).forEach(child => {
+                    const optText = child.innerText;
+                    if (qData.shuffledOptions.find(o => o.text === optText && o.isCorrect)) {
+                        child.classList.add('correct');
+                    }
+                });
+            }
+
+            setTimeout(nextQuestion, 1500);
+        }
+
+        function handleTimeout() {
+            canClick = false;
+            const qData = questions[currentIdx];
+
+            feedbackLog.push({
+                q: qData.q,
+                correct: false,
+                correctFull: qData.shuffledOptions.find(o => o.isCorrect).text,
+                explanation: qData.e + " (TIMED OUT)"
+            });
+
+            // Highlight correct one
+            Array.from(uiOptions.children).forEach(child => {
+                const optText = child.innerText;
+                if (qData.shuffledOptions.find(o => o.text === optText && o.isCorrect)) {
+                    child.classList.add('correct');
+                }
+            });
+
+            setTimeout(nextQuestion, 1500);
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            loadQuestion();
+        }
+
+        function endQuiz() {
+            uiQuiz.style.display = 'none';
+            uiResults.style.display = 'block';
+
+            document.getElementById('final-score').innerText = score;
+            const verdict = document.getElementById('verdict');
+
+            if (score >= 80) verdict.innerText = "Master Defender: Your Social Media is Fort Knox.";
+            else if (score >= 60) verdict.innerText = "Security Analyst: Good awareness, but patch your leaks.";
+            else verdict.innerText = "Critical Risk: Your digital life is exposed.";
+
+            // Render Explanation Log
+            uiExplanationLog.innerHTML = '<h3>Simulation Log & Explanations</h3>';
+            feedbackLog.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = `explanation-item ${item.correct ? '' : 'incorrect'}`;
+                div.innerHTML = `
+                    <h4>Q${idx + 1}: ${item.q}</h4>
+                    <p><strong>Correct Answer:</strong> ${item.correctFull}</p>
+                    <p style="margin-top:8px;">${item.explanation}</p>
+                `;
+                uiExplanationLog.appendChild(div);
+            });
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('start-btn').onclick = startQuiz;
+        document.getElementById('retry-btn').onclick = startQuiz;
+
+    </script>
+</body>
+
+</html>

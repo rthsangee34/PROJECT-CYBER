@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero-Day Exploits Quiz | Cyber Breaker</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #020b1c;
+            --neon-blue: #00ffff;
+            --neon-purple: #9d00ff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --correct-color: #00ffcc;
+            --wrong-color: #ff3366;
+            --text-main: #ffffff;
+            --timer-green: #00ffcc;
+            --timer-orange: #ff9900;
+            --timer-red: #ff3366;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 255, 255, 0.03) 0%, transparent 60%);
+            z-index: -1;
+            animation: rotateBg 30s linear infinite;
+        }
+
+        @keyframes rotateBg {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        h1,
+        h2,
+        h3,
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 1rem;
+        }
+
+        header h1 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .disclaimer {
+            font-size: 0.8rem;
+            color: var(--timer-orange);
+            font-style: italic;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .intro-section {
+            display: none;
+            text-align: left;
+        }
+
+        .intro-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .intro-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: #cccccc;
+        }
+
+        .quiz-section {
+            display: none;
+        }
+
+        .quiz-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Quiz Header Info (Progress & Timer) */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--neon-purple);
+        }
+
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            width: 150px;
+        }
+
+        .timer-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--timer-green);
+            transition: color 0.3s;
+        }
+
+        .timer-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--timer-green);
+            transition: width 1s linear, background-color 0.3s;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* Question & Options */
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: var(--neon-blue);
+            transform: translateX(5px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        .option-btn.correct {
+            background: rgba(0, 255, 204, 0.2);
+            border-color: var(--correct-color);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+        }
+
+        .option-btn.wrong {
+            background: rgba(255, 51, 102, 0.2);
+            border-color: var(--wrong-color);
+        }
+
+        /* Result Section */
+        .result-section {
+            display: none;
+            text-align: center;
+        }
+
+        .result-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .score-display {
+            font-size: 4rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            margin: 1rem 0;
+        }
+
+        .answers-review {
+            margin-top: 2rem;
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* Custom Scrollbar */
+        .answers-review::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .answers-review::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .answers-review::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .answers-review::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 255, 0.6);
+        }
+
+        .review-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--neon-blue);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .review-q {
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .review-a {
+            color: var(--correct-color);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .review-exp {
+            font-size: 0.9rem;
+            color: #aaa;
+            font-style: italic;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 0.8rem;
+        }
+
+        .prevention-tips {
+            background: rgba(157, 0, 255, 0.1);
+            border: 1px solid var(--neon-purple);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2.5rem;
+            text-align: left;
+        }
+
+        .prevention-tips h3 {
+            color: var(--neon-purple);
+            margin-bottom: 1.2rem;
+        }
+
+        .prevention-tips ul {
+            list-style-type: none;
+        }
+
+        .prevention-tips li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 28px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .prevention-tips li::before {
+            content: "🛡️";
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* Buttons */
+        .btn {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-family: 'Orbitron', sans-serif;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+            transform: scale(1.05);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .score-display {
+                font-size: 3rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Zero-Day Exploits</h1>
+            <p style="color:#00ffcc; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">Cybersecurity Awareness
+                Quiz</p>
+        </header>
+
+        <div class="disclaimer">
+            ⚠️ This quiz is for cybersecurity education purposes only.
+        </div>
+
+        <!-- Introduction Section -->
+        <div id="introSection" class="intro-section active">
+            <h2 class="orbitron" style="color:var(--neon-purple); margin-bottom:1.5rem; text-align:center;">
+                Understanding the Unseen Threat</h2>
+            <p><strong>What is a Zero-Day Exploit?</strong> It is a cyberattack that occurs on the same day a weakness
+                is discovered in software. At that point, it's exploited before the software creator has a patch to fix
+                it (zero days of protection).</p>
+            <p><strong>Why are they dangerous?</strong> They are extremely difficult to detect because antivirus
+                programs and intrusion detection systems don't have a signature for them yet. Hackers can exploit these
+                flaws to steal data, cause damage, or gain unauthorized access.</p>
+            <p><strong>Who discovers them?</strong> Security researchers, vendors, or malicious hackers. If hackers find
+                it first, they can sell it on the dark web or use it for cyber espionage and attacks.</p>
+            <p><strong>Why awareness is important?</strong> While zero-days are complex, good cyber hygiene and
+                proactive defenses can mitigate their impact and protect individuals and organizations.</p>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" id="startBtn">START QUIZ</button>
+                <button class="btn" style="border-color: #666; color: #ccc;" onclick="location.href='lessons.html'">BACK
+                    TO LESSONS</button>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quizSection" class="quiz-section">
+            <div class="quiz-header">
+                <div class="progress-text">Question <span id="currentQNum">1</span> / 10</div>
+                <div class="timer-container">
+                    <div class="timer-text" id="timerText">30s</div>
+                    <div class="timer-bar-bg">
+                        <div class="timer-bar" id="timerBar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-bar-bg">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-text" id="questionText">Question goes here?</div>
+                <div class="options-grid" id="optionsContainer">
+                    <!-- Options injected via JS -->
+                </div>
+            </div>
+
+            <div class="controls" style="display: none;" id="nextControl">
+                <button class="btn" id="nextBtn"
+                    style="border-color: var(--neon-purple); color: var(--neon-purple);">NEXT QUESTION</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultSection" class="result-section">
+            <h2 class="orbitron" style="color: white; font-size: 2rem; margin-bottom: 0.5rem;">Quiz Completed</h2>
+            <div class="score-display" id="finalScore">0 / 10</div>
+            <p id="scoreMessage" style="color:#aaa; margin-bottom:2rem; font-size: 1.1rem;"></p>
+
+            <div class="controls">
+                <button class="btn" id="retryBtn">TRY AGAIN</button>
+                <button class="btn" onclick="location.href='lessons.html'"
+                    style="border-color:var(--neon-purple); color:var(--neon-purple);">Back to Learn</button>
+            </div>
+
+            <div class="prevention-tips">
+                <h3 class="orbitron">🛡️ Best Practices to Reduce Zero-Day Risk</h3>
+                <ul>
+                    <li><strong>Keep software updated:</strong> Ensure modern operating systems and firmware are
+                        constantly updated.</li>
+                    <li><strong>Apply security patches immediately:</strong> Do this upon release to eliminate known
+                        vulnerabilities.</li>
+                    <li><strong>Use Intrusion Detection Systems (IDS):</strong> Monitor network behavior for unusual
+                        anomalies instead of just relying on known signatures.</li>
+                    <li><strong>Follow responsible disclosure:</strong> Encourage ethical hackers to report flaws
+                        directly to vendors.</li>
+                    <li><strong>Avoid downloading unknown files:</strong> Zero-days are often delivered via malicious
+                        attachments.</li>
+                    <li><strong>Limit user privileges:</strong> Practice the Principle of Least Privilege to limit
+                        lateral movement if a breach occurs.</li>
+                    <li><strong>Educate employees:</strong> Teach about phishing and social engineering, common vectors
+                        for zero-day delivery.</li>
+                    <li><strong>Maintain backups:</strong> Keep offline, isolated backups to recover quickly from
+                        destructive attacks or ransomware.</li>
+                </ul>
+            </div>
+
+            <h3 class="orbitron" style="margin-top:3rem; margin-bottom:1rem; color:var(--neon-blue); text-align:left;">
+                Review Answers</h3>
+            <div class="answers-review" id="answersReview">
+                <!-- Review injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Sound FX -->
+    <script>
+        const btnClickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                btnClickSound.currentTime = 0;
+                btnClickSound.play().catch(() => { });
+            }
+        });
+    </script>
+
+    <script>
+        // Quiz Data
+        const quizData = [
+            {
+                question: "What exactly does the term 'zero-day' refer to in cybersecurity?",
+                options: [
+                    "The number of days the vendor has known about the vulnerability before a patch is available.",
+                    "An exploit that takes zero days to execute.",
+                    "A virus that destroys a system in zero days.",
+                    "A security protocol that guarantees zero breaches."
+                ],
+                correctAnswer: "The number of days the vendor has known about the vulnerability before a patch is available.",
+                explanation: "'Zero-day' means the software vendor has had 0 days to fix the flaw because they just learned about it (or attackers found it first)."
+            },
+            {
+                question: "What is the primary difference between a zero-day vulnerability and a known vulnerability?",
+                options: [
+                    "A known vulnerability has an available patch or mitigation, while a zero-day does not.",
+                    "Zero-day vulnerabilities only affect hardware, known ones affect software.",
+                    "Known vulnerabilities are used by ethical hackers, zero-days are used by malicious hackers.",
+                    "A zero-day vulnerability is always more destructive than a known vulnerability."
+                ],
+                correctAnswer: "A known vulnerability has an available patch or mitigation, while a zero-day does not.",
+                explanation: "The lack of an available fix or patch is what makes zero-day vulnerabilities uniquely dangerous compared to known ones."
+            },
+            {
+                question: "Why are zero-day exploits typically difficult for traditional antivirus software to detect?",
+                options: [
+                    "They do not have an existing signature in the antivirus database yet.",
+                    "They automatically disable the antivirus upon entering the system.",
+                    "Antivirus software only scans for network threats, not software vulnerabilities.",
+                    "They are encrypted with quantum algorithms."
+                ],
+                correctAnswer: "They do not have an existing signature in the antivirus database yet.",
+                explanation: "Traditional AV relies on identifying known malware signatures. Since a zero-day is entirely new, there is no signature to detect."
+            },
+            {
+                question: "Which of the following describes 'responsible disclosure' of a zero-day vulnerability?",
+                options: [
+                    "A researcher privately notifies the vendor and gives them time to patch before making it public.",
+                    "A hacker sells the vulnerability on the dark web.",
+                    "A researcher immediately publishes the exploit code on social media.",
+                    "An employee uses the exploit to steal company data securely."
+                ],
+                correctAnswer: "A researcher privately notifies the vendor and gives them time to patch before making it public.",
+                explanation: "Responsible disclosure ensures the vendor can create a patch before malicious actors can learn about and exploit the flaw."
+            },
+            {
+                question: "How can Next-Generation Antivirus (NGAV) or Endpoint Detection and Response (EDR) help against zero-days?",
+                options: [
+                    "By analyzing application behavior and anomalies rather than just relying on signatures.",
+                    "By instantly writing a patch for the vulnerable software.",
+                    "By blocking all internet access automatically.",
+                    "They cannot help; zero-days are completely unstoppable."
+                ],
+                correctAnswer: "By analyzing application behavior and anomalies rather than just relying on signatures.",
+                explanation: "Behavioral analytics can detect malicious activity (like an app trying to access unauthorized memory) even if the specific exploit is unknown."
+            },
+            {
+                question: "Which defense mechanism focuses on minimizing damage if a zero-day exploit breaches a system?",
+                options: [
+                    "Principle of Least Privilege and Network Segmentation.",
+                    "Using stronger passwords.",
+                    "Turning off the monitor when not in use.",
+                    "Installing a secondary firewall."
+                ],
+                correctAnswer: "Principle of Least Privilege and Network Segmentation.",
+                explanation: "If an attacker exploits a zero-day to compromise an application, limiting privileges and segmenting networks prevents them from moving laterally to sensitive areas."
+            },
+            {
+                question: "Which entity is most likely to purchase a zero-day exploit for millions of dollars?",
+                options: [
+                    "Nation-state actors or advanced persistent threat (APT) groups.",
+                    "A small local business.",
+                    "A solo ethical hacker.",
+                    "A high school student."
+                ],
+                correctAnswer: "Nation-state actors or advanced persistent threat (APT) groups.",
+                explanation: "Due to their high cost and stealth capabilities, zero-days are highly sought after by intelligence agencies and well-funded APT groups."
+            },
+            {
+                question: "What is an effective proactive measure an organization can take to reduce the risk of zero-day attacks?",
+                options: [
+                    "Implementing a robust patch management process to apply updates immediately.",
+                    "Wait for vendors to email them about new threats.",
+                    "Use only open-source software, as it cannot have zero-days.",
+                    "Disable all security software to increase system speed."
+                ],
+                correctAnswer: "Implementing a robust patch management process to apply updates immediately.",
+                explanation: "While you can't patch a zero-day beforehand, quick patching upon release limits exposure to malicious hackers using the vulnerability."
+            },
+            {
+                question: "A company was hit by a zero-day exploit. What role did a 'Zero-Day Market' likely play?",
+                options: [
+                    "It provided a platform where the vulnerability was bought and sold before the vendor knew about it.",
+                    "It is a market where the company bought their antivirus.",
+                    "It is the dark web forum where hackers apologize for attacks.",
+                    "It is an official app store for downloading patches."
+                ],
+                correctAnswer: "It provided a platform where the vulnerability was bought and sold before the vendor knew about it.",
+                explanation: "Zero-day markets (white, gray, and black) facilitate the trade of undisclosed vulnerabilities to governments, security firms, or malicious actors."
+            },
+            {
+                question: "If a software vendor releases a patch for a zero-day vulnerability, what happens to the exploit?",
+                options: [
+                    "It becomes a known vulnerability, and remains a threat to unpatched systems.",
+                    "The exploit is completely erased from the internet.",
+                    "Attackers can no longer use it on any system globally.",
+                    "It automatically patches itself on all computers."
+                ],
+                correctAnswer: "It becomes a known vulnerability, and remains a threat to unpatched systems.",
+                explanation: "Once patched, it is widely known. Systems that delay applying the patch remain highly vulnerable to attackers now using 'known' exploits."
+            }
+        ];
+
+        // State Variables
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timerInterval;
+        let timeLeft = 30;
+        let answered = false;
+
+        // DOM Elements
+        const introSection = document.getElementById('introSection');
+        const quizSection = document.getElementById('quizSection');
+        const resultSection = document.getElementById('resultSection');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const retryBtn = document.getElementById('retryBtn');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const currentQNum = document.getElementById('currentQNum');
+        const progressBar = document.getElementById('progressBar');
+        const timerText = document.getElementById('timerText');
+        const timerBar = document.getElementById('timerBar');
+        const nextControl = document.getElementById('nextControl');
+        const finalScore = document.getElementById('finalScore');
+        const scoreMessage = document.getElementById('scoreMessage');
+        const answersReview = document.getElementById('answersReview');
+
+        // Fisher-Yates Shuffle Function
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        // Initialize Quiz
+        function startQuiz() {
+            // Deep copy and shuffle questions
+            currentQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(currentQuestions);
+
+            // Shuffle options for each question
+            currentQuestions.forEach(q => {
+                shuffleArray(q.options);
+            });
+
+            currentQuestionIndex = 0;
+            score = 0;
+
+            introSection.classList.remove('active');
+            resultSection.classList.remove('active');
+            quizSection.classList.add('active');
+
+            loadQuestion();
+        }
+
+        // Load Question
+        function loadQuestion() {
+            answered = false;
+            nextControl.style.display = 'none';
+            const q = currentQuestions[currentQuestionIndex];
+
+            // Update UI
+            currentQNum.innerText = currentQuestionIndex + 1;
+            progressBar.style.width = `${((currentQuestionIndex) / 10) * 100}%`;
+            questionText.innerText = q.question;
+
+            // Generate Options
+            optionsContainer.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(btn, opt, q.correctAnswer);
+                optionsContainer.appendChild(btn);
+            });
+
+            startTimer();
+        }
+
+        // Timer Logic
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 30;
+            updateTimerUI();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timeOut();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            timerText.innerText = `${timeLeft}s`;
+            const widthPct = (timeLeft / 30) * 100;
+            timerBar.style.width = `${widthPct}%`;
+
+            if (timeLeft > 20) {
+                timerText.style.color = 'var(--timer-green)';
+                timerBar.style.backgroundColor = 'var(--timer-green)';
+            } else if (timeLeft > 10) {
+                timerText.style.color = 'var(--timer-orange)';
+                timerBar.style.backgroundColor = 'var(--timer-orange)';
+            } else {
+                timerText.style.color = 'var(--timer-red)';
+                timerBar.style.backgroundColor = 'var(--timer-red)';
+            }
+        }
+
+        function timeOut() {
+            if (answered) return;
+            answered = true;
+            disableOptions();
+            showCorrectOption(currentQuestions[currentQuestionIndex].correctAnswer);
+            nextControl.style.display = 'block';
+        }
+
+        // Handle Option Selection
+        function selectOption(selectedBtn, selectedText, correctText) {
+            if (answered) return;
+            answered = true;
+            clearInterval(timerInterval);
+            disableOptions();
+
+            if (selectedText === correctText) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+                showCorrectOption(correctText);
+            }
+
+            nextControl.style.display = 'block';
+        }
+
+        function disableOptions() {
+            const btns = optionsContainer.querySelectorAll('.option-btn');
+            btns.forEach(btn => btn.disabled = true);
+        }
+
+        function showCorrectOption(correctText) {
+            const btns = optionsContainer.querySelectorAll('.option-btn');
+            btns.forEach(btn => {
+                if (btn.innerText === correctText) {
+                    btn.classList.add('correct');
+                }
+            });
+        }
+
+        // Move to next question or end
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        // End Quiz & Show Results
+        function endQuiz() {
+            quizSection.classList.remove('active');
+            resultSection.classList.add('active');
+
+            // Set 100% progress
+            progressBar.style.width = '100%';
+
+            finalScore.innerText = `${score} / ${currentQuestions.length}`;
+
+            if (score === currentQuestions.length) {
+                scoreMessage.innerText = "Flawless Execution! You have a strong grasp of zero-day exploits.";
+                scoreMessage.style.color = "var(--timer-green)";
+            } else if (score >= 7) {
+                scoreMessage.innerText = "Great job! You have a solid understanding of zero-day threats.";
+                scoreMessage.style.color = "var(--neon-blue)";
+            } else {
+                scoreMessage.innerText = "Keep learning! Understanding zero-days is crucial for defense.";
+                scoreMessage.style.color = "var(--timer-orange)";
+            }
+
+            generateReview();
+        }
+
+        // Generate Answers Review
+        function generateReview() {
+            answersReview.innerHTML = '';
+
+            // Using the original quizData to display review in consistent order
+            quizData.forEach((q, index) => {
+                const item = document.createElement('div');
+                item.className = 'review-item';
+
+                item.innerHTML = `
+                    <div class="review-q">Q${index + 1}: ${q.question}</div>
+                    <div class="review-a">✔️ ${q.correctAnswer}</div>
+                    <div class="review-exp"><strong>Explanation:</strong> ${q.explanation}</div>
+                `;
+                answersReview.appendChild(item);
+            });
+        }
+
+        // Event Listeners
+        startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', nextQuestion);
+        retryBtn.addEventListener('click', startQuiz);
+
+    </script>
+</body>
+
+</html>

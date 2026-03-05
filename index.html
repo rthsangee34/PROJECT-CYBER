@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Breaker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        body {
+            background: #020b1c;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Particle canvas */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid cyan;
+            box-shadow: 0 0 25px cyan;
+            animation: pulse 3s infinite;
+            object-fit: cover;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 15px cyan;
+            }
+
+            50% {
+                box-shadow: 0 0 40px cyan;
+            }
+
+            100% {
+                box-shadow: 0 0 15px cyan;
+            }
+        }
+
+        /* Heading */
+        h1 {
+            text-align: center;
+            font-size: clamp(2.5rem, 5vw, 60px);
+            color: #00f7ff;
+            animation: glow 2s infinite alternate;
+            padding: 0 10px;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px cyan;
+            }
+
+            to {
+                text-shadow: 0 0 30px cyan;
+            }
+        }
+
+        /* Subtitle */
+        .subtitle {
+            text-align: center;
+            margin-top: 10px;
+            font-size: clamp(1rem, 2.5vw, 22px);
+            animation: fadeIn 3s;
+            padding: 0 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Buttons */
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            padding: 0 20px;
+        }
+
+        .nav button {
+            padding: 15px 35px;
+            font-size: 18px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(45deg, #00f7ff, #0066ff);
+            color: white;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 0 15px cyan;
+        }
+
+        .nav button:hover {
+            transform: scale(1.2) rotate(3deg);
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            box-shadow: 0 0 30px magenta;
+        }
+
+        /* Paragraph */
+        .content {
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+            line-height: 1.8;
+            font-size: clamp(1rem, 2vw, 18px);
+            animation: slide 2s;
+        }
+
+        @keyframes slide {
+            from {
+                transform: translateX(-200px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav button {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .logo {
+                width: 90px;
+                height: 90px;
+            }
+
+            .content {
+                line-height: 1.6;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="bg"></canvas>
+
+    <div class="logo-container">
+        <img src="logo.jpeg" class="logo" alt="Cyber Breaker Logo">
+    </div>
+
+    <h1>CYBER BREAKER</h1>
+    <div class="subtitle">Come and learn with us</div>
+
+    <div class="nav">
+        <button onclick="playSound()"><a href="home.html" style="text-decoration:none; color:inherit;">Home</a></button>
+        <button onclick="playSound()"><a href="lessons.html"
+                style="text-decoration:none; color:inherit;">Lessons</a></button>
+        <button onclick="playSound()"><a href="simulators.html" style="text-decoration:none; color:inherit;">Virtual
+                Labs</a></button>
+        <button onclick="playSound()"><a href="home.html#about"
+                style="text-decoration:none; color:inherit;">About</a></button>
+    </div>
+
+    <div class="content">
+        In today's digital world, cyber security is more important than ever. Millions of people use the internet daily
+        for learning, communication, banking and entertainment. However, cyber threats such as hacking, phishing and
+        malware attacks are increasing rapidly. Our mission is to educate, protect and empower individuals with the
+        knowledge and tools needed to stay safe online. Welcome to Cyber Breaker — where security meets awareness and
+        learning becomes protection.
+    </div>
+
+    <script>
+        // Global click sound
+        const btnClickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                btnClickSound.currentTime = 0;
+                btnClickSound.play().catch(() => { });
+            }
+        });
+
+        /* Particle network background */
+        const canvas = document.getElementById("bg");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        for (let i = 0; i < 100; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5),
+                vy: (Math.random() - 0.5)
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.fillStyle = "cyan";
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.strokeStyle = "rgba(0,255,255,0.2)";
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+
+</body>
+
+</html>

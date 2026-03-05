@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ransomware Attacks Guide | CYBER BREAKER</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #020111;
+            --cyber-blue: #00d4ff;
+            --cyber-purple: #9d00ff;
+            --cyber-green: #00ffaa;
+            --aurora-green: #00ff88;
+            --aurora-purple: #8100ff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-silver: #e0e0e0;
+            --accent-gradient: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
+            --green-gradient: linear-gradient(90deg, var(--cyber-green), var(--cyber-blue));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-silver);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Aurora Borealis Green/Purple Animation */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: var(--bg-deep);
+            overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background:
+                radial-gradient(circle at 20% 40%, rgba(0, 255, 170, 0.25) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(157, 0, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 30% 70%, rgba(129, 0, 255, 0.15) 0%, transparent 30%);
+            filter: blur(80px);
+            animation: auroraMove 30s linear infinite;
+        }
+
+        @keyframes auroraMove {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.2);
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            background: rgba(2, 1, 17, 0.85);
+            backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--aurora-green);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .logo:hover {
+            color: var(--cyber-purple);
+            text-shadow: 0 0 10px var(--cyber-purple);
+        }
+
+        .logo img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--aurora-green);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-silver);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--green-gradient);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--aurora-green);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 100px 20px 60px;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(32px, 5vw, 56px);
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, var(--cyber-green), var(--cyber-blue), var(--cyber-purple), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 5s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 170, 0.3));
+        }
+
+        @keyframes textShimmer {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .card-section {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 45px;
+            margin-bottom: 50px;
+            backdrop-filter: blur(10px);
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .card-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-section:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 255, 170, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--green-gradient);
+            opacity: 0.7;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-header i {
+            font-size: 32px;
+            background: var(--green-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        /* Highlight & Lists */
+        strong {
+            color: var(--cyber-green);
+            font-weight: 600;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .comp-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+
+        .comp-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 15px;
+            color: var(--cyber-green);
+        }
+
+        .comp-card.other h3 {
+            color: var(--cyber-blue);
+        }
+
+        /* Types Grid */
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .type-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 3px solid var(--cyber-green);
+        }
+
+        .type-item i {
+            font-size: 20px;
+            color: var(--cyber-green);
+            margin-top: 4px;
+        }
+
+        /* Step List */
+        .step-list {
+            list-style: none;
+            counter-reset: steps;
+        }
+
+        .step-list li {
+            counter-increment: steps;
+            margin-bottom: 20px;
+            padding-left: 60px;
+            position: relative;
+        }
+
+        .step-list li::before {
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background: var(--green-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Best Practices Bullet Points */
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            list-style: none;
+        }
+
+        .practice-bullet {
+            background: rgba(0, 255, 170, 0.05);
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .practice-bullet:hover {
+            background: rgba(0, 255, 170, 0.1);
+            transform: translateX(10px);
+        }
+
+        .practice-bullet i {
+            color: var(--cyber-green);
+        }
+
+        /* Tone & Footer */
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 40px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 80px;
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyber-green);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .card-section {
+                padding: 30px 20px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aurora-container">
+        <div class="aurora"></div>
+    </div>
+
+    <nav>
+        <a href="home.html" class="logo">
+            <img src="logo.jpeg" alt="Cyber Breaker Logo">
+            CYBER BREAKER
+        </a>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="lessons.html">Lessons</a>
+            <a href="home.html#about">About</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1 class="hero-title">Ransomware Attacks</h1>
+        <p class="hero-subtitle">Student Awareness and Safety Guide: Defeating Digital Extortion</p>
+    </header>
+
+    <div class="container">
+        <!-- 1. What is a Ransomware Attack -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-user-secret"></i>
+                <h2>1. What is a Ransomware Attack?</h2>
+            </div>
+            <p class="intro-text">
+                A <strong>Ransomware Attack</strong> is a type of cyberattack where malicious software
+                <strong>encrypts or locks</strong> a victim’s files or computer system.
+            </p>
+            <p>
+                The attacker then demands a "ransom" payment (usually in cryptocurrency like Bitcoin) in exchange for
+                restoring access. It’s like a digital kidnapper taking your homework or photos and refusing to give them
+                back unless you pay.
+            </p>
+        </div>
+
+        <!-- 2. Types of Ransomware Attacks -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-vial"></i>
+                <h2>2. Types of Ransomware Attacks</h2>
+            </div>
+            <div class="types-grid">
+                <div class="type-item">
+                    <i class="fas fa-lock"></i>
+                    <div><strong>Encrypting Ransomware:</strong> Scrambles your files (docs, photos) so you can't open
+                        them anymore.</div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-desktop"></i>
+                    <div><strong>Locker Ransomware:</strong> Completely locks you out of your computer so you can't even
+                        see your desktop.</div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-skull"></i>
+                    <div><strong>Scareware:</strong> Fake software that claims you have a virus and demands money to
+                        "fix" it.</div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-upload"></i>
+                    <div><strong>Double Extortion:</strong> Threatens to leak your private data online if you don't pay.
+                    </div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <div><strong>Mobile Ransomware:</strong> Attacks smartphones, often disguised as harmless apps or
+                        system updates.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Difference -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-exchange-alt"></i>
+                <h2>3. Ransomware vs. Other Malware</h2>
+            </div>
+            <div class="comparison-grid">
+                <div class="comp-card">
+                    <h3>Ransomware</h3>
+                    <p>Wants <strong>money</strong>. It makes its presence known immediately with a scary ransom note on
+                        your screen.</p>
+                </div>
+                <div class="comp-card other">
+                    <h3>Other Malware</h3>
+                    <p>Usually stays <strong>hidden</strong>. Viruses, Trojans, and Spyware want to steal data or spy on
+                        you without you knowing.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. How Hackers Perform Ransomware Attacks -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-cogs"></i>
+                <h2>4. How Hackers Perform Ransomware Attacks</h2>
+            </div>
+            <ul class="step-list">
+                <li><strong>Delivery:</strong> Using phishing emails with "urgent" attachments or malicious links on
+                    sketchy sites.</li>
+                <li><strong>Exploitation:</strong> Finding "holes" (vulnerabilities) in your software or operating
+                    system to get inside.</li>
+                <li><strong>Infection:</strong> The malware runs silently in the background, communicating with the
+                    hacker's server.</li>
+                <li><strong>Execution:</strong> The software encrypts your files and pops up a demand for payment.</li>
+            </ul>
+        </div>
+
+        <!-- 5. What Hackers Gain -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-money-bill-wave"></i>
+                <h2>5. What Hackers Gain from Ransomware</h2>
+            </div>
+            <div class="types-grid">
+                <div class="type-item"><i class="fas fa-coins"></i> <span><strong>Financial Gain:</strong> Direct ransom
+                        payments from scared victims.</span></div>
+                <div class="type-item"><i class="fas fa-file-invoice-dollar"></i> <span><strong>Data Sales:</strong>
+                        Selling stolen sensitive info on the dark web.</span></div>
+                <div class="type-item"><i class="fas fa-building-circle-xmark"></i> <span><strong>Disruption:</strong>
+                        Causing chaos for businesses or schools by locking their systems.</span></div>
+                <div class="type-item"><i class="fas fa-user-ninja"></i> <span><strong>Extortion:</strong> Using the
+                        data to intimidate or blackmail organizations.</span></div>
+            </div>
+        </div>
+
+        <!-- 6. Risks and Damage -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-biohazard"></i>
+                <h2>6. Risks and Damage Caused</h2>
+            </div>
+            <ul style="margin-left:25px; display:grid; gap:12px;">
+                <li><strong>Permanent File Loss:</strong> If you don't have backups, your files might be gone forever.
+                </li>
+                <li><strong>Financial Burden:</strong> Ransoms can be thousands or even millions of dollars.</li>
+                <li><strong>System Downtime:</strong> Schools or hospitals being unable to function for days or weeks.
+                </li>
+                <li><strong>Reputation Damage:</strong> People losing trust in a company that can't protect its data.
+                </li>
+                <li><strong>Legal Consequences:</strong> Companies might face fines for failing to secure customer
+                    information.</li>
+            </ul>
+        </div>
+
+        <!-- 7. Roles -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-users-cog"></i>
+                <h2>7. Role of Hackers, Victims, and Experts</h2>
+            </div>
+            <div class="comparison-grid">
+                <div class="comp-card">
+                    <h3>The Victims</h3>
+                    <p>Individuals (like students) and organizations who lose their data and face the choice of paying
+                        or not.</p>
+                </div>
+                <div class="comp-card other">
+                    <h3>The Experts</h3>
+                    <p>Security researchers and IT teams who build "decryptors" and help clean infected systems.</p>
+                </div>
+            </div>
+            <p style="margin-top:20px;"><strong>Cybercriminals:</strong> The people creating and launching the attacks
+                for profit.</p>
+        </div>
+
+        <!-- 8. Importance of Backups -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-shield-alt"></i>
+                <h2>8. Why Backups and Security are Mandatory</h2>
+            </div>
+            <p>
+                A <strong>Backup</strong> is your digital "insurance policy." If your files are encrypted, you can just
+                delete
+                the bad software and restore your files from your backup.
+                <strong>Updates</strong> and <strong>Antivirus</strong> act as the front door locks that keep the hacker
+                out in the first place.
+            </p>
+        </div>
+
+        <!-- 9. Impact -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-university"></i>
+                <h2>9. Impact on Individuals and Organizations</h2>
+            </div>
+            <div class="types-grid">
+                <div class="comp-card">
+                    <h3>For Individuals</h3>
+                    <p>Lost personal memories (photos), school projects, and financial stress from lost devices.</p>
+                </div>
+                <div class="comp-card other">
+                    <h3>For Organizations</h3>
+                    <p>Operational disruption, huge data recovery costs, and potential lawsuits from leaked data.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. Detection and Mitigation -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-bell"></i>
+                <h2>10. Detection and Mitigation Strategies</h2>
+            </div>
+            <div class="types-grid">
+                <div class="type-item"><span><strong>Antivirus Software:</strong> Using tools that can detect
+                        "Ransomware-like behavior" and stop it.</span></div>
+                <div class="type-item"><span><strong>Offline Backups:</strong> Keeping backups on a drive that is *not*
+                        always plugged into your computer.</span></div>
+                <div class="type-item"><span><strong>Email Filtering:</strong> Using advanced email systems to block
+                        "fishy" attachments automatically.</span></div>
+                <div class="type-item"><span><strong>Incident Planning:</strong> Knowing exactly what to do (unplug the
+                        internet!) if you get infected.</span></div>
+            </div>
+        </div>
+
+        <!-- 11. Ethical and Legal -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-gavel"></i>
+                <h2>11. Ethical and Legal Issues</h2>
+            </div>
+            <p>
+                Paying the ransom is <strong>discouraged</strong> because it funds more crimes and doesn't guarantee
+                you'll get
+                your files back. In some cases, paying ransoms to certain groups is even <strong>illegal</strong>.
+                Reporting the attack to authorities helps them track down the criminals and warn others.
+            </p>
+        </div>
+
+        <!-- 12. Best Practices -->
+        <div class="card-section" style="border-left: 5px solid var(--cyber-green);">
+            <div class="section-header">
+                <i class="fas fa-user-check"></i>
+                <h2>12. Best Cybersecurity Practices to Prevent Ransomware</h2>
+            </div>
+            <ul class="practices-list">
+                <li class="practice-bullet"><i class="fas fa-sync-alt"></i> Keep all your software and apps updated.
+                </li>
+                <li class="practice-bullet"><i class="fas fa-key"></i> Use strong, unique passwords for every account.
+                </li>
+                <li class="practice-bullet"><i class="fas fa-shield-virus"></i> Enable your firewall and antivirus
+                    protection.</li>
+                <li class="practice-bullet"><i class="fas fa-envelope-open-text"></i> Be skeptical of "Urgent" or
+                    "Special Offer" emails.</li>
+                <li class="practice-bullet"><i class="fas fa-cloud-upload-alt"></i> Back up your most important data to
+                    the cloud or an external drive.</li>
+                <li class="practice-bullet"><i class="fas fa-users-viewfinder"></i> Educate your friends and family
+                    about the signs of ransomware.</li>
+                <li class="practice-bullet"><i class="fas fa-microscope"></i> Monitor your device for slowing down or
+                    weird file names.</li>
+            </ul>
+        </div>
+
+        <div class="disclaimer">
+            "Your data is your legacy. Don't let a criminal put a price on it."
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">CYBER BREAKER</div>
+        <p>© CYBER BREAKER – Cyber Safety Learning Platform</p>
+    </footer>
+
+    <script>
+        // Scroll Animation logic
+        const sections = document.querySelectorAll('.card-section');
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Dynamic Glow Effect on Header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.hero-title');
+            const scroll = window.scrollY;
+            header.style.filter = `drop-shadow(0 0 ${Math.min(20, scroll / 10)}px rgba(0, 255, 170, 0.5))`;
+        });
+    </script>
+</body>
+
+</html>

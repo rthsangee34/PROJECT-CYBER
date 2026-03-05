@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDoS Attack Awareness Quiz | Cyber Breaker</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #02050a;
+            --card-bg: #0a0d14;
+            --accent-blue: #0084ff;
+            --accent-red: #ff3c3c;
+            --accent-green: #00ff73;
+            --text-main: #ffffff;
+            --glass: rgba(0, 132, 255, 0.05);
+            --border: rgba(0, 132, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 70% 20%, rgba(0, 132, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 30% 80%, rgba(255, 60, 60, 0.05) 0%, transparent 40%);
+            z-index: -2;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .intro-box {
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent-blue);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .disclaimer {
+            color: var(--accent-red);
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        #quiz-screen {
+            display: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 224, 255, 0.3);
+            object-fit: cover;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .timer-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--accent-green);
+            transition: width 0.1s linear;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 2px;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-blue);
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(0, 132, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .option.correct {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 115, 0.1);
+            color: var(--accent-green);
+        }
+
+        .option.wrong {
+            border-color: var(--accent-red);
+            background: rgba(255, 60, 60, 0.1);
+            color: var(--accent-red);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--accent-blue);
+            margin: 20px 0;
+        }
+
+        .exp-log {
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            margin: 25px 0;
+            padding-right: 10px;
+        }
+
+        .exp-item {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-blue);
+            font-size: 0.9rem;
+        }
+
+        .tips-box {
+            background: rgba(0, 255, 115, 0.05);
+            border: 1px dashed var(--accent-green);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 12px 30px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--accent-blue);
+            color: #fff;
+            box-shadow: 0 0 20px var(--accent-blue);
+        }
+
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='home.html'">Home</button>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='lessons.html'">Lessons</button>
+    </nav>
+
+    <div class="container">
+        <!-- Intro -->
+        <div id="intro-screen">
+            <div style="text-align: center; margin-bottom: 20px; font-size: 3rem; color: var(--accent-blue);">
+                <i class="fas fa-server"></i> <i class="fas fa-network-wired" style="font-size: 1.5rem;"></i>
+            </div>
+            <h1 class="title">DDoS Defense Lab</h1>
+            <div class="intro-box">
+                <p>
+                    <strong>What is a DDoS Attack?</strong><br>
+                    A Distributed Denial of Service (DDoS) attack is a malicious attempt to disrupt the normal traffic
+                    of a targeted server, service, or network by overwhelming it with a flood of Internet traffic.
+                    <br><br>
+                    <strong>The Botnet factor:</strong><br>
+                    Attackers often use "botnets"—networks of compromised devices (PCs, IoT gadgets)—managed remotely to
+                    launch these massive floods.
+                </p>
+            </div>
+            <p class="disclaimer">Cyber Education Purposes Only</p>
+            <button class="btn" id="start-btn">Initialize Mitigation</button>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quiz-screen">
+            <div class="hud" style="display: flex; align-items: center; gap: 20px;">
+                <img src="logo.jpeg" alt="Logo" class="logo-img">
+                <div style="flex-grow: 1; display: flex; justify-content: space-between; align-items: center;">
+                    <div id="timer-text">30s</div>
+                    <div id="q-count">QUESTION 1/10</div>
+                </div>
+            </div>
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="quiz-content">
+                <h2 class="question-text" id="q-text">Filtering traffic...</h2>
+                <div id="options-list"></div>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div id="result-screen">
+            <h1 class="title">Network Status Report</h1>
+            <div class="score-display"><span id="final-score">0</span>%</div>
+            <p id="verdict">Analyzing packet drops...</p>
+            <div class="exp-log" id="exp-log"></div>
+            <div class="tips-box">
+                <h3 style="color:var(--accent-green); margin-bottom:10px;">🛠️ DDoS Mitigation Tips</h3>
+                <ul style="list-style:none; font-size:0.85rem;">
+                    <li>• <strong>Anycast & CDN:</strong> Distribute traffic across global servers to soak up loads.
+                    </li>
+                    <li>• <strong>Rate Limiting:</strong> Limit how many requests one IP can make per second.</li>
+                    <li>• <strong>Cloud Scrubbing:</strong> Use 3rd party services to 'clean' traffic before it hits
+                        you.</li>
+                    <li>• <strong>Monitoring:</strong> Set up alerts for sudden spikes in bandwidth usage.</li>
+                </ul>
+            </div>
+            <button class="btn" id="retry-btn">Re-Sync Defense</button>
+            <button class="btn" onclick="location.href='lessons.html'">Back to Learn</button>
+        </div>
+    </div>
+
+    <script>
+        const originalQuestions = [
+            {
+                q: "What does the first 'D' in DDoS stand for?",
+                o: ["Dynamic", "Distributed", "Digital", "Destructive"],
+                a: 1,
+                e: "DDoS stands for Distributed Denial of Service. The 'Distributed' part means the attack comes from many sources at once."
+            },
+            {
+                q: "What is a 'Botnet' in the context of DDoS?",
+                o: ["A fast internet connection", "A network of compromised devices used to flood a target", "A types of virus that steals passwords", "A cloud storage service"],
+                a: 1,
+                e: "Botnets are collections of 'zombie' computers or IoT devices controlled by a hacker to launch attacks."
+            },
+            {
+                q: "What is the main goal of a volumetric DDoS attack?",
+                o: ["To steal user database", "To consume the available bandwidth of the target", "To delete server files", "To change the website's logo"],
+                a: 1,
+                e: "Volumetric attacks try to create congestion by consuming all available bandwidth, causing a complete shutdown."
+            }, {
+                q: "Which layer of the OSI model does an 'HTTP Flood' attack target?",
+                o: ["Layer 1 (Physical)", "Layer 3 (Network)", "Layer 4 (Transport)", "Layer 7 (Application)"],
+                a: 3,
+                e: "HTTP Floods target Layer 7 (Application), where web pages are generated and served to users."
+            },
+            {
+                q: "What is a common sign that you are under a DDoS attack?",
+                o: ["Your mouse cursor turns red", "Sudden and extreme slowness in website response or total downtime", "You receive more suspicious emails", "Your PC fan stops spinning"],
+                a: 1,
+                e: "The primary sign of a DDoS attack is the service becoming unavailable or extremely slow for legitimate users."
+            },
+            {
+                q: "What is 'Rate Limiting'?",
+                o: ["Measuring the speed of your internet", "Setting a limit on how many requests a server accepts from one IP", "Buying a cheaper internet plan", "Uninstalling software"],
+                a: 1,
+                e: "Rate limiting helps mitigate DDoS by stopping a single source from overwhelming the server with too many requests."
+            },
+            {
+                q: "How does a Content Delivery Network (CDN) help prevent DDoS?",
+                o: ["It hides your passwords", "It distributes traffic across multiple global servers", "It makes the website text smaller", "It encrypts your hard drive"],
+                a: 1,
+                e: "CDNs spread the load of a traffic flood across many servers worldwide, making it harder for one server to crash."
+            },
+            {
+                q: "What is 'IP Spoofing' in a DDoS attack?",
+                o: ["Changing your own IP address", "Sending packets with fake source IP addresses to hide the attacker's identity", "Stealing someone's IP", "Block an IP address"],
+                a: 1,
+                e: "Spoofing makes it difficult to trace where the attack is actually coming from."
+            },
+            {
+                q: "What is 'Application Layer' DDoS meant to exploit?",
+                o: ["The network cables", "Server resources like CPU and Memory by making complex requests", "The router password", "Email accounts"],
+                a: 1,
+                e: "Application layer attacks focus on exhausting server resources rather than just bandwidth."
+            },
+            {
+                q: "What is a 'Salami Attack'?",
+                o: ["A type of food poisoning", "A series of very small attacks that go unnoticed but build up", "A physical attack on a server", "A password guessing attack"],
+                a: 1,
+                e: "In DDoS, small, slow attacks can sometimes bypass simple filters while still causing service degradation."
+            }
+        ];
+
+        let questions = [], currentIdx = 0, score = 0, timeLeft = 30, timer, canClick = true, logs = [];
+        const clickSnd = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON' || e.target.closest('button')) { clickSnd.play(); } });
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        const uiIntro = document.getElementById('intro-screen'), uiQuiz = document.getElementById('quiz-screen'), uiResult = document.getElementById('result-screen'), uiQText = document.getElementById('q-text'), uiOptions = document.getElementById('options-list'), uiTimerBar = document.getElementById('timer-bar'), uiTimerTxt = document.getElementById('timer-text'), uiProgress = document.getElementById('progress-fill');
+
+        function startQuiz() {
+            questions = shuffle([...originalQuestions]).map(q => {
+                const opts = q.o.map((t, i) => ({ t, is: i === q.a }));
+                return { ...q, shuffled: shuffle(opts) };
+            }).slice(0, 10);
+            currentIdx = 0; score = 0; logs = [];
+            uiIntro.style.display = 'none'; uiResult.style.display = 'none'; uiQuiz.style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIdx >= 10) { endQuiz(); return; }
+            const q = questions[currentIdx];
+            uiQText.innerText = q.q;
+            document.getElementById('q-count').innerText = `PKT ${currentIdx + 1}/10`;
+            uiProgress.style.width = ((currentIdx + 1) / 10 * 100) + '%';
+            uiOptions.innerHTML = '';
+            q.shuffled.forEach(opt => {
+                const d = document.createElement('div'); d.className = 'option'; d.innerText = opt.t;
+                d.onclick = () => handle(d, opt.is); uiOptions.appendChild(d);
+            });
+            canClick = true; resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(timer); timeLeft = 30; updateTimerUI();
+            timer = setInterval(() => {
+                timeLeft--; updateTimerUI();
+                if (timeLeft <= 0) { clearInterval(timer); timeout(); }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            uiTimerTxt.innerText = `${timeLeft}s`; uiTimerBar.style.width = (timeLeft / 30 * 100) + '%';
+            uiTimerBar.style.backgroundColor = timeLeft > 20 ? 'var(--accent-green)' : (timeLeft > 10 ? 'var(--accent-orange)' : 'var(--accent-red)');
+        }
+
+        function handle(el, is) {
+            if (!canClick) return; canClick = false; clearInterval(timer);
+            const q = questions[currentIdx];
+            logs.push({ q: q.q, is, correct: q.shuffled.find(o => o.is).t, exp: q.e });
+            if (is) { el.classList.add('correct'); score += 10; }
+            else { el.classList.add('wrong'); Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); }); }
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function timeout() {
+            canClick = false; const q = questions[currentIdx];
+            logs.push({ q: q.q, is: false, correct: q.shuffled.find(o => o.is).t, exp: q.e + " (TIMED OUT)" });
+            Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); });
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function endQuiz() {
+            uiQuiz.style.display = 'none'; uiResult.style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            const verdict = document.getElementById('verdict');
+            verdict.innerText = score >= 70 ? "ONLINE: Traffic filtered successfully." : "DOWN: System overwhelmed. Need better filters.";
+            const logView = document.getElementById('exp-log');
+            logView.innerHTML = '<h3 style="margin-bottom:15px; font-family:Orbitron; font-size:1rem;">Mitigation Log</h3>';
+            logs.forEach((item, idx) => {
+                const d = document.createElement('div'); d.className = `exp-item ${item.is ? '' : 'incorrect'}`;
+                d.innerHTML = `<strong>Q${idx + 1}: ${item.q}</strong><br><small>Verified: ${item.correct}</small><br><p style="font-size:0.85rem; margin-top:5px;">${item.exp}</p>`;
+                logView.appendChild(d);
+            });
+        }
+
+        document.getElementById('start-btn').onclick = startQuiz;
+        document.getElementById('retry-btn').onclick = startQuiz;
+    </script>
+</body>
+
+</html>

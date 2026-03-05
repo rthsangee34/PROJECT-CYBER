@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Fraud Awareness Quiz | Cyber Breaker</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0a0805;
+            --card-bg: #14100a;
+            --accent-orange: #ff9d00;
+            --accent-red: #ff3c3c;
+            --accent-green: #00ff9d;
+            --text-main: #ffffff;
+            --glass: rgba(255, 157, 0, 0.05);
+            --border: rgba(255, 157, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(255, 157, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 90%, rgba(255, 60, 60, 0.05) 0%, transparent 50%);
+            z-index: -2;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-orange);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .intro-box {
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent-orange);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .disclaimer {
+            color: var(--accent-red);
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        #quiz-screen {
+            display: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 224, 255, 0.3);
+            object-fit: cover;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .timer-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--accent-green);
+            transition: width 0.1s linear;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 2px;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-orange);
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(255, 157, 0, 0.1);
+            transform: translateX(10px);
+        }
+
+        .option.correct {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 157, 0.1);
+            color: var(--accent-green);
+        }
+
+        .option.wrong {
+            border-color: var(--accent-red);
+            background: rgba(255, 60, 60, 0.1);
+            color: var(--accent-red);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--accent-orange);
+            margin: 20px 0;
+        }
+
+        .exp-log {
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            margin: 25px 0;
+            padding-right: 10px;
+        }
+
+        .exp-item {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-orange);
+            font-size: 0.9rem;
+        }
+
+        .tips-box {
+            background: rgba(0, 255, 157, 0.05);
+            border: 1px dashed var(--accent-green);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--accent-orange);
+            color: var(--accent-orange);
+            padding: 12px 30px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--accent-orange);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-orange);
+        }
+
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-orange);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='home.html'">Home</button>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='lessons.html'">Lessons</button>
+    </nav>
+
+    <div class="container">
+        <!-- Intro -->
+        <div id="intro-screen">
+            <div style="text-align: center; margin-bottom: 20px; font-size: 3rem; color: var(--accent-orange);">
+                <i class="fas fa-credit-card"></i> <i class="fas fa-fish" style="font-size: 1.5rem;"></i>
+            </div>
+            <h1 class="title">Online Fraud Shield</h1>
+            <div class="intro-box">
+                <p>
+                    <strong>What is Online Fraud?</strong><br>
+                    Online fraud refers to any type of scheme that uses the internet to trick victims out of money,
+                    property, or sensitive data.
+                    <br><br>
+                    <strong>Common Scams:</strong><br>
+                    This includes fake shopping sites, lottery "wins", investment scams, and impersonation of family
+                    members in trouble.
+                </p>
+            </div>
+            <p class="disclaimer">Cyber Education Purposes Only</p>
+            <button class="btn" id="start-btn">Start Detection</button>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quiz-screen">
+            <div class="hud" style="display: flex; align-items: center; gap: 20px;">
+                <img src="logo.jpeg" alt="Logo" class="logo-img">
+                <div style="flex-grow: 1; display: flex; justify-content: space-between; align-items: center;">
+                    <div id="timer-text">30s</div>
+                    <div id="q-count">VERIFY 1/10</div>
+                </div>
+            </div>
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="quiz-content">
+                <h2 class="question-text" id="q-text">Analyzing transaction...</h2>
+                <div id="options-list"></div>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div id="result-screen">
+            <h1 class="title">Protection Status</h1>
+            <div class="score-display"><span id="final-score">0</span>%</div>
+            <p id="verdict">Evaluating fraudulent patterns...</p>
+            <div class="exp-log" id="exp-log"></div>
+            <div class="tips-box">
+                <h3 style="color:var(--accent-green); margin-bottom:10px;">🛠️ Anti-Fraud Tips</h3>
+                <ul style="list-style:none; font-size:0.85rem;">
+                    <li>• <strong>Too Good to be True:</strong> If a prize or investment seems perfect, it's likely a
+                        scam.</li>
+                    <li>• <strong>Check URLs:</strong> Fraudulent sites often have typos (e.g., 'amozon.com').</li>
+                    <li>• <strong>Secure Payment:</strong> Only shop on sites with 'https' and valid SSL certificates.
+                    </li>
+                    <li>• <strong>No OTP Sharing:</strong> Never share your OTP with anyone, even 'bank staff'.</li>
+                </ul>
+            </div>
+            <button class="btn" id="retry-btn">Restart Shield</button>
+            <button class="btn" onclick="location.href='lessons.html'">Back to Lessons</button>
+        </div>
+    </div>
+
+    <script>
+        const originalQuestions = [
+            {
+                q: "What is the most common sign of a fraudulent e-commerce website?",
+                o: ["It has a lot of products", "Prices are extremely low for branded items", "It uses blue colors", "It has a 'Contact Us' page"],
+                a: 1,
+                e: "Unbelievably low prices are the most common bait for fake shopping websites."
+            },
+            {
+                q: "You receive a text saying you won a lottery you never entered. What is this?",
+                o: ["A lucky day", "Lottery/Prize Fraud", "A bank update", "Service notification"],
+                a: 1,
+                e: "Lottery scams trick you into paying 'processing fees' or 'taxes' for a prize that doesn't exist."
+            },
+            {
+                q: "What should you do if an 'agent' asks for your bank OTP to 'verify' a transaction?",
+                o: ["Give it to them quickly", "Never share it and hang up immediately", "Ask them to wait while you find it", "Write it in an email"],
+                a: 1,
+                e: "Banks will NEVER ask for your OTP. Sharing it allows criminals to drain your account."
+            }, {
+                q: "What is an 'Investment Scam'?",
+                o: ["Buying a house", "A scheme promising high returns with 'zero' risk", "Saving money in a bank", "Buying stocks on a regulated exchange"],
+                a: 1,
+                e: "Scammers promise fast, high profits in things like crypto or forex to steal your initial investment."
+            },
+            {
+                q: "Which of these is a safe online behavior?",
+                o: ["Clicking every link in your inbox", "Using unique passwords for every site", "Saving your credit card on every site", "Sharing your full birthdate on social media"],
+                a: 1,
+                e: "Unique passwords ensure that if one site is hacked, your other accounts remain safe."
+            },
+            {
+                q: "What is 'Account Takeover'?",
+                o: ["Getting a promotion", "When a fraudster gains access to your online account and locks you out", "Opening a new account", "Deleting an old account"],
+                a: 1,
+                e: "Account takeover often happens due to weak passwords or phishing, leading to identity or financial theft."
+            },
+            {
+                q: "How can you verify if a website is real?",
+                o: ["It looks professional", "Check the URL spelling and look for the padlock icon", "It has a lot of ads", "It loads very fast"],
+                a: 1,
+                e: "Checking for typos in the domain (like g00gle.com) is the best way to spot a fake site."
+            },
+            {
+                q: "What is 'Skimming'?",
+                o: ["Reading books fast", "Using a device to steal credit card data at ATMs or gas pumps", "Browsing the web", "A type of virus"],
+                a: 1,
+                e: "Skimmers are physical devices placed over card readers to copy your card's magnetic stripe data."
+            },
+            {
+                q: "If you are a victim of fraud, what should be your first step?",
+                o: ["Do nothing and hope it doesn't happen again", "Contact your bank to freeze accounts and inform authorities", "Post about it on social media", "Try to hack the scammer back"],
+                a: 1,
+                e: "Immediate action (freezing cards and reporting) can stop further losses and help in recovery."
+            },
+            {
+                q: "What is 'Vishing'?",
+                o: ["Fishing in a virtual world", "Voice Phishing - using phone calls for fraud", "A types of computer virus", "A video editing software"],
+                a: 1,
+                e: "Vishing uses social engineering over the phone to trick people into giving up bank or personal details."
+            }
+        ];
+
+        let questions = [], currentIdx = 0, score = 0, timeLeft = 30, timer, canClick = true, logs = [];
+        const clickSnd = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON' || e.target.closest('button')) { clickSnd.play(); } });
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        const uiIntro = document.getElementById('intro-screen'), uiQuiz = document.getElementById('quiz-screen'), uiResult = document.getElementById('result-screen'), uiQText = document.getElementById('q-text'), uiOptions = document.getElementById('options-list'), uiTimerBar = document.getElementById('timer-bar'), uiTimerTxt = document.getElementById('timer-text'), uiProgress = document.getElementById('progress-fill');
+
+        function startQuiz() {
+            questions = shuffle([...originalQuestions]).map(q => {
+                const opts = q.o.map((t, i) => ({ t, is: i === q.a }));
+                return { ...q, shuffled: shuffle(opts) };
+            }).slice(0, 10);
+            currentIdx = 0; score = 0; logs = [];
+            uiIntro.style.display = 'none'; uiResult.style.display = 'none'; uiQuiz.style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIdx >= 10) { endQuiz(); return; }
+            const q = questions[currentIdx];
+            uiQText.innerText = q.q;
+            document.getElementById('q-count').innerText = `VERIFY ${currentIdx + 1}/10`;
+            uiProgress.style.width = ((currentIdx + 1) / 10 * 100) + '%';
+            uiOptions.innerHTML = '';
+            q.shuffled.forEach(opt => {
+                const d = document.createElement('div'); d.className = 'option'; d.innerText = opt.t;
+                d.onclick = () => handle(d, opt.is); uiOptions.appendChild(d);
+            });
+            canClick = true; resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(timer); timeLeft = 30; updateTimerUI();
+            timer = setInterval(() => {
+                timeLeft--; updateTimerUI();
+                if (timeLeft <= 0) { clearInterval(timer); timeout(); }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            uiTimerTxt.innerText = `${timeLeft}s`; uiTimerBar.style.width = (timeLeft / 30 * 100) + '%';
+            uiTimerBar.style.backgroundColor = timeLeft > 20 ? 'var(--accent-green)' : (timeLeft > 10 ? 'var(--accent-orange)' : 'var(--accent-red)');
+        }
+
+        function handle(el, is) {
+            if (!canClick) return; canClick = false; clearInterval(timer);
+            const q = questions[currentIdx];
+            logs.push({ q: q.q, is, correct: q.shuffled.find(o => o.is).t, exp: q.e });
+            if (is) { el.classList.add('correct'); score += 10; }
+            else { el.classList.add('wrong'); Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); }); }
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function timeout() {
+            canClick = false; const q = questions[currentIdx];
+            logs.push({ q: q.q, is: false, correct: q.shuffled.find(o => o.is).t, exp: q.e + " (TIMED OUT)" });
+            Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); });
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function endQuiz() {
+            uiQuiz.style.display = 'none'; uiResult.style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            const verdict = document.getElementById('verdict');
+            verdict.innerText = score >= 70 ? "SECURE: You have a sharp eye for fraud." : "VULNERABLE: Scammers might find you an easy target.";
+            const logView = document.getElementById('exp-log');
+            logView.innerHTML = '<h3 style="margin-bottom:15px; font-family:Orbitron; font-size:1rem;">Fraud Audit</h3>';
+            logs.forEach((item, idx) => {
+                const d = document.createElement('div'); d.className = `exp-item ${item.is ? '' : 'incorrect'}`;
+                d.innerHTML = `<strong>Q${idx + 1}: ${item.q}</strong><br><small>Fact: ${item.correct}</small><br><p style="font-size:0.85rem; margin-top:5px;">${item.exp}</p>`;
+                logView.appendChild(d);
+            });
+        }
+
+        document.getElementById('start-btn').onclick = startQuiz;
+        document.getElementById('retry-btn').onclick = startQuiz;
+    </script>
+</body>
+
+</html>

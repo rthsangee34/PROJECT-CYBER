@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDENTITY HIJACK LAB | Cyber Breaker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #020b1c;
+            color: #e2e8f0;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1.5px solid #00ffff;
+            object-fit: cover;
+        }
+
+        .platform-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .platform-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffff;
+        }
+
+        .mfa-pulse {
+            animation: mfa-ping 2s infinite;
+        }
+
+        @keyframes mfa-ping {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 255, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 255, 0);
+            }
+        }
+
+        .hidden-content {
+            display: none;
+        }
+
+        .terminal-glow {
+            box-shadow: 0 0 20px rgba(0, 102, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="glass border-b border-white/10 p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="../simulators.html" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <img src="../logo.jpeg" alt="Logo" class="logo-img">
+                <h1 class="orbitron text-lg font-bold text-[#00ffff]">👤 IDENTITY HIJACK LAB</h1>
+            </div>
+            <div
+                class="text-[10px] orbitron tracking-widest text-slate-500 uppercase px-3 py-1 border border-white/10 rounded-full">
+                Typosquatting & MFA Intercept</div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6 md:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- Left: Attacker Workspace -->
+        <aside class="lg:col-span-4 space-y-6">
+            <section class="glass p-6 rounded-3xl border-l-4 border-blue-500">
+                <h2 class="orbitron text-sm font-bold mb-4 text-blue-400 uppercase tracking-widest italic">1. Setup Trap
+                </h2>
+
+                <div class="space-y-4">
+                    <div>
+                        <label
+                            class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Platform
+                            Clone</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="setPlatform('facebook')"
+                                class="p-3 rounded-xl border border-white/10 hover:border-blue-500 transition-all text-xs font-bold bg-white/5 active:scale-95">FACEBOOK</button>
+                            <button onclick="setPlatform('instagram')"
+                                class="p-3 rounded-xl border border-white/10 hover:border-pink-500 transition-all text-xs font-bold bg-white/5 active:scale-95">INSTAGRAM</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Domain
+                            Spoofing (Homograph)</label>
+                        <div id="spoofDomain"
+                            class="text-[11px] font-mono text-blue-300 break-all mb-3 p-2 bg-blue-900/10 rounded">
+                            fаcebook.com (Homograph 'a')</div>
+                        <p class="text-[9px] text-slate-500 italic">Target: Real domain. Attacker: Uses Cyrillic 'a'
+                            (U+0430) which looks identical to Latin 'a'.</p>
+                    </div>
+
+                    <button onclick="activateHijack()"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl transition-all orbitron text-xs tracking-widest shadow-lg shadow-blue-900/20 active:scale-95">
+                        ENGAGE LISTENER
+                    </button>
+                </div>
+            </section>
+
+            <!-- Attacker C2 Terminal -->
+            <section
+                class="bg-black/90 p-6 rounded-3xl border border-blue-900/30 terminal-glow h-[400px] flex flex-col font-mono text-[10px] shadow-2xl overflow-hidden">
+                <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
+                    <span class="text-blue-500 font-bold uppercase tracking-widest">AiTM_PROXY_V9</span>
+                    <div class="flex gap-1">
+                        <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                        <span class="text-[8px] text-slate-600 tracking-tighter">SOCKET: ACTIVE</span>
+                    </div>
+                </div>
+                <div id="proxyLog" class="flex-1 overflow-y-auto space-y-1.5 text-blue-400/80 scrollbar-hide">
+                    <p class="opacity-30">> Standing by for domain resolution...</p>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Right: Victim Flow -->
+        <div class="lg:col-span-8 space-y-8">
+
+            <!-- Browser Simulation -->
+            <div class="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-200">
+                <div class="bg-slate-50 p-4 border-b flex items-center gap-4">
+                    <div class="flex gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                    </div>
+                    <div
+                        class="bg-white border border-slate-200 px-4 py-1.5 rounded-full flex-1 flex items-center justify-between text-[11px]">
+                        <span id="browserUrl" class="text-slate-400 font-medium">https://fаcebook.com/login/</span>
+                        <span class="text-green-500 font-bold">🔒 Secure</span>
+                    </div>
+                </div>
+
+                <div id="loginView" class="p-12 max-w-sm mx-auto transition-opacity duration-500">
+                    <div id="platformLogo" class="text-center mb-10 text-4xl font-black italic tracking-tighter">
+                        facebook
+                    </div>
+
+                    <div class="space-y-4">
+                        <input id="vUser" type="text" placeholder="Mobile number or email"
+                            class="w-full border border-slate-200 bg-slate-50 p-4 rounded-lg text-sm focus:border-blue-500 outline-none"
+                            autocomplete="off">
+                        <input id="vPass" type="password" placeholder="Password"
+                            class="w-full border border-slate-200 bg-slate-50 p-4 rounded-lg text-sm focus:border-blue-500 outline-none"
+                            autocomplete="off">
+                        <button onclick="handleLogin()"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-95">Log
+                            In</button>
+                    </div>
+
+                    <div class="mt-6 text-center text-xs text-blue-600 font-medium">Forgotten account? &middot; Sign up
+                        for account</div>
+                </div>
+
+                <!-- MFA Intercept Page -->
+                <div id="mfaView"
+                    class="hidden-content p-12 max-w-sm mx-auto text-center animate-in slide-in-from-right duration-500">
+                    <div
+                        class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 mfa-pulse">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Two-Factor Authentication</h3>
+                    <p class="text-xs text-slate-500 mb-8 leading-relaxed">A login code was sent to your mobile device
+                        ending in **82. Enter the 6-digit code to continue.</p>
+
+                    <div class="grid grid-cols-6 gap-2 mb-8">
+                        <input type="text" maxlength="1"
+                            class="mfa-input w-full border-2 border-slate-100 p-3 rounded-lg text-center font-bold text-xl focus:border-blue-500 outline-none">
+                        <input type="text" maxlength="1"
+                            class="mfa-input w-full border-2 border-slate-100 p-3 rounded-lg text-center font-bold text-xl focus:border-blue-500 outline-none">
+                        <input type="text" maxlength="1"
+                            class="mfa-input w-full border-2 border-slate-100 p-3 rounded-lg text-center font-bold text-xl focus:border-blue-500 outline-none">
+                        <input type="text" maxlength="1"
+                            class="mfa-input w-full border-2 border-slate-100 p-3 rounded-lg text-center font-bold text-xl focus:border-blue-500 outline-none">
+                        <input type="text" maxlength="1"
+                            class="mfa-input w-full border-2 border-slate-100 p-3 rounded-lg text-center font-bold text-xl focus:border-blue-500 outline-none">
+                        <input type="text" maxlength="1"
+                            class="mfa-input w-full border-2 border-slate-100 p-3 rounded-lg text-center font-bold text-xl focus:border-blue-500 outline-none">
+                    </div>
+
+                    <button onclick="finishHijack()"
+                        class="w-full bg-slate-100 text-slate-400 font-bold py-4 rounded-xl cursor-not-allowed">Continue</button>
+                </div>
+            </div>
+
+            <!-- Education Panels -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass p-8 rounded-3xl border-l-4 border-[#00ffff]">
+                    <h3 class="orbitron text-[10px] font-black text-[#00ffff] mb-4 tracking-[0.2em]">HOMOGRAPH ATTACK
+                    </h3>
+                    <p class="text-[11px] text-slate-400 leading-relaxed font-medium">Attackers use international domain
+                        names (IDN) to register URLs that look identical. Visually, <span
+                            class="text-white italic">facebook.com</span> could be using a Cyrillic character that leads
+                        to a malicious server.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl border-l-4 border-magenta-500">
+                    <h3 class="orbitron text-[10px] font-black text-pink-500 mb-4 tracking-[0.2em]">SESSION HIJACKING
+                    </h3>
+                    <p class="text-[11px] text-slate-400 leading-relaxed font-medium">When you enter an MFA code on a
+                        fake site, the attacker doesn't just steal the code; they use it instantly via an automated
+                        script to hijack your <span class="text-white">Active Session Cookie</span>.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const config = {
+            facebook: {
+                name: 'facebook',
+                color: 'text-blue-600',
+                btn: 'bg-blue-600',
+                url: 'https://fаcebook.com/login/',
+                domain: 'fаcebook.com (Homograph "a")'
+            },
+            instagram: {
+                name: 'instagram',
+                color: 'text-pink-600',
+                btn: 'bg-pink-600',
+                url: 'https://instagrаm.com/accounts/login/',
+                domain: 'instagrаm.com (Homograph "a")'
+            }
+        };
+
+        function addLog(msg, type = "info") {
+            const log = document.getElementById('proxyLog');
+            const p = document.createElement('p');
+            const now = new Date().toLocaleTimeString().split(' ')[0];
+
+            if (type === "warn") p.className = "text-yellow-500 font-bold italic";
+            if (type === "alert") p.className = "text-red-500 font-black animate-pulse bg-red-950/20 px-2 py-1 rounded";
+
+            p.innerHTML = `<span class="opacity-30">[${now}]</span> ${msg}`;
+            log.appendChild(p);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function setPlatform(key) {
+            const p = config[key];
+            const logo = document.getElementById('platformLogo');
+            logo.className = `text-center mb-10 text-4xl font-black italic tracking-tighter transition-all ${p.color}`;
+            logo.innerText = p.name;
+            document.getElementById('spoofDomain').innerText = p.domain;
+            document.getElementById('browserUrl').innerText = p.url;
+            addLog(`ENGINE: Switched to template ${key.toUpperCase()}`);
+        }
+
+        function activateHijack() {
+            addLog("LISTENER: Initializing AiTM proxy socket...", "warn");
+            addLog("DNS_SPOOF: Injecting homograph routes...", "warn");
+            addLog("STATUS: READY. Waiting for user input.", "alert");
+        }
+
+        function handleLogin() {
+            const user = document.getElementById('vUser').value;
+            const pass = document.getElementById('vPass').value;
+
+            if (!user || !pass) return;
+
+            addLog(`PKT_INTERCEPT: CREDENTIALS_CAPTURED`, "alert");
+            addLog(`USER: ${user} | PASS: ${pass}`, "warn");
+
+            document.getElementById('loginView').classList.add('hidden-content');
+            document.getElementById('mfaView').classList.remove('hidden-content');
+
+            addLog(`SCRIPT: Triggering MFA prompt on REAL server...`, "info");
+            addLog(`PROXY: Relaying MFA UI back to victim.`, "info");
+        }
+
+        // MFA Auto-focus logic
+        const mfaInputs = document.querySelectorAll('.mfa-input');
+        mfaInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < 5) {
+                    mfaInputs[index + 1].focus();
+                }
+
+                // Track in attacker console
+                let fullCode = "";
+                mfaInputs.forEach(i => fullCode += i.value);
+                if (fullCode.length > 0) {
+                    addLog(`RELAY_DATA: Partial MFA Sequence -> [ ${fullCode} ]`, "info");
+                }
+
+                if (fullCode.length === 6) {
+                    const btn = document.querySelector('#mfaView button');
+                    btn.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
+                    btn.classList.add('bg-blue-600', 'text-white');
+                    btn.innerText = "VERIFY CODE";
+                    btn.removeAttribute('disabled');
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && index > 0 && !e.target.value) {
+                    mfaInputs[index - 1].focus();
+                }
+            });
+        });
+
+        function finishHijack() {
+            addLog(`EXFIL_SUCCESS: SESSION_TOKEN CAPTURED`, "alert");
+            addLog(`SYSTEM: Account takeover confirmed. Password changed.`, "alert");
+
+            alert("LAB COMPLETE: You've simulated an Adversary-in-the-Middle (AiTM) attack.\n\nYou didn't just steal a password; you intercepted the MFA code in real-time to hijack the entire login session.\n\nLearning Point: Real identity theft happens in seconds via automated proxies like Evilginx.");
+            location.reload();
+        }
+
+        window.onload = activateHijack;
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANSOMWARE LAB | Cyber Breaker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1.5px solid #ff0000;
+            object-fit: cover;
+        }
+
+        .glitch {
+            animation: glitch 1.5s linear infinite;
+        }
+
+        @keyframes glitch {
+
+            2%,
+            64% {
+                transform: translate(3px, 0) skew(0deg);
+            }
+
+            4%,
+            60% {
+                transform: translate(-3px, 0) skew(0deg);
+            }
+
+            62% {
+                transform: translate(0, 0) skew(5deg);
+            }
+        }
+
+        .file-encrypting {
+            animation: scan 2s ease-in-out infinite;
+            background: linear-gradient(to bottom, transparent, rgba(239, 68, 68, 0.15), transparent);
+            background-size: 100% 200%;
+        }
+
+        @keyframes scan {
+            0% {
+                background-position: 0 -100%;
+            }
+
+            100% {
+                background-position: 0 100%;
+            }
+        }
+
+        .hidden-content {
+            display: none;
+        }
+
+        .node-infected {
+            color: #ef4444;
+            border-color: #ef4444 !important;
+            background: rgba(220, 38, 38, 0.1) !important;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+
+        .critical-glow {
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.2);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="glass border-b border-white/5 p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center text-[11px] orbitron tracking-[0.3em]">
+            <div class="flex items-center gap-4">
+                <a href="../simulators.html" class="text-slate-500 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <img src="../logo.jpeg" alt="Logo" class="logo-img">
+                <div class="flex items-center gap-4 ml-4">
+                    <a href="../ransomwareguide.html"
+                        class="text-[10px] text-[#ff0000] hover:underline uppercase font-bold">Guide</a>
+                    <a href="../ransomwarequiz.html"
+                        class="text-[10px] text-[#ff0000] hover:underline uppercase font-bold">Quiz</a>
+                </div>
+                <span class="text-red-600 font-black animate-pulse ml-4">⚠️ ATTENTION: RANSOMWARE ANATOMY LAB</span>
+            </div>
+            <div id="globalStatus" class="hidden sm:block text-green-500 font-bold">SYSTEM_INTEGRITY: NORMAL</div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6 md:p-10">
+        <!-- Simulation Stage 1 -->
+        <div id="infectionPhase" class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+            <!-- Attack Orchestrator -->
+            <section class="lg:col-span-4 space-y-8">
+                <div class="glass p-8 rounded-[2rem] border-t-4 border-red-600 shadow-2xl">
+                    <h2 class="orbitron text-xs font-bold mb-6 text-slate-400 tracking-widest uppercase">Payload
+                        Deployment</h2>
+                    <p class="text-[11px] text-slate-500 mb-8 leading-relaxed italic">A benign-looking "PDF Invoice" is
+                        executed with administrative privileges.</p>
+
+                    <button id="execBtn" onclick="startEncryption()"
+                        class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-5 rounded-2xl transition-all transform active:scale-95 flex flex-col items-center gap-1 shadow-lg shadow-red-900/20 group">
+                        <span class="orbitron text-xs tracking-widest">EXECUTE: INVOICE_V9.EXE</span>
+                        <span class="text-[9px] opacity-40 group-hover:opacity-70">UAC_BYPASS_ENABLED</span>
+                    </button>
+                </div>
+
+                <!-- Network Visualization -->
+                <div class="glass p-8 rounded-[2rem] space-y-6">
+                    <h2 class="orbitron text-[10px] font-bold text-slate-500 tracking-widest uppercase">Network
+                        Proximity Scan</h2>
+                    <div class="space-y-3 font-mono text-[10px]">
+                        <div id="node-1"
+                            class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/5 transition-all duration-700">
+                            <span class="text-slate-400">DESKTOP-HR-04 (192.168.1.12)</span>
+                            <span class="status text-green-500">SECURE</span>
+                        </div>
+                        <div id="node-2"
+                            class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/5 transition-all duration-700">
+                            <span class="text-slate-400">NAS-FILESHARE-01 (192.168.1.50)</span>
+                            <span class="status text-green-500">SECURE</span>
+                        </div>
+                        <div id="node-3"
+                            class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/5 transition-all duration-700">
+                            <span class="text-slate-400">SRV-DC-01 (192.168.1.10)</span>
+                            <span class="status text-green-500">SECURE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Low-level console -->
+                <div
+                    class="bg-black/80 rounded-[2rem] border border-red-900/20 p-6 h-56 flex flex-col font-mono text-[10px] shadow-inner">
+                    <div class="text-red-900 border-b border-red-900/20 pb-3 mb-4 font-black uppercase tracking-widest">
+                        Malcore_Output_Buf</div>
+                    <div id="processLog" class="text-red-500/80 space-y-1.5 overflow-y-auto flex-1 scrollbar-hide">
+                        <p class="text-slate-700">> Kernel listeners parked. Awaiting trigger...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Victim Workspace -->
+            <section class="lg:col-span-8 flex flex-col">
+                <div
+                    class="glass rounded-[2.5rem] overflow-hidden shadow-2xl flex-1 flex flex-col border border-white/5">
+                    <div class="bg-white/5 p-5 flex items-center justify-between border-b border-white/5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-slate-800"></div>
+                            <span
+                                class="text-[11px] font-bold orbitron text-slate-500 tracking-widest">C:\Users\Admin\Project_Alpha\</span>
+                        </div>
+                        <div id="encryptionProgress"
+                            class="text-[10px] font-mono text-slate-600 uppercase tracking-tighter">0% Processed</div>
+                    </div>
+
+                    <div id="fileGrid"
+                        class="p-10 grid grid-cols-2 lg:grid-cols-3 gap-6 flex-1 content-start overflow-y-auto scrollbar-hide">
+                        <!-- Simulated Files -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Stage 2: The Ransom Lock Screen -->
+        <div id="ransomPhase"
+            class="hidden-content fixed inset-0 z-[100] bg-[#450a0a] flex items-center justify-center p-6 lg:p-12 overflow-y-auto">
+            <div
+                class="max-w-5xl w-full bg-black border-[12px] border-red-600 p-8 lg:p-16 critical-glow flex flex-col lg:row gap-12 relative overflow-hidden">
+                <!-- Lock Background Decoration -->
+                <div class="absolute top-0 right-0 p-10 text-[20rem] opacity-5 pointer-events-none select-none">🔒</div>
+
+                <div class="flex flex-col lg:flex-row gap-12 relative z-10">
+                    <!-- Ransom Sidebar -->
+                    <div
+                        class="lg:w-1/3 text-center border-b lg:border-b-0 lg:border-r border-red-900/50 pb-8 lg:pb-0 lg:pr-12">
+                        <div class="text-7xl mb-8">🔓</div>
+                        <h2 class="orbitron text-xl font-black text-white mb-8 tracking-tighter uppercase italic">
+                            PAYMENT_ID: #8XR92</h2>
+
+                        <div class="bg-red-900/30 border border-red-600 p-6 rounded-2xl mb-6">
+                            <p class="text-[10px] text-red-400 font-black uppercase tracking-[0.2em] mb-2">Private Key
+                                Expiry</p>
+                            <p id="timer" class="text-4xl font-mono text-white font-bold tracking-tighter">47:59:59</p>
+                        </div>
+
+                        <p class="text-[11px] text-red-900 font-bold leading-relaxed uppercase">The price will double in
+                            48 hours. After 96 hours, your key will be wiped.</p>
+                    </div>
+
+                    <!-- Ransom Message Body -->
+                    <div class="lg:w-2/3">
+                        <h1 class="text-4xl lg:text-6xl font-black text-red-600 glitch mb-6 tracking-tighter italic">
+                            OOPS, YOUR FILES ARE ENCRYPTED!</h1>
+
+                        <div class="text-sm text-slate-400 space-y-5 mb-10 leading-relaxed font-medium">
+                            <p>What Happened to My Computer? Your important files are encrypted. Many of your documents,
+                                photos, videos, databases and other files are no longer accessible because they have
+                                been encrypted.</p>
+                            <p>Can I Recover My Files? Sure. We guarantee that you can recover all your files safely and
+                                easily. But you have not so much time.</p>
+
+                            <div class="bg-[#050505] p-5 rounded-xl border border-red-900/30 font-mono">
+                                <p class="text-red-600 font-bold mb-3 text-xs uppercase tracking-widest">Send $300
+                                    (0.0048 BTC) to this address:</p>
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <input readonly value="bc1qxy2kgdy6ynsp30m24k87680y9mwnm6d"
+                                        class="bg-black/50 border border-red-900/20 p-3 w-full text-red-400 text-xs overflow-hidden rounded-lg font-bold">
+                                    <button
+                                        class="bg-red-600 text-white px-6 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <input id="keyInput" type="text" placeholder="ENTER 16-DIGIT DECRYPTION KEY..."
+                                class="flex-1 bg-black/50 border border-red-900/30 p-4 rounded-xl font-mono text-xs outline-none focus:border-green-500 text-white tracking-widest">
+                            <button onclick="tryDecrypt()"
+                                class="bg-green-600 hover:bg-green-700 text-black font-black px-10 py-4 rounded-xl text-xs uppercase tracking-widest transition-all active:scale-95">AUTHENTICATE</button>
+                        </div>
+                        <div id="decryptMsg" class="mt-4 text-[10px] orbitron font-bold tracking-widest"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post-Lab Debrief -->
+        <section id="analysisSection" class="mt-12 glass p-10 rounded-[2.5rem] border-white/5 relative overflow-hidden">
+            <div
+                class="absolute top-0 right-10 translate-y-[-50%] p-4 bg-blue-600 rounded-full text-2xl shadow-lg shadow-blue-600/30">
+                📖</div>
+            <h3 class="orbitron text-xs font-black text-blue-500 mb-8 tracking-[0.3em] uppercase">Post-Infection
+                Analysis</h3>
+
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="space-y-4">
+                    <p class="orbitron text-[9px] font-black text-slate-300 uppercase tracking-widest">01 / LATERAL
+                        SPREAD</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed font-medium">Modern ransomware doesn't just
+                        encrypt one PC. It scans for <span class="text-white">SMB shares</span> and domain controllers
+                        to paralyze the entire network at once.</p>
+                </div>
+                <div class="space-y-4">
+                    <p class="orbitron text-[9px] font-black text-slate-300 uppercase tracking-widest">02 / SHADOW
+                        DELETION</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed font-medium">The payload executes
+                        <code>vssadmin.exe delete shadows /all /quiet</code> to ensure the victim cannot use Windows
+                        "System Restore" or "Previous Versions" to get their data back.
+                    </p>
+                </div>
+                <div class="space-y-4">
+                    <p class="orbitron text-[9px] font-black text-slate-300 uppercase tracking-widest">03 / RAAS MODEL
+                    </p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed font-medium">Ransomware-as-a-Service allows
+                        low-skill hackers to use pro-grade tools. Even if the ransom is paid, statistics show a <span
+                            class="text-white">20% failure rate</span> in actually receiving a working key.</p>
+                </div>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-white/5 flex justify-center">
+                <button onclick="location.reload()"
+                    class="orbitron text-[10px] text-slate-600 hover:text-[#00ffff] font-black uppercase tracking-[0.4em] transition-colors active:scale-95">
+                    REBOOT_ENVIRONMENT_SIGNAL: RESET
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const files = [
+            { name: "Accounting_2025.xlsx", size: "14.1 MB" },
+            { name: "Project_Blue_Schema.dwg", size: "128.8 MB" },
+            { name: "Executive_Strategy.pdf", size: "2.1 MB" },
+            { name: "Customer_PII_Backup.db", size: "1.4 GB" },
+            { name: "Tax_Returns_2024.zip", size: "45 MB" },
+            { name: "Contract_Signed.docx", size: "85 KB" }
+        ];
+
+        function renderFiles() {
+            const grid = document.getElementById('fileGrid');
+            grid.innerHTML = '';
+            files.forEach((file, index) => {
+                grid.innerHTML += `
+                    <div id="file-${index}" class="bg-white/5 p-6 rounded-2xl border border-white/5 flex flex-col items-center text-center transition-all duration-500 group">
+                        <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">📄</div>
+                        <div class="text-[10px] font-bold truncate w-full orbitron tracking-tighter text-slate-400">${file.name}</div>
+                        <div class="text-[9px] text-slate-600 font-mono mt-1">${file.size}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function addProcessLog(msg, type = "info") {
+            const log = document.getElementById('processLog');
+            const p = document.createElement('p');
+            const color = type === "danger" ? "text-red-500" : (type === "warn" ? "text-yellow-600" : "text-blue-500");
+            p.className = `${color} font-bold`;
+            p.innerHTML = `<span class="opacity-20">></span> ${msg}`;
+            log.appendChild(p);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        async function startEncryption() {
+            const btn = document.getElementById('execBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="orbitron text-xs tracking-widest">INJECTING...</span>';
+            btn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-slate-800');
+
+            document.getElementById('globalStatus').innerText = "SYSTEM_INTEGRITY: COMPROMISED";
+            document.getElementById('globalStatus').className = "text-red-500 font-black animate-glitch";
+
+            addProcessLog("Child_Process: Spawning PID 8842 with High Integrity", "danger");
+            addProcessLog("Hooking Winsock: Intercepting network traffic", "info");
+            await new Promise(r => setTimeout(r, 800));
+
+            // Lateral movement
+            for (let i = 1; i <= 3; i++) {
+                addProcessLog(`Probing network segment: 192.168.1.${i + 9}...`, "info");
+                await new Promise(r => setTimeout(r, 600));
+                const node = document.getElementById(`node-${i}`);
+                node.classList.add('node-infected');
+                node.querySelector('.status').innerText = "INFECTED";
+                addProcessLog(`Exploit sent via SMBv1: Node-${i} vulnerable.`, "danger");
+            }
+
+            addProcessLog("Running vssadmin.exe delete shadows /all /quiet", "warn");
+            addProcessLog("RSA-2048: Generating unique keypair for local disk", "info");
+
+            // File Encryption Loop
+            for (let i = 0; i < files.length; i++) {
+                const fileEl = document.getElementById(`file-${i}`);
+                fileEl.classList.add('file-encrypting');
+                addProcessLog(`AES-256 Symmetric Encryption: ${files[i].name}`, "danger");
+
+                let progress = Math.round(((i + 1) / files.length) * 100);
+                document.getElementById('encryptionProgress').innerText = `${progress}% ENCRYPTED`;
+
+                await new Promise(r => setTimeout(r, 900));
+
+                fileEl.classList.remove('file-encrypting', 'bg-white/5');
+                fileEl.classList.add('bg-red-950/20', 'border-red-600/50');
+                fileEl.innerHTML = `
+                    <div class="text-4xl mb-4 text-red-600 animate-pulse">🔒</div>
+                    <div class="text-[10px] font-bold text-red-400 orbitron tracking-tighter">${files[i].name}.crypt</div>
+                    <div class="text-[9px] text-red-900 font-mono font-bold mt-1 uppercase">LOCKED</div>
+                `;
+            }
+
+            addProcessLog("Persistence: Modifying HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", "warn");
+            addProcessLog("Finalizing Infection: Dropping @README.txt", "danger");
+
+            setTimeout(() => {
+                document.getElementById('ransomPhase').classList.remove('hidden-content');
+                startTimer();
+            }, 1200);
+        }
+
+        function startTimer() {
+            let h = 47, m = 59, s = 59;
+            setInterval(() => {
+                s--;
+                if (s < 0) { s = 59; m--; }
+                if (m < 0) { m = 59; h--; }
+                document.getElementById('timer').innerText =
+                    `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function tryDecrypt() {
+            const key = document.getElementById('keyInput').value;
+            const msg = document.getElementById('decryptMsg');
+            // This is just a test key for the lab
+            if (key.toUpperCase() === "CYBER-BREAKER-2026") {
+                msg.className = "mt-4 text-[10px] orbitron font-bold tracking-widest text-green-500 animate-pulse";
+                msg.innerText = "AUTHENTICATED: COMMENCING DECRYPTION SEQUENCE...";
+                setTimeout(() => {
+                    alert("LAB COMPLETE: You have simulated a ransomware containment and recovery. \n\nRemember: In the real world, paying the ransom is NEVER recommended as it funds further criminal activity and doesn't guarantee data return.");
+                    location.reload();
+                }, 2500);
+            } else {
+                msg.className = "mt-4 text-[10px] orbitron font-bold tracking-widest text-red-500";
+                msg.innerText = "ERROR: RSA_KEY_INVALID. VERIFY HANDSHAKE.";
+            }
+        }
+
+        window.onload = renderFiles;
+    </script>
+</body>
+
+</html>

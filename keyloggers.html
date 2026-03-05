@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keylogger & Live Exfiltration Lab | Cyber Breaker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&family=Fira+Code:wght@300;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #ef4444;
+            --bg-dark: #050507;
+            --card-bg: #0c0c0e;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: #cbd5e1;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .terminal-text {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Desktop Mockup Styling */
+        .desktop-mockup {
+            width: 100%;
+            height: 500px;
+            background: #1e293b;
+            border: 8px solid #334155;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            background-image: radial-gradient(circle at center, #334155 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .window-header {
+            background: #e2e8f0;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .key-cap {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            color: #38bdf8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-family: 'Fira Code', monospace;
+            display: inline-block;
+            margin: 2px;
+            min-width: 24px;
+            text-align: center;
+            box-shadow: 0 2px 0 #000;
+        }
+
+        .intercept-glow {
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px #ef4444;
+            }
+
+            to {
+                box-shadow: 0 0 20px #ef4444;
+            }
+        }
+
+        .active-process {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 2px solid #38bdf8;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-red);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+            object-fit: cover;
+        }
+
+        .btn-nav {
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-red);
+            box-shadow: 0 0 10px var(--primary-red);
+        }
+
+        /* Glassmorphism scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-red);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <nav class="bg-[#0c0c0e] border-b border-white/5 p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <img src="../logo.jpeg" alt="Logo" class="logo-img">
+                <div>
+                    <h1 class="text-sm font-bold tracking-widest uppercase text-white leading-none orbitron">Venom-RAT
+                        C2 Console</h1>
+                    <p class="text-[10px] text-red-500 font-mono mt-1 uppercase">Persistence: Active (LocalSystem)</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="location.href='../simulators.html'" class="btn-nav">Hub</button>
+                <button onclick="location.href='../home.html'" class="btn-nav">Home</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-8">
+
+        <!-- Left: Victim's Desktop (The Input) -->
+        <div class="lg:col-span-6 flex flex-col gap-4">
+            <div class="flex justify-between items-end">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Target Environment</h3>
+                <span class="text-[10px] text-slate-600">User is currently active</span>
+            </div>
+
+            <div class="desktop-mockup p-6">
+                <!-- Browser Window -->
+                <div class="bg-white rounded-lg shadow-2xl max-w-md mx-auto mt-10 overflow-hidden">
+                    <div class="window-header">
+                        <div class="dot bg-red-400"></div>
+                        <div class="dot bg-yellow-400"></div>
+                        <div class="dot bg-green-400"></div>
+                        <div class="ml-4 bg-slate-200 rounded px-3 py-1 text-[9px] text-slate-500 flex-1 truncate">
+                            https://secure.banking-portal.com/login
+                        </div>
+                    </div>
+
+                    <div class="p-8 space-y-4">
+                        <div class="text-center mb-6">
+                            <h4 class="text-slate-800 font-bold">Secure Portal Login</h4>
+                        </div>
+                        <div class="space-y-3">
+                            <input type="text" placeholder="Username / Email"
+                                class="w-full p-2 border border-slate-200 rounded text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none"
+                                onfocus="setFocus('Bank Login')" oninput="captureKey(event, 'Username')">
+
+                            <input type="password" placeholder="Password"
+                                class="w-full p-2 border border-slate-200 rounded text-sm text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none"
+                                onfocus="setFocus('Bank Login')" oninput="captureKey(event, 'Password')">
+
+                            <button
+                                class="w-full py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 transition-colors">Sign
+                                In</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notepad Window -->
+                <div
+                    class="absolute bottom-6 left-6 w-64 bg-slate-100 rounded shadow-lg overflow-hidden border border-slate-300">
+                    <div class="bg-slate-300 px-3 py-1 flex justify-between items-center">
+                        <span class="text-[10px] text-slate-600 font-bold">Draft.txt - Notepad</span>
+                    </div>
+                    <textarea class="w-full h-32 p-3 text-xs text-slate-800 resize-none outline-none bg-transparent"
+                        placeholder="Type personal notes..." onfocus="setFocus('Notepad')"
+                        oninput="captureKey(event, 'Note')"></textarea>
+                </div>
+            </div>
+
+            <div class="bg-red-950/10 border-l-4 border-red-500 p-4 rounded-r-xl">
+                <p class="text-xs text-slate-400">
+                    <strong>Note:</strong> In a real scenario, the keylogger runs in the background as a hidden process.
+                    The victim sees nothing unusual while their keystrokes are bundled into "packages" and sent to the
+                    C2 server every few seconds.
+                </p>
+            </div>
+        </div>
+
+        <!-- Right: Attacker C2 Terminal (The Output) -->
+        <div class="lg:col-span-6 flex flex-col gap-6 h-full">
+
+            <!-- Live Keystroke Buffer -->
+            <div class="bg-[#0c0c0e] rounded-2xl border border-white/5 shadow-2xl flex flex-col h-[500px]">
+                <div class="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-black/20">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                        <span class="text-[10px] font-mono font-bold text-red-500 uppercase tracking-widest">Live
+                            Key-Stream</span>
+                    </div>
+                    <div id="activeWindow"
+                        class="text-[10px] font-mono text-blue-400 bg-blue-900/20 px-2 py-0.5 rounded">IDLE</div>
+                </div>
+
+                <!-- Visual Key Feed -->
+                <div id="keyBuffer" class="p-6 flex-1 overflow-y-auto content-start flex flex-wrap gap-1 align-top">
+                    <div class="w-full text-center text-slate-700 text-[10px] mt-20 italic">Waiting for target input...
+                    </div>
+                </div>
+
+                <!-- Structured Extraction (Regex Matching) -->
+                <div class="p-4 border-t border-white/5 bg-black/40">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Value Extraction
+                            (Regex)</span>
+                        <span class="text-[9px] text-green-500 font-mono">AUTOSCAN: ENABLED</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-slate-900/50 p-2 rounded border border-white/5">
+                            <label class="text-[8px] text-slate-600 block mb-1">POSSIBLE_PASSWORD</label>
+                            <div id="extPass" class="text-[10px] font-mono text-red-400">-----</div>
+                        </div>
+                        <div class="bg-slate-900/50 p-2 rounded border border-white/5">
+                            <label class="text-[8px] text-slate-600 block mb-1">POSSIBLE_EMAIL</label>
+                            <div id="extEmail" class="text-[10px] font-mono text-blue-400 truncate">-----</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis -->
+            <div class="bg-blue-900/10 border border-blue-500/20 p-6 rounded-2xl">
+                <h4 class="text-white font-bold text-sm mb-2 uppercase tracking-tight orbitron">Technical Breakdown</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Keyloggers operate at the <strong>Kernel</strong> or <strong>API</strong> level (e.g., using
+                    <code>SetWindowsHookEx</code>). They intercept input before it even reaches the intended
+                    application. This allows them to capture passwords even if the website uses masking (dots) or
+                    virtual keyboards.
+                </p>
+                <div class="mt-4 flex gap-4 text-[10px] font-mono">
+                    <span class="text-green-500">✓ Stealth Hooking</span>
+                    <span class="text-green-500">✓ Clipboard Stealing</span>
+                    <span class="text-yellow-500">! AV Evasion Required</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let lastWindow = "";
+        let keystrokeCount = 0;
+        let fullString = "";
+
+        function setFocus(windowName) {
+            if (lastWindow !== windowName) {
+                lastWindow = windowName;
+                document.getElementById('activeWindow').innerText = windowName.toUpperCase();
+
+                const buffer = document.getElementById('keyBuffer');
+                if (keystrokeCount === 0) buffer.innerHTML = "";
+
+                const divider = document.createElement('div');
+                divider.className = "w-full text-[9px] text-slate-600 mt-4 mb-2 border-b border-white/5 pb-1 font-mono uppercase";
+                divider.innerText = `Focus Change: ${windowName}`;
+                buffer.appendChild(divider);
+
+                fullString = ""; // Reset string context for new window
+            }
+        }
+
+        function captureKey(event, type) {
+            const buffer = document.getElementById('keyBuffer');
+            const key = event.data || (event.inputType === 'deleteContentBackward' ? 'BKSP' : '');
+
+            if (!key) return;
+
+            // Update UI
+            const keyEl = document.createElement('span');
+            keyEl.className = "key-cap animate-bounce";
+            keyEl.innerText = key === ' ' ? 'SPC' : (key === 'BKSP' ? '⌫' : key);
+            buffer.appendChild(keyEl);
+            buffer.scrollTop = buffer.scrollHeight;
+
+            // Logic for Extraction
+            if (key !== 'BKSP') {
+                fullString += key;
+            } else {
+                fullString = fullString.slice(0, -1);
+            }
+            keystrokeCount++;
+
+            // Simple "Heuristics" simulation
+            if (type === 'Password' && fullString.length > 3) {
+                document.getElementById('extPass').innerText = "*".repeat(Math.min(fullString.length, 12)) + " [EXTRACTED]";
+                document.getElementById('extPass').classList.add('intercept-glow');
+            }
+
+            if (type === 'Username' && fullString.includes('@')) {
+                document.getElementById('extEmail').innerText = fullString.split(' ').pop();
+            }
+
+            // Remove bounce class after animation
+            setTimeout(() => keyEl.classList.remove('animate-bounce'), 500);
+        }
+    </script>
+</body>
+
+</html>

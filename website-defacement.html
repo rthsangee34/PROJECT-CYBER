@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Defacement & Hijacking Lab | Cyber Breaker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&family=Fira+Code:wght@300;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #10b981;
+            --bg-dark: #050507;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: #cbd5e1;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .terminal-text {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Corporate Site Styles */
+        #victimSite {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            color: #1a202c;
+        }
+
+        .defaced #victimSite {
+            background: #000 !important;
+            color: #0f0 !important;
+            filter: contrast(1.2) brightness(0.8);
+            font-family: 'Courier New', Courier, monospace !important;
+        }
+
+        .glitch-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .defaced .glitch-overlay {
+            display: block;
+        }
+
+        @keyframes strobe {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .defaced h1,
+        .defaced h2 {
+            animation: strobe 0.1s infinite;
+            text-shadow: 0 0 10px #0f0;
+        }
+
+        .file-list-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            cursor: pointer;
+        }
+
+        /* Scanline effect */
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 0, 0.1);
+            position: absolute;
+            top: 0;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            from {
+                top: 0;
+            }
+
+            to {
+                top: 100%;
+            }
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-green);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+            object-fit: cover;
+        }
+
+        .btn-nav {
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-green);
+            box-shadow: 0 0 10px var(--primary-green);
+        }
+
+        /* Glassmorphism scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-green);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <nav class="bg-[#0c0c0e] border-b border-white/5 p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <img src="../logo.jpeg" alt="Logo" class="logo-img">
+                <div>
+                    <h1 class="text-sm font-bold tracking-widest uppercase text-white leading-none orbitron">Web-Sploit
+                        C2 Shell</h1>
+                    <p class="text-[10px] text-green-500 font-mono mt-1 uppercase orbitron">Target:
+                        www.green-eco-corp.com (vulnerable)</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <a href="../defacementguide.html" class="btn-nav">Guide</a>
+                <a href="../defacementquiz.html" class="btn-nav">Quiz</a>
+                <button onclick="location.href='../simulators.html'" class="btn-nav">Hub</button>
+                <button onclick="location.href='../home.html'" class="btn-nav">Home</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="h-[calc(100vh-80px)] p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 mt-4">
+
+        <!-- Left: Attacker Workspace (File Manager & Terminal) -->
+        <div class="lg:col-span-4 flex flex-col gap-4 overflow-hidden">
+            <!-- File Explorer -->
+            <div class="bg-[#0c0c0e] border border-white/10 rounded-2xl overflow-hidden flex flex-col h-1/2">
+                <div class="p-3 border-b border-white/5 bg-black/40 flex justify-between">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase orbitron">Remote File System</span>
+                    <span class="text-[10px] font-mono text-green-600">/var/www/html/</span>
+                </div>
+                <div class="flex-1 p-2 overflow-y-auto font-mono text-[11px]">
+                    <div class="file-list-item flex items-center gap-2 p-2 rounded text-slate-400">
+                        <span>📁</span> assets/
+                    </div>
+                    <div class="file-list-item flex items-center gap-2 p-2 rounded text-slate-400">
+                        <span>📁</span> css/
+                    </div>
+                    <div
+                        class="file-list-item flex items-center gap-2 p-2 rounded text-blue-400 font-bold bg-blue-900/10">
+                        <span>📄</span> index.html <span class="text-[9px] text-slate-600 ml-auto">4.2 KB</span>
+                    </div>
+                    <div class="file-list-item flex items-center gap-2 p-2 rounded text-slate-400">
+                        <span>📄</span> contact.php
+                    </div>
+                    <div class="file-list-item flex items-center gap-2 p-2 rounded text-slate-400">
+                        <span>📄</span> config.json
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payload Console -->
+            <div class="bg-black border border-white/10 rounded-2xl overflow-hidden flex flex-col h-1/2">
+                <div class="p-3 border-b border-white/5 bg-slate-900/50">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest orbitron">Injection
+                        Payload</span>
+                </div>
+                <div class="p-4 flex-1 flex flex-col gap-3">
+                    <button onclick="injectCSS()"
+                        class="w-full py-2 bg-blue-900/30 border border-blue-500/50 text-blue-400 rounded-lg text-[11px] font-bold hover:bg-blue-900/50 transition-all uppercase orbitron">
+                        Inject Malicious CSS
+                    </button>
+                    <button onclick="replaceImages()"
+                        class="w-full py-2 bg-purple-900/30 border border-purple-500/50 text-purple-400 rounded-lg text-[11px] font-bold hover:bg-purple-900/50 transition-all uppercase orbitron">
+                        Overwrite Site Media
+                    </button>
+                    <button onclick="fullDeface()"
+                        class="w-full py-4 bg-red-600/20 border border-red-500 text-red-500 rounded-lg text-xs font-black hover:bg-red-600/40 transition-all uppercase mt-auto orbitron">
+                        Execute Full Defacement
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Target Website Preview -->
+        <div class="lg:col-span-8 flex flex-col gap-4 overflow-hidden h-full">
+            <div class="flex justify-between items-end">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest orbitron">Live Site Preview</h3>
+                <div class="flex gap-4">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        <span class="text-[10px] text-slate-500 orbitron">HTTP 200 OK</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="siteContainer"
+                class="relative flex-1 rounded-2xl border-4 border-[#1a1a1a] overflow-hidden shadow-2xl">
+                <div class="glitch-overlay"></div>
+                <div class="scanline hidden"></div>
+
+                <div id="victimSite" class="h-full overflow-y-auto p-0">
+                    <!-- Original Content -->
+                    <div id="originalContent">
+                        <nav class="p-6 border-b border-slate-100 flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <span class="font-bold text-xl tracking-tight orbitron text-slate-900">EcoFlow
+                                    Systems</span>
+                            </div>
+                            <div class="flex gap-6 text-sm font-medium text-slate-600 orbitron">
+                                <span>Solutions</span>
+                                <span>Sustainability</span>
+                                <span>About</span>
+                            </div>
+                        </nav>
+                        <header class="p-12 text-center max-w-2xl mx-auto">
+                            <h1 class="text-5xl font-black text-slate-900 mb-6 orbitron">Powering a Cleaner Tomorrow.
+                            </h1>
+                            <p class="text-lg text-slate-500 mb-8 leading-relaxed">We provide industrial-scale solar
+                                solutions for the next generation of global infrastructure.</p>
+                            <img id="heroImg"
+                                src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&q=80&w=800"
+                                class="w-full h-64 object-cover rounded-3xl shadow-lg mb-8">
+                            <div class="grid grid-cols-3 gap-6 text-left">
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    <h4 class="font-bold text-green-600 orbitron">98%</h4>
+                                    <p class="text-[11px] text-slate-500 font-bold">Carbon Reduction</p>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    <h4 class="font-bold text-green-600 orbitron">400+</h4>
+                                    <p class="text-[11px] text-slate-500 font-bold">Global Partners</p>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    <h4 class="font-bold text-green-600 orbitron">24/7</h4>
+                                    <p class="text-[11px] text-slate-500 font-bold">Live Monitoring</p>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+
+                    <!-- Defaced Content (Hidden) -->
+                    <div id="defacedContent"
+                        class="hidden h-full flex flex-col items-center justify-center text-center p-12 bg-black">
+                        <div class="text-[100px] mb-8">💀</div>
+                        <h1 class="text-6xl font-black mb-4 text-green-500 terminal-text">OWNED BY PHANTOM_NET</h1>
+                        <p class="text-2xl mb-12 text-green-400">Your "Clean Energy" is a lie. We see everything.</p>
+                        <div
+                            class="bg-green-900/20 border border-green-500/50 p-6 rounded-lg font-mono text-left max-w-xl">
+                            <p class="mb-2 text-green-400 font-bold underline">LEAKED_INTERNAL_EMAILS.TXT</p>
+                            <p class="text-[12px] text-green-300 opacity-70">
+                                > Root access obtained via outdated WordPress plugin.<br>
+                                > Database dump initiated: 12.4GB exfiltrated.<br>
+                                > Corporate credentials posted to Pastebin.<br>
+                                > System lockdown: ACTIVE.
+                            </p>
+                        </div>
+                        <p class="mt-20 text-xs text-green-600 opacity-50 font-mono tracking-widest uppercase">Greetings
+                            to all our friends in the underground.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Logs -->
+            <div
+                class="bg-[#0c0c0e] rounded-2xl border border-white/5 p-4 h-32 font-mono text-[10px] overflow-y-auto text-slate-500">
+                <div id="logs">
+                    <p class="text-green-600">// Shell session initialized at 192.168.1.104</p>
+                    <p class="text-slate-600">// Waiting for instructions...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function addLog(msg, color = 'text-slate-500') {
+            const logs = document.getElementById('logs');
+            const p = document.createElement('p');
+            p.className = color;
+            p.innerText = `[${new Date().toLocaleTimeString()}] > ${msg}`;
+            logs.appendChild(p);
+            logs.parentNode.scrollTop = logs.parentNode.scrollHeight;
+        }
+
+        function injectCSS() {
+            addLog("UPLOADING: payload.css to /var/www/html/css/...", "text-blue-500");
+            setTimeout(() => {
+                document.getElementById('victimSite').style.filter = "invert(1) hue-rotate(180deg)";
+                addLog("INJECTION: Overwriting global CSS styles. Site distorted.", "text-green-500");
+            }, 800);
+        }
+
+        function replaceImages() {
+            addLog("REPLACING: All .jpg assets in /assets/media/...", "text-purple-500");
+            setTimeout(() => {
+                const img = document.getElementById('heroImg');
+                img.src = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800";
+                img.style.filter = "sepia(1) saturate(10) hue-rotate(90deg)";
+                addLog("SUCCESS: Assets swapped with malicious placeholder.", "text-green-500");
+            }, 1000);
+        }
+
+        function fullDeface() {
+            addLog("OVERWRITING: /var/www/html/index.html...", "text-red-500 font-bold");
+
+            setTimeout(() => {
+                document.getElementById('siteContainer').classList.add('defaced');
+                document.querySelector('.scanline').classList.remove('hidden');
+                document.getElementById('originalContent').classList.add('hidden');
+                document.getElementById('defacedContent').classList.remove('hidden');
+
+                addLog("CRITICAL: Root index.html overwritten with Phantom_Net template.", "text-red-500 font-bold");
+                addLog("LOCKOUT: Admin panel access disabled.", "text-red-500");
+                addLog("BROADCAST: Site defacement visible to global traffic.", "text-green-500");
+            }, 1500);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEYLOGGER LAB | Cyber Breaker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #020b1c;
+            color: #e2e8f0;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1.5px solid #00ffff;
+            object-fit: cover;
+        }
+
+        .terminal-glow {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+        }
+
+        .cursor-blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .hidden-key {
+            display: inline-block;
+            width: 22px;
+            text-align: center;
+            border-bottom: 2px solid #334155;
+            margin: 0 1px;
+        }
+
+        .stream-item {
+            border-left: 2px solid #ef4444;
+            padding-left: 12px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="glass border-b border-white/10 p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="../simulators.html" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <img src="../logo.jpeg" alt="Logo" class="logo-img">
+                <h1 class="orbitron text-lg font-bold text-[#00ffff]">🕵️ KEYLOGGER & SPYWARE LAB</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="../keyloggerguide.html" class="text-xs orbitron text-[#00ffff] hover:underline">View Guide</a>
+                <a href="../keyloggerquiz.html" class="text-xs orbitron text-[#00ffff] hover:underline">Take Quiz</a>
+                <div
+                    class="text-[10px] orbitron tracking-widest text-slate-500 uppercase px-3 py-1 border border-white/10 rounded-full">
+                    Input Interception Simulator</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6 md:p-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+        <!-- Left Column: The Victim's Perspective -->
+        <section class="space-y-8">
+            <header>
+                <h2 class="orbitron text-sm font-bold text-slate-400 mb-2 uppercase tracking-widest">Target Environment
+                </h2>
+                <p class="text-xs text-slate-500">A legitimate login portal with hidden malicious listeners.</p>
+            </header>
+
+            <div class="bg-white text-slate-900 rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-200">
+                <div class="bg-slate-50 p-4 border-b flex items-center justify-between">
+                    <div class="flex gap-1.5 px-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                    </div>
+                    <span class="text-[10px] font-mono text-slate-400 italic">secure-vault-login.com/auth</span>
+                </div>
+
+                <div class="p-10">
+                    <div class="text-center mb-10">
+                        <div class="inline-block p-4 bg-blue-50 rounded-3xl mb-4">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-800 tracking-tighter">MEMBER ACCESS</h2>
+                        <p class="text-slate-400 text-xs font-medium">Please sign in to your encrypted dashboard</p>
+                    </div>
+
+                    <div class="space-y-5 max-w-sm mx-auto">
+                        <div class="space-y-2">
+                            <label
+                                class="block text-[10px] font-black text-slate-400 mb-1 uppercase tracking-widest ml-1">Identity/Email</label>
+                            <input type="text" id="victimInput"
+                                class="w-full border-2 border-slate-100 p-4 rounded-xl focus:border-blue-500 focus:bg-white bg-slate-50 outline-none transition-all font-mono text-sm"
+                                placeholder="e.g. user@vault.com" autocomplete="off">
+                        </div>
+                        <div class="space-y-2">
+                            <label
+                                class="block text-[10px] font-black text-slate-400 mb-1 uppercase tracking-widest ml-1">Private
+                                Key</label>
+                            <input type="password" id="victimPass"
+                                class="w-full border-2 border-slate-100 p-4 rounded-xl focus:border-blue-500 focus:bg-white bg-slate-50 outline-none transition-all font-mono text-sm"
+                                placeholder="••••••••" autocomplete="off">
+                        </div>
+                        <button
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-600/20 active:scale-95">
+                            DECRYPT & SYNC
+                        </button>
+                    </div>
+
+                    <div class="mt-10 p-5 bg-blue-50 rounded-2xl border border-blue-100 flex items-start gap-4">
+                        <div class="text-blue-500 text-lg">💡</div>
+                        <p class="text-[11px] text-blue-800 leading-relaxed font-medium">
+                            <strong>Instructor Note:</strong> To the victim, this is a normal HTTPS-secured site.
+                            However, a malicious <code>&lt;script&gt;</code> is listening for every <code>keydown</code>
+                            event and transmitting it to the attacker.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-8 rounded-3xl border-l-4 border-orange-500">
+                <h3 class="orbitron text-[10px] font-bold text-orange-400 mb-4 tracking-widest">DEFENSIVE STRATEGY</h3>
+                <ul class="text-[11px] text-slate-400 space-y-3 list-none font-medium">
+                    <li class="flex items-center gap-3">
+                        <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                        <strong class="text-white">Multi-Factor Auth:</strong> Stolen passwords are useless without the
+                        physical 2FA token.
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                        <strong class="text-white">Autofill:</strong> Managers autofill fields directly into the DOM,
+                        bypassing keyboard events.
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                        <strong class="text-white">Virtual Keyboards:</strong> Using mouse clicks on-screen prevents
+                        hardware key interception.
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Right Column: The Attacker's C2 Console -->
+        <section class="space-y-8">
+            <header>
+                <h2 class="orbitron text-sm font-bold text-red-500 mb-2 uppercase tracking-widest">Attacker Control
+                    Center</h2>
+                <p class="text-xs text-slate-500">Real-time exfiltration buffer and raw data analyzer.</p>
+            </header>
+
+            <div
+                class="bg-black/95 p-8 rounded-[2.5rem] border border-red-500/20 terminal-glow h-full flex flex-col min-h-[600px] shadow-2xl">
+                <div class="flex justify-between items-center mb-8 border-b border-red-900/30 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></div>
+                        <span
+                            class="text-[10px] text-red-500 font-mono font-bold tracking-[0.2em] uppercase">REMOTE_LOGGER_RECEIVER
+                            V2.4</span>
+                    </div>
+                    <button onclick="clearLogs()"
+                        class="text-[9px] text-slate-500 hover:text-white uppercase font-bold tracking-widest transition-colors">WIPE_BUFFER</button>
+                </div>
+
+                <div class="flex-1 font-mono text-[11px] overflow-y-auto space-y-8 scrollbar-hide">
+                    <div id="statusLine" class="text-slate-600 text-[10px] italic border-b border-white/5 pb-2">
+                        [LISTENING ON 192.168.1.104:8888] [STATUS: CONNECTED]
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-8">
+                        <div>
+                            <p class="text-[9px] text-red-900 font-black uppercase mb-3 tracking-[0.3em]">Identity
+                                Buffer [U]</p>
+                            <div id="userBuffer"
+                                class="bg-red-500/5 p-5 rounded-2xl border border-red-900/20 text-red-500 break-all min-h-[70px] flex items-center shadow-inner">
+                                <span class="opacity-30 italic">Waiting for inbound data...</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-[9px] text-red-900 font-black uppercase mb-3 tracking-[0.3em]">Credential
+                                Buffer [P]</p>
+                            <div id="passBuffer"
+                                class="bg-red-500/5 p-5 rounded-2xl border border-red-900/20 text-yellow-500 break-all min-h-[70px] flex items-center shadow-inner">
+                                <span class="opacity-30 italic">Waiting for inbound data...</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white/5 p-5 rounded-2xl border border-white/5">
+                            <p class="text-slate-600 text-[9px] mb-4 font-black uppercase tracking-widest">Raw Packet
+                                Stream Analysis</p>
+                            <div id="rawStream"
+                                class="text-slate-500 h-48 overflow-y-auto space-y-1 text-[10px] scrollbar-hide">
+                                <p class="text-slate-800">> Initializing exfiltration tunnel...</p>
+                                <p class="text-slate-800">> Hooking keydown event on target DOM...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-8 pt-6 border-t border-red-900/30 flex justify-between items-center orbitron text-[9px] tracking-widest text-red-900">
+                    <div>PACKETS_REC: <span id="packetCount" class="text-red-600 font-bold">0</span></div>
+                    <div>LATENCY: <span class="text-green-500 font-bold">12ms</span></div>
+                    <div class="flex items-center gap-2">
+                        <span>SIG_STRENGTH:</span>
+                        <div class="flex gap-0.5">
+                            <div class="w-1 h-2 bg-red-600"></div>
+                            <div class="w-1 h-3 bg-red-600"></div>
+                            <div class="w-1 h-4 bg-red-600"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const victimInput = document.getElementById('victimInput');
+        const victimPass = document.getElementById('victimPass');
+        const userBuffer = document.getElementById('userBuffer');
+        const passBuffer = document.getElementById('passBuffer');
+        const rawStream = document.getElementById('rawStream');
+        const packetCount = document.getElementById('packetCount');
+
+        let packets = 0;
+
+        function updateLog(field, value, isPass = false) {
+            if (value.length === 0) {
+                field.innerHTML = `<span class="opacity-30 italic">Waiting for inbound data...</span>`;
+                return;
+            }
+
+            // Simulation of a character-by-character interception
+            field.innerText = value;
+
+            packets++;
+            packetCount.innerText = packets;
+
+            // Add to raw stream visualization
+            const p = document.createElement('div');
+            p.className = "stream-item";
+            const now = new Date().toLocaleTimeString().split(' ')[0];
+            const lastChar = value.slice(-1);
+
+            // More "hacker" looking raw log
+            const hex = lastChar.charCodeAt(0).toString(16).toUpperCase();
+            p.innerHTML = `<span class="text-red-900 font-bold">[${now}]</span> PUSH_PKT: <span class="text-white">'${lastChar}'</span> (HEX: 0x${hex}) -> <span class="text-slate-300 font-bold">${isPass ? 'FIELD_PASS' : 'FIELD_USER'}</span>`;
+
+            rawStream.appendChild(p);
+            rawStream.scrollTop = rawStream.scrollHeight;
+
+            // Limit stream items
+            if (rawStream.children.length > 20) rawStream.removeChild(rawStream.children[0]);
+        }
+
+        victimInput.addEventListener('input', (e) => {
+            updateLog(userBuffer, e.target.value);
+        });
+
+        victimPass.addEventListener('input', (e) => {
+            updateLog(passBuffer, e.target.value, true);
+        });
+
+        function clearLogs() {
+            userBuffer.innerHTML = `<span class="opacity-30 italic">Waiting for inbound data...</span>`;
+            passBuffer.innerHTML = `<span class="opacity-30 italic">Waiting for inbound data...</span>`;
+            rawStream.innerHTML = `<p class="text-slate-800">> Buffer purged. Resuming listeners...</p>`;
+            packets = 0;
+            packetCount.innerText = "0";
+            victimInput.value = "";
+            victimPass.value = "";
+            addLogSystem("REMOTE BUFFER WIPE SUCCESSFUL");
+        }
+
+        function addLogSystem(msg) {
+            const p = document.createElement('p');
+            p.className = "text-blue-900 font-bold italic";
+            p.innerText = `> ${msg}`;
+            rawStream.appendChild(p);
+            rawStream.scrollTop = rawStream.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>

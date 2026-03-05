@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDoS Attacks Guide | CYBER BREAKER</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #020111;
+            --cyber-blue: #00d4ff;
+            --cyber-purple: #9d00ff;
+            --cyber-green: #00ffaa;
+            --aurora-green: #00ff88;
+            --aurora-purple: #8100ff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-silver: #e0e0e0;
+            --accent-gradient: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
+            --green-gradient: linear-gradient(90deg, var(--cyber-green), var(--cyber-blue));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-silver);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Aurora Borealis Animation */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: var(--bg-deep);
+            overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 170, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(157, 0, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 30% 70%, rgba(129, 0, 255, 0.15) 0%, transparent 30%);
+            filter: blur(80px);
+            animation: auroraMove 30s linear infinite;
+        }
+
+        @keyframes auroraMove {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.2);
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            background: rgba(2, 1, 17, 0.85);
+            backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--aurora-green);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .logo:hover {
+            color: var(--cyber-purple);
+            text-shadow: 0 0 10px var(--cyber-purple);
+        }
+
+        .logo img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--aurora-green);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-silver);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--green-gradient);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--aurora-green);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 100px 20px 60px;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(32px, 5vw, 56px);
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, var(--cyber-green), var(--cyber-blue), var(--cyber-purple), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 5s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 170, 0.3));
+        }
+
+        @keyframes textShimmer {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .card-section {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 45px;
+            margin-bottom: 50px;
+            backdrop-filter: blur(10px);
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .card-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-section:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 255, 170, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--green-gradient);
+            opacity: 0.7;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-header i {
+            font-size: 32px;
+            background: var(--green-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        /* Highlight & Lists */
+        strong {
+            color: var(--cyber-green);
+            font-weight: 600;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .comp-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+
+        .comp-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 15px;
+            color: var(--cyber-green);
+        }
+
+        .comp-card.ddos h3 {
+            color: var(--cyber-blue);
+        }
+
+        /* Types Grid */
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .type-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 3px solid var(--cyber-green);
+        }
+
+        .type-item i {
+            font-size: 20px;
+            color: var(--cyber-green);
+            margin-top: 4px;
+        }
+
+        /* Step List */
+        .step-list {
+            list-style: none;
+            counter-reset: steps;
+        }
+
+        .step-list li {
+            counter-increment: steps;
+            margin-bottom: 20px;
+            padding-left: 60px;
+            position: relative;
+        }
+
+        .step-list li::before {
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background: var(--green-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Best Practices Bullet Points */
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            list-style: none;
+        }
+
+        .practice-bullet {
+            background: rgba(0, 255, 170, 0.05);
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .practice-bullet:hover {
+            background: rgba(0, 255, 170, 0.1);
+            transform: translateX(10px);
+        }
+
+        .practice-bullet i {
+            color: var(--cyber-green);
+        }
+
+        /* Tone & Footer */
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 40px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 80px;
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyber-green);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .card-section {
+                padding: 30px 20px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aurora-container">
+        <div class="aurora"></div>
+    </div>
+
+    <nav>
+        <a href="home.html" class="logo">
+            <img src="logo.jpeg" alt="Cyber Breaker Logo">
+            CYBER BREAKER
+        </a>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="lessons.html">Lessons</a>
+            <a href="home.html#about">About</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1 class="hero-title">DDoS Attacks</h1>
+        <p class="hero-subtitle">Student Awareness and Safety Guide: Understanding Digital Overloads</p>
+    </header>
+
+    <div class="container">
+        <!-- 1. What is a DDoS Attack -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-network-wired"></i>
+                <h2>1. What is a Distributed Denial-of-Service (DDoS) Attack?</h2>
+            </div>
+            <p class="intro-text">
+                A <strong>DDoS Attack</strong> is a malicious attempt to disrupt the normal traffic of a targeted
+                server, service, or network by overwhelming it with a flood of internet traffic.
+            </p>
+            <p>
+                Imagine a thousand people trying to walk through a single door at the same exact time. The door becomes
+                blocked, and legitimate people can't get inside.
+                In the digital world, this "crowd" is made of fake internet requests that crash websites and online
+                services.
+            </p>
+        </div>
+
+        <!-- 2. Types -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-project-diagram"></i>
+                <h2>2. Types of DDoS Attacks</h2>
+            </div>
+            <div class="types-grid">
+                <div class="type-item">
+                    <i class="fas fa-weight-hanging"></i>
+                    <div><strong>Volume-Based:</strong> Flooding the network with massive amounts of data to use up all
+                        available bandwidth.</div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-Exchange-alt"></i>
+                    <div><strong>Protocol Attacks:</strong> Exploiting weaknesses in how computers communicate to
+                        consume server resources like memory.</div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-window-maximize"></i>
+                    <div><strong>Application-Layer:</strong> Targeting specific parts of a website (like a login page)
+                        to crash it without needing much traffic.</div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-robot"></i>
+                    <div><strong>Botnet-Based:</strong> Using thousands of infected "zombie" computers to launch an
+                        attack simultaneously.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Difference -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-equals"></i>
+                <h2>3. DoS vs. DDoS Attacks</h2>
+            </div>
+            <div class="comparison-grid">
+                <div class="comp-card">
+                    <h3>DoS (Denial-of-Service)</h3>
+                    <p>Comes from <strong>one single source</strong>. It’s easier to block because you only have to stop
+                        one IP address.</p>
+                </div>
+                <div class="comp-card ddos">
+                    <h3>DDoS (Distributed DoS)</h3>
+                    <p>Comes from <strong>hundreds or thousands</strong> of different sources. It’s much harder to stop
+                        because the traffic comes from everywhere at once.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. How Attackers Perform IT -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-user-ninja"></i>
+                <h2>4. How Attackers Perform DDoS Attacks</h2>
+            </div>
+            <ul class="step-list">
+                <li><strong>Recruiting:</strong> Hackers use malware to infect computers, phones, and smart devices
+                    (IoT) to create a "Botnet."</li>
+                <li><strong>The Command:</strong> The attacker sends a single command to the botnet to target a specific
+                    IP address.</li>
+                <li><strong>The Flood:</strong> All thousands of bots start sending requests to the target at the same
+                    time.</li>
+                <li><strong>The Crash:</strong> The target server cannot handle the pressure and slows down or
+                    completely stops working.</li>
+            </ul>
+        </div>
+
+        <!-- 5. What Hackers Gain -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-bullseye"></i>
+                <h2>5. What Attackers Gain from DDoS Attacks</h2>
+            </div>
+            <div class="types-grid">
+                <div class="type-item"><i class="fas fa-handshake-slash"></i> <span><strong>Disruption:</strong> Simply
+                        wanting to shut down a service they don't like.</span></div>
+                <div class="type-item"><i class="fas fa-money-bill-wave"></i> <span><strong>Extortion:</strong>
+                        Demanding money (ransom) to stop the attack.</span></div>
+                <div class="type-item"><i class="fas fa-fist-raised"></i> <span><strong>Protest:</strong> Using attacks
+                        for political or social reasons (Hacktivism).</span></div>
+                <div class="type-item"><i class="fas fa-ghost"></i> <span><strong>Distraction:</strong> Using a DDoS to
+                        hide a more serious attack, like a data breach.</span></div>
+                <div class="type-item"><i class="fas fa-microphone"></i> <span><strong>Publicity:</strong> Doing it just
+                        to show off their power and get attention.</span></div>
+            </div>
+        </div>
+
+        <!-- 6. Risks and Damage -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>6. Risks and Damage Caused</h2>
+            </div>
+            <ul style="margin-left:25px; display:grid; gap:12px;">
+                <li><strong>Complete Downtime:</strong> Websites, apps, and gaming servers becoming unusable for hours
+                    or days.</li>
+                <li><strong>Financial Ruin:</strong> Companies lose millions in sales and repairs for every hour they
+                    are offline.</li>
+                <li><strong>Trust Loss:</strong> Customers may leave a service if it is constantly unavailable.</li>
+                <li><strong>Brand Damage:</strong> A company's reputation is hurt when they can't protect their
+                    services.</li>
+                <li><strong>Critical Failure:</strong> Attacks on hospitals or government sites can put lives at risk.
+                </li>
+            </ul>
+        </div>
+
+        <!-- 7. Roles -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-users-cog"></i>
+                <h2>7. Role of Attackers, Victims, and Providers</h2>
+            </div>
+            <div class="comparison-grid">
+                <div class="comp-card">
+                    <h3>The Victims</h3>
+                    <p>They are the targets who must invest in protection to stay online.</p>
+                </div>
+                <div class="comp-card ddos">
+                    <h3>The Providers</h3>
+                    <p>ISPs and Cloud hosts (like Cloudflare) act as the "shields" that filter out the bad traffic.</p>
+                </div>
+            </div>
+            <p style="margin-top:20px;"><strong>Cybercriminals:</strong> They often rent botnets from the dark web for
+                very cheap prices.</p>
+        </div>
+
+        <!-- 8. Filtering -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-filter"></i>
+                <h2>8. Why Traffic Filtering is Essential</h2>
+            </div>
+            <p>
+                Protection services act like a <strong>digital security guard</strong>. They inspect every single
+                visitor.
+                If a visitor looks fake or part of a botnet, they are blocked.
+                <strong>Firewalls</strong> and <strong>Load Balancers</strong> help spread the work so no single server
+                gets too tired.
+            </p>
+        </div>
+
+        <!-- 9. Impact -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-user-friends"></i>
+                <h2>9. Impact on Individuals and Organizations</h2>
+            </div>
+            <div class="types-grid">
+                <div class="comp-card">
+                    <h3>For Individuals</h3>
+                    <p>Unable to play games, use social media, or access online banking when they need it.</p>
+                </div>
+                <div class="comp-card ddos">
+                    <h3>For Organizations</h3>
+                    <p>Loss of income, legal problems for not meeting service levels, and high repair costs.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. Detection -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-satellite-dish"></i>
+                <h2>10. Detection and Mitigation Strategies</h2>
+            </div>
+            <div class="types-grid">
+                <div class="type-item"><span><strong>Rate Limiting:</strong> Only allowing a user to make a certain
+                        number of requests per minute.</span></div>
+                <div class="type-item"><span><strong>Traffic Monitoring:</strong> Using AI to spot a "spike" in traffic
+                        before it crashes the server.</span></div>
+                <div class="type-item"><span><strong>Mitigation Services:</strong> Absorbing the attack traffic into a
+                        massive global network.</span></div>
+                <div class="type-item"><span><strong>Redundancy:</strong> Having multiple "backup" servers in different
+                        locations around the world.</span></div>
+            </div>
+        </div>
+
+        <!-- 11. Ethical Issues -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-gavel"></i>
+                <h2>11. Ethical and Legal Concerns</h2>
+            </div>
+            <p>
+                Launching a DDoS attack is <strong>illegal</strong> in almost every country. It is considered a form of
+                sabotage.
+                Even if you think a company "deserves it," participating in a DDoS can lead to fines, jail time, and a
+                permanent criminal record.
+                Being a responsible digital citizen means respecting the availability of online spaces.
+            </p>
+        </div>
+
+        <!-- 12. Best Practices -->
+        <div class="card-section" style="border-left: 5px solid var(--cyber-green);">
+            <div class="section-header">
+                <i class="fas fa-shield-alt"></i>
+                <h2>12. Best Practices to Reduce DDoS Risk</h2>
+            </div>
+            <ul class="practices-list">
+                <li class="practice-bullet"><i class="fas fa-cloud-upload-alt"></i> Use Cloud-based DDoS protection.
+                </li>
+                <li class="practice-bullet"><i class="fas fa-sync"></i> Keep all software and servers updated.</li>
+                <li class="practice-bullet"><i class="fas fa-fire"></i> Configure your Firewall to block "weird"
+                    traffic.</li>
+                <li class="practice-bullet"><i class="fas fa-chart-line"></i> Monitor your network traffic patterns.
+                </li>
+                <li class="practice-bullet"><i class="fas fa-clipboard-list"></i> Have a plan for what to do if an
+                    attack starts.</li>
+                <li class="practice-bullet"><i class="fas fa-user-graduate"></i> Educate yourself on how botnets spread.
+                </li>
+                <li class="practice-bullet"><i class="fas fa-hands-helping"></i> Work with your ISP to block large
+                    floods.</li>
+            </ul>
+        </div>
+
+        <div class="disclaimer">
+            "Availability is a pillar of security. Don't let the flood wash you away."
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">CYBER BREAKER</div>
+        <p>© CYBER BREAKER – Cyber Safety Learning Platform</p>
+    </footer>
+
+    <script>
+        // Scroll Animation logic
+        const sections = document.querySelectorAll('.card-section');
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Dynamic Glow Effect on Header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.hero-title');
+            const scroll = window.scrollY;
+            header.style.filter = `drop-shadow(0 0 ${Math.min(20, scroll / 10)}px rgba(0, 255, 170, 0.5))`;
+        });
+    </script>
+</body>
+
+</html>

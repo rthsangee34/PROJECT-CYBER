@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Engineering & Pretexting Lab | Cyber Breaker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&family=Fira+Code:wght@300;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #f97316;
+            --bg-dark: #050507;
+            --card-bg: #0c0c0e;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: #cbd5e1;
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .terminal-text {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hidden-step {
+            display: none;
+        }
+
+        .phone-mockup {
+            width: 320px;
+            height: 640px;
+            background: #000;
+            border: 12px solid #1a1a1a;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.8);
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 25px;
+            background: #1a1a1a;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 100;
+        }
+
+        .social-input {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            width: 100%;
+            color: #1e293b;
+            transition: all 0.2s;
+        }
+
+        .social-input:focus {
+            border-color: var(--primary-orange);
+            outline: none;
+            background: #fff;
+        }
+
+        @keyframes alert-pulse {
+            0% {
+                background: #fee2e2;
+            }
+
+            50% {
+                background: #fecaca;
+            }
+
+            100% {
+                background: #fee2e2;
+            }
+        }
+
+        .urgent-alert {
+            animation: alert-pulse 2s infinite;
+        }
+
+        .typing-dot {
+            width: 4px;
+            height: 4px;
+            background: #94a3b8;
+            border-radius: 50%;
+            animation: typing 1s infinite;
+        }
+
+        @keyframes typing {
+
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-orange);
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+            object-fit: cover;
+        }
+
+        .btn-nav {
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 10px var(--primary-orange);
+        }
+
+        /* Glassmorphism scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-orange);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <nav class="bg-[#0c0c0e] border-b border-white/5 p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <img src="../logo.jpeg" alt="Logo" class="logo-img">
+                <div>
+                    <h1 class="text-sm font-bold tracking-widest uppercase text-white leading-none orbitron">Social
+                        Influence Engine</h1>
+                    <p class="text-[10px] text-orange-500 font-mono mt-1 uppercase">Pretext: IT Support Specialist</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <a href="../socialengineeringguide.html" class="btn-nav">Guide</a>
+                <a href="../socialengineeringquiz.html" class="btn-nav">Quiz</a>
+                <button onclick="location.href='../simulators.html'" class="btn-nav">Hub</button>
+                <button onclick="location.href='../home.html'" class="btn-nav">Home</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mt-8">
+
+        <!-- Left: Victim Trap (The Call/Chat) -->
+        <div class="lg:col-span-5 flex flex-col items-center">
+            <div class="phone-mockup" id="phoneBody">
+                <div class="phone-notch"></div>
+
+                <!-- Step 1: Incoming Message (The Hook) -->
+                <div id="step1" class="h-full bg-slate-50 flex flex-col p-6">
+                    <div class="mt-12 bg-white rounded-2xl shadow-sm border border-slate-200 p-4 urgent-alert">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div
+                                class="w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                                IT</div>
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-900">IT Helpdesk - Mark</p>
+                                <p class="text-[9px] text-slate-500">Just now</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed">"URGENT: Your workstation (UID-882) is
+                            broadcasting cleartext credentials. We need to perform a remote patch immediately to avoid a
+                            full network lockout. Are you at your desk?"</p>
+                    </div>
+
+                    <div class="mt-auto mb-10 space-y-3">
+                        <button onclick="goToStep(2)"
+                            class="w-full py-4 bg-orange-600 text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-all">Reply:
+                            "Yes, I'm here"</button>
+                        <p class="text-[10px] text-center text-slate-400 uppercase font-bold tracking-widest">Pretext
+                            established</p>
+                    </div>
+                </div>
+
+                <!-- Step 2: Information Gathering -->
+                <div id="step2" class="hidden-step h-full bg-white flex flex-col px-6 pt-16">
+                    <div class="flex gap-2 mb-8">
+                        <div
+                            class="w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold text-[10px] shrink-0">
+                            IT</div>
+                        <div class="bg-slate-100 p-3 rounded-2xl rounded-tl-none">
+                            <p class="text-[11px] text-slate-700">Great. First, confirm your Employee ID and the version
+                                of 'VPN Connect' you are running so I can send the right patch link.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">Employee Reference
+                                ID</label>
+                            <input id="vID" type="text" placeholder="e.g. EMP-9921" class="social-input">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase mb-1 block">Internal Software
+                                Version</label>
+                            <input id="vSoft" type="text" placeholder="e.g. v4.2.0" class="social-input">
+                        </div>
+                        <button id="sendInfoBtn"
+                            class="w-full py-4 bg-orange-600 text-white font-bold rounded-xl mt-4">Send Info</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: The Data Collection Trap -->
+                <div id="step3"
+                    class="hidden-step h-full bg-white flex flex-col items-center justify-center px-8 text-center">
+                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-6">
+                        <div class="flex gap-1">
+                            <div class="typing-dot" style="animation-delay: 0s"></div>
+                            <div class="typing-dot" style="animation-delay: 0.2s"></div>
+                            <div class="typing-dot" style="animation-delay: 0.4s"></div>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-800 tracking-tight">System Audit in Progress</h3>
+                    <p class="text-[11px] text-slate-500 mt-3 leading-relaxed">
+                        Mark is currently verifying your credentials against the AD server. <br><br>
+                        <strong>"Please stay on the line. We are also checking your linked mobile authenticator
+                            settings."</strong>
+                    </p>
+
+                    <div class="w-full h-1.5 bg-slate-100 rounded-full mt-10 overflow-hidden">
+                        <div id="vProgress" class="h-full bg-orange-500 w-0 transition-all duration-300"></div>
+                    </div>
+                    <p id="vStatus" class="text-[9px] text-orange-600 font-bold uppercase tracking-widest mt-4">
+                        Simulating patch deployment...</p>
+                </div>
+
+                <!-- Step 4: Final Success Mask -->
+                <div id="step4"
+                    class="hidden-step h-full bg-white flex flex-col items-center justify-center p-8 text-center">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-800">Patch Complete</h2>
+                    <p class="text-xs text-slate-500 mt-4 leading-relaxed">"Thanks for your cooperation. Your UID has
+                        been cleared. Have a great day!"</p>
+                    <p class="text-[10px] text-slate-300 mt-8 font-mono italic">- Call Ended -</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Attacker C2 Dashboard -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+            <div
+                class="bg-[#0c0c0e] rounded-3xl border border-white/5 shadow-2xl overflow-hidden flex flex-col h-[640px]">
+
+                <div class="bg-black/40 px-6 py-4 border-b border-white/5 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
+                        <span class="text-[10px] font-mono font-bold text-orange-500 uppercase tracking-widest">Soc-Eng
+                            Pipeline: Active</span>
+                    </div>
+                    <div id="timer" class="text-[10px] text-slate-600 font-mono">ESTABLISHING PRETEXT...</div>
+                </div>
+
+                <!-- Intelligence Cards -->
+                <div class="p-6 grid grid-cols-2 gap-4">
+                    <div class="bg-black/50 p-4 rounded-2xl border border-white/5">
+                        <label class="text-[9px] text-slate-600 font-bold uppercase mb-2 block">Victim Profile</label>
+                        <div id="resEID" class="text-xs text-white font-mono truncate">Awaiting ID...</div>
+                        <div class="text-[9px] text-orange-500 font-mono mt-1 uppercase">Role: Corporate Target</div>
+                    </div>
+                    <div class="bg-black/50 p-4 rounded-2xl border border-white/5">
+                        <label class="text-[9px] text-slate-600 font-bold uppercase mb-2 block">Environment
+                            Intel</label>
+                        <div id="resSoft" class="text-xs text-blue-400 font-mono">Awaiting Version...</div>
+                        <div id="vulnStatus" class="text-[9px] text-slate-600 font-mono mt-1 italic">Scan pending...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Engineering Timeline -->
+                <div class="px-6 flex-1 overflow-hidden flex flex-col">
+                    <label class="text-[9px] text-slate-600 font-bold uppercase mb-2">Psychological Progress
+                        Logs</label>
+                    <div id="terminal"
+                        class="bg-black/80 rounded-2xl border border-white/5 p-4 flex-1 font-mono text-[10px] overflow-y-auto space-y-1.5 text-slate-400">
+                        <p class="text-slate-700 italic">// Pretext: "IT Helpdesk Mark" initialized.</p>
+                        <p class="text-slate-700 italic">// Triggering Lever: Sense of Fear/Lockout.</p>
+                    </div>
+                </div>
+
+                <!-- Asset Harvest -->
+                <div class="p-6 mt-auto bg-black/20 grid grid-cols-3 gap-4 border-t border-white/5">
+                    <div>
+                        <div class="text-[9px] text-slate-500 font-bold uppercase">Auth Tokens</div>
+                        <div id="statTokens" class="text-sm font-bold text-white">0</div>
+                    </div>
+                    <div>
+                        <div class="text-[9px] text-slate-500 font-bold uppercase">Internal IP</div>
+                        <div id="statIP" class="text-[10px] font-mono text-slate-500">PENDING</div>
+                    </div>
+                    <div>
+                        <div class="text-[9px] text-slate-500 font-bold uppercase">Trust Level</div>
+                        <div id="statTrust" class="text-sm font-bold text-orange-500">LOW</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-orange-900/10 border border-orange-500/20 p-6 rounded-3xl">
+                <div class="flex gap-4">
+                    <div class="w-12 h-12 bg-orange-500/20 rounded-2xl flex items-center justify-center shrink-0">
+                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-sm mb-1 uppercase tracking-tight orbitron">Social
+                            Engineering: The "IT" Pretext</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Attackers rarely start with "give me your password." They build <strong>Trust</strong> and
+                            <strong>Urgency</strong> first. By posing as IT Support and mentioning a "technical issue,"
+                            they bypass the victim's natural skepticism. Once the victim provides "minor" info like a
+                            software version, the attacker uses it to pivot to more sensitive requests (like 2FA codes
+                            or remote access).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Live updates for intel
+        document.getElementById('vID').addEventListener('input', function (e) {
+            document.getElementById('resEID').innerText = e.target.value || "Awaiting ID...";
+        });
+
+        document.getElementById('vSoft').addEventListener('input', function (e) {
+            const val = e.target.value;
+            document.getElementById('resSoft').innerText = val || "Awaiting Version...";
+            if (val.length > 2) {
+                const el = document.getElementById('vulnStatus');
+                el.innerText = "CVE-2023-412 SEARCHING...";
+                el.className = "text-[9px] text-red-500 font-mono mt-1 italic";
+            }
+        });
+
+        function goToStep(num) {
+            document.querySelectorAll('.phone-mockup > div').forEach(d => {
+                if (d.id) d.classList.add('hidden-step');
+            });
+            document.getElementById('step' + num).classList.remove('hidden-step');
+
+            if (num === 2) {
+                logTerminal("VICTIM_ENGAGED: Compliance confirmed.", "text-orange-500");
+                logTerminal("LEVER: Authority established as 'Helpdesk Mark'.", "text-blue-400");
+                document.getElementById('statTrust').innerText = "MEDIUM";
+                document.getElementById('statTrust').className = "text-sm font-bold text-yellow-500";
+            }
+        }
+
+        async function startATO() {
+            goToStep(3);
+            logTerminal("RECON_COLLECTED: Targeting VPN vulnerability.", "text-green-500 font-bold");
+            logTerminal("PIVOT: Requesting MFA bypass token...", "text-orange-500 font-bold");
+
+            const tasks = [
+                { msg: "Spoofing internal LDAP response...", status: "LDAP Auth Simulation...", token: 1, ip: "10.0.4.112" },
+                { msg: "Intercepting workstation session...", status: "RDP Tunneling...", token: 1, ip: "10.0.4.112" },
+                { msg: "Harvesting browser cookies...", status: "Memory scraping...", token: 4, ip: "10.0.4.112" },
+                { msg: "Scanning shared network drives...", status: "Enumerating HR_Files...", token: 9, ip: "10.0.4.112" },
+                { msg: "Planting persistence payload...", status: "Deploying silent listener...", token: 12, ip: "10.0.4.112" },
+                { msg: "SOCIAL_HACK: SUCCESSFUL EXFIL.", status: "Cleaning up chat history...", token: 14, ip: "10.0.4.112" }
+            ];
+
+            const bar = document.getElementById('vProgress');
+            const statusText = document.getElementById('vStatus');
+
+            for (let i = 0; i < tasks.length; i++) {
+                const p = ((i + 1) / tasks.length) * 100;
+                bar.style.width = p + "%";
+                statusText.innerText = tasks[i].status;
+
+                document.getElementById('statTokens').innerText = tasks[i].token;
+                document.getElementById('statIP').innerText = tasks[i].ip;
+                document.getElementById('statTrust').innerText = "MAX";
+                document.getElementById('statTrust').className = "text-sm font-bold text-green-500";
+
+                logTerminal(tasks[i].msg, i === tasks.length - 1 ? "text-green-500 font-bold" : "text-slate-400");
+                await new Promise(r => setTimeout(r, 1200));
+            }
+
+            goToStep(4);
+        }
+
+        document.getElementById('sendInfoBtn').onclick = startATO;
+
+        function logTerminal(msg, color) {
+            const term = document.getElementById('terminal');
+            const p = document.createElement('p');
+            p.className = color;
+            p.innerHTML = `<span class="text-slate-800">[${new Date().toLocaleTimeString()}]</span> > ${msg}`;
+            term.appendChild(p);
+            term.scrollTop = term.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>

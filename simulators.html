@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Breaker | Lab Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00ffff;
+            --neon-purple: #9d00ff;
+            --dark-bg: #020b1c;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #020b1c, #071a36, #001f3f, #0a0f2c);
+            background-size: 400% 400%;
+            animation: gradientFlow 12s ease infinite;
+            color: white;
+            min-height: screen;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            object-fit: cover;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0%;
+            height: 2px;
+            background: var(--neon-blue);
+            transition: 0.4s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: var(--neon-blue);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            transition: transform 0.5s;
+        }
+
+        .glass:hover .card-icon {
+            transform: rotateY(360deg);
+        }
+
+        /* Hamburger Menu Icon */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--neon-blue);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        /* Mobile Navigation Overlay */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 250px;
+            height: 100vh;
+            background: rgba(2, 11, 28, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            padding: 80px 20px 20px;
+            transition: left 0.4s ease;
+            z-index: 999;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .mobile-nav.open {
+            left: 0;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .mobile-nav a {
+            color: white;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        .mobile-nav a:hover {
+            color: var(--neon-blue);
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body class="p-0 m-0">
+    <nav class="flex justify-between items-center py-4 px-6 md:py-6 md:px-12 glass sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <img src="logo.jpeg" alt="Logo" class="logo-img">
+            <div class="logo orbitron text-xl md:text-2xl font-bold text-[#00ffff] tracking-widest"
+                style="text-shadow: 0 0 10px #00ffff">CYBER BREAKER</div>
+        </div>
+        <ul class="hidden md:flex gap-8 list-none font-medium">
+            <li><a href="home.html" class="nav-link">Home</a></li>
+            <li><a href="lessons.html" class="nav-link">Lessons</a></li>
+            <li><a href="simulators.html" class="nav-link text-[#00ffff]">Labs</a></li>
+        </ul>
+        <button class="menu-toggle md:hidden" id="menuToggle">☰</button>
+    </nav>
+
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav orbitron" id="mobileNav">
+        <button class="close-menu" id="closeMenu">&times;</button>
+        <ul>
+            <li><a href="home.html" class="mobile-link">Home</a></li>
+            <li><a href="lessons.html" class="mobile-link">Lessons</a></li>
+            <li><a href="simulators.html" class="mobile-link text-[#00ffff]">Labs</a></li>
+        </ul>
+    </div>
+
+    <main class="max-w-6xl mx-auto py-16 px-6">
+        <header class="text-center mb-16">
+            <h1 class="orbitron text-4xl md:text-5xl font-black mb-4 tracking-tighter"
+                style="text-shadow: 0 0 20px #00ffff">VIRTUAL
+                LABS</h1>
+            <p class="text-slate-400 max-w-2xl mx-auto">Welcome to the Cybersecurity Anatomy Laboratory. Here you can
+                safely interact with simulated cyber threats to understand their mechanics and learn how to defend
+                against them.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Phishing Lab -->
+            <a href="phishing.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">🎣</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Phishing Lab</h3>
+                <p class="text-sm text-slate-400">Analyze the anatomy of a phishing campaign. Configure lures and watch
+                    data exfiltration in real-time.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+
+            <!-- Password Cracking Lab -->
+            <a href="password-attack.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">🔑</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Password Attack</h3>
+                <p class="text-sm text-slate-400">Simulate brute-force and dictionary attacks. Learn why length and
+                    complexity are your first line of defense.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+
+            <!-- Keylogger Lab -->
+            <a href="keylogger.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">🕵️</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Spyware & Keylogs</h3>
+                <p class="text-sm text-slate-400">Understand how keyloggers intercept sensitive data. Visualize the raw
+                    packet stream from victim to attacker.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+
+            <!-- Ransomware Lab -->
+            <a href="ransomware.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">⚠️</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Ransomware Sim</h3>
+                <p class="text-sm text-slate-400">Experience the stages of a ransomware attack: from payload execution
+                    to the terrifying ransom note.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+
+            <!-- Social Media Hacking Lab -->
+            <a href="social-media-hacking.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">📱</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Social Hacking</h3>
+                <p class="text-sm text-slate-400">Intercept session tokens, bypass 2FA, and simulate account takeover
+                    (ATO)
+                    mechanics.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+            <!-- Social Engineering Lab -->
+            <a href="social-engineering.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">🎭</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Social Engineering</h3>
+                <p class="text-sm text-slate-400">Master the art of pretexting and psychological manipulation. Bypass
+                    technical
+                    controls through human deception.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+            <!-- Keyloggers Lab -->
+            <a href="keyloggers.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">⌨️</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Keyloggers</h3>
+                <p class="text-sm text-slate-400">Observe real-time keystroke interception and data exfiltration from a
+                    remote
+                    target. Learn how persistence is maintained.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+            <!-- Website Defacement Lab -->
+            <a href="website-defacement.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">🚩</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Defacement</h3>
+                <p class="text-sm text-slate-400">Execute root-level shell commands to deface a vulnerable corporate
+                    website.
+                    Simulate CSS injection and asset replacement.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+            <!-- DDoS Attack Lab -->
+            <a href="ddos-attack.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">⚡</span>
+                <h3 class="orbitron text-xl font-bold mb-3">DDoS Attack</h3>
+                <p class="text-sm text-slate-400">Control a global botnet to launch volumetric and layer 7 attacks.
+                    Monitor real-time server degradation and traffic spikes.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+            <a href="online-fraud.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">💰</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Online Fraud</h3>
+                <p class="text-sm text-slate-400">Step into the Fraud-Ops Command Center. Simulate Pig Butchering,
+                    Marketplace Phishing, and Refund scams to understand the mechanics of deception.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+            <a href="identity-hijack.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">👤</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Identity Hijack</h3>
+                <p class="text-sm text-slate-400">Combined social media account takeover simulation. Bypass 2FA and
+                    intercept session cookies.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+
+            <a href="sim-swap.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">📶</span>
+                <h3 class="orbitron text-xl font-bold mb-3">SIM Swap</h3>
+                <p class="text-sm text-slate-400">Execute a mobile identity hijack. Use social engineering to port a
+                    number and intercept SMS MFA codes in real-time.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+            <a href="cyber-bullying.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">📢</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Cyberbullying</h3>
+                <p class="text-sm text-slate-400">Analyze the behavioral impact of digital harassment. Simulate bot
+                    swarms,
+                    doxing, and impersonation to understand victim distress.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+            <a href="zero-day.html" class="glass rounded-3xl p-8 flex flex-col items-center text-center">
+                <span class="card-icon">🐛</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Zero-Day</h3>
+                <p class="text-sm text-slate-400">Dive into memory corruption. Visualize stack overflows, bypass ASLR,
+                    and hijack control flow to gain root-level shell access.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-[#00ffff]">Start Simulation →
+                </div>
+            </a>
+            <!-- Coming Soon -->
+            <div
+                class="glass rounded-3xl p-8 flex flex-col items-center text-center opacity-50 grayscale border-dashed">
+                <span class="card-icon">⚡</span>
+                <h3 class="orbitron text-xl font-bold mb-3">Network Breach</h3>
+                <p class="text-sm text-slate-400">Simulate a large-scale network penetration. Coming in next module.</p>
+                <div class="mt-6 text-[10px] font-bold uppercase tracking-widest text-slate-600">Locked</div>
+            </div>
+        </div>
+    </main>
+
+    <section class="max-w-4xl mx-auto py-12 px-6 border-t border-white/10 text-center">
+        <h2 class="orbitron text-2xl font-bold mb-6">Lab Instructions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-sm text-slate-400 leading-relaxed">
+            <div class="bg-white/5 p-6 rounded-2xl">
+                <strong class="text-white block mb-2 uppercase tracking-tighter text-xs">Safe Environment</strong>
+                These simulations are contained entirely within your browser. No data is sent to external servers, and
+                no actual malicious code is executed.
+            </div>
+            <div class="bg-white/5 p-6 rounded-2xl">
+                <strong class="text-white block mb-2 uppercase tracking-tighter text-xs">Educational Use</strong>
+                Use these tools to identify red flags and vulnerabilities. Apply these lessons to your real-world online
+                presence to stay safe.
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-white/10 text-center text-xs text-slate-500 font-mono">
+        &copy; 2026 CYBER BREAKER ANATOMY LAB | SECURE CONNECTION: 256-BIT AES
+    </footer>
+
+    <script>
+        // Hamburger Menu Logic
+        const menuToggle = document.getElementById('menuToggle');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        if (menuToggle && closeMenu && mobileNav) {
+            menuToggle.addEventListener('click', () => {
+                mobileNav.classList.add('open');
+            });
+
+            closeMenu.addEventListener('click', () => {
+                mobileNav.classList.remove('open');
+            });
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileNav.classList.remove('open');
+                });
+            });
+        }
+        document.addEventListener("mousemove", function (e) {
+            const x = e.clientX;
+            const y = e.clientY;
+            document.body.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0, 255, 255, 0.05), transparent 20%), linear-gradient(-45deg, #020b1c, #071a36, #001f3f, #0a0f2c)`;
+        });
+    </script>
+</body>
+
+</html>

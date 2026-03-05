@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keylogger Attack Awareness Quiz | Cyber Breaker</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0a0202;
+            --card-bg: #140505;
+            --accent-red: #ff3c3c;
+            --accent-green: #00ff9d;
+            --text-main: #ffffff;
+            --glass: rgba(255, 60, 60, 0.05);
+            --border: rgba(255, 60, 60, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(255, 60, 60, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 90%, rgba(0, 255, 157, 0.05) 0%, transparent 50%);
+            z-index: -2;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-red);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .intro-box {
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent-red);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .disclaimer {
+            color: var(--accent-red);
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        #quiz-screen {
+            display: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 224, 255, 0.3);
+            object-fit: cover;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .timer-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--accent-green);
+            transition: width 0.1s linear;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 2px;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-red);
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(255, 60, 60, 0.1);
+            transform: translateX(10px);
+        }
+
+        .option.correct {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 157, 0.1);
+            color: var(--accent-green);
+        }
+
+        .option.wrong {
+            border-color: var(--accent-red);
+            background: rgba(255, 60, 60, 0.1);
+            color: var(--accent-red);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--accent-red);
+            margin: 20px 0;
+        }
+
+        .exp-log {
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            margin: 25px 0;
+            padding-right: 10px;
+        }
+
+        .exp-item {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-red);
+            font-size: 0.9rem;
+        }
+
+        .tips-box {
+            background: rgba(0, 255, 157, 0.05);
+            border: 1px dashed var(--accent-green);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            padding: 12px 30px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--accent-red);
+            color: #fff;
+            box-shadow: 0 0 20px var(--accent-red);
+        }
+
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-red);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='home.html'">Home</button>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='lessons.html'">Lessons</button>
+    </nav>
+
+    <div class="container">
+        <!-- Intro -->
+        <div id="intro-screen">
+            <div style="text-align: center; margin-bottom: 20px; font-size: 3rem; color: var(--accent-red);">
+                <i class="fas fa-keyboard"></i> <i class="fas fa-spider" style="font-size: 1.5rem;"></i>
+            </div>
+            <h1 class="title">Keylogger Detection Lab</h1>
+            <div class="intro-box">
+                <p>
+                    <strong>What is a Keylogger?</strong><br>
+                    A keylogger is a type of surveillance software or hardware that records every keystroke you type on
+                    your computer or mobile device.
+                    <br><br>
+                    <strong>The Invisible Thief:</strong><br>
+                    Attackers use them to steal passwords, bank details, and private conversations without you ever
+                    noticing they are there.
+                </p>
+            </div>
+            <p class="disclaimer">Cyber Education Purposes Only</p>
+            <button class="btn" id="start-btn">Scan for Spyware</button>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quiz-screen">
+            <div class="hud" style="display: flex; align-items: center; gap: 20px;">
+                <img src="logo.jpeg" alt="Logo" class="logo-img">
+                <div style="flex-grow: 1; display: flex; justify-content: space-between; align-items: center;">
+                    <div id="timer-text">30s</div>
+                    <div id="q-count">TRACK 1/10</div>
+                </div>
+            </div>
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="quiz-content">
+                <h2 class="question-text" id="q-text">Monitoring input...</h2>
+                <div id="options-list"></div>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div id="result-screen">
+            <h1 class="title">Anti-Spyware Audit</h1>
+            <div class="score-display"><span id="final-score">0</span>%</div>
+            <p id="verdict">Evaluating system safety...</p>
+            <div class="exp-log" id="exp-log"></div>
+            <div class="tips-box">
+                <h3 style="color:var(--accent-green); margin-bottom:10px;">🛡️ Keylogger Prevention Tips</h3>
+                <ul style="list-style:none; font-size:0.85rem;">
+                    <li>• <strong>Antivirus:</strong> Use reputable anti-malware and keep it updated.</li>
+                    <li>• <strong>No Public PCs:</strong> Never access sensitive info (banking) on public computers.
+                    </li>
+                    <li>• <strong>Virtual Keyboard:</strong> Use on-screen keyboards for passwords when on suspicious
+                        devices.</li>
+                    <li>• <strong>Software Integrity:</strong> Only download programs from official, verified sources.
+                    </li>
+                </ul>
+            </div>
+            <button class="btn" id="retry-btn">Reset Input Signal</button>
+            <button class="btn" onclick="location.href='lessons.html'">Back to Learn</button>
+        </div>
+    </div>
+
+    <script>
+        const originalQuestions = [
+            {
+                q: "What is the primary function of a keylogger?",
+                o: ["To speed up your typing", "To record every keystroke made on a device", "To protect the keyboard from dust", "To help you find lost files"],
+                a: 1,
+                e: "Keyloggers record everything you type, including usernames, passwords, and sensitive messages."
+            },
+            {
+                q: "What is a 'Hardware Keylogger'?",
+                o: ["A types of computer mouse", "A physical device plugged between the keyboard and the PC", "A keyboard with extra keys", "A broken keyboard"],
+                a: 1,
+                e: "Hardware keyloggers are small USB or PS/2 devices that physically intercept keyboard signals."
+            },
+            {
+                q: "How can a software keylogger infect your computer?",
+                o: ["By typing too fast", "Through malicious email attachments or infected software downloads", "By leaving the computer on too long", "By using a screen protector"],
+                a: 1,
+                e: "Most keyloggers are delivered as Trojans hidden inside legitimate-looking files or links."
+            }, {
+                q: "What is a sign that your device might have a keylogger?",
+                o: ["The monitor gets brighter", "Unusual system lag or delay between typing and characters appearing", "The keyboard feels heavy", "The mouse moves faster"],
+                a: 1,
+                e: "Significant lag when typing is often a side effect of a poorly written keylogger processing every stroke."
+            },
+            {
+                q: "Why are public computers (libraries/cafes) risky regarding keyloggers?",
+                o: ["They are too slow", "Anyone could have installed a software or hardware keylogger", "The chairs are uncomfortable", "The internet is not free"],
+                a: 1,
+                e: "You have no control over the security of public devices; they are prime targets for physical keyloggers."
+            },
+            {
+                q: "How does Multi-Factor Authentication (MFA) help against keyloggers?",
+                o: ["It stops the keylogger from recording", "It requires a second code that the keylogger can't use later", "It makes the keyboard silent", "It deletes the keylogger"],
+                a: 1,
+                e: "Even if a keylogger steals your password, the hacker still needs your 2FA code (which expires quickly)."
+            },
+            {
+                q: "What is the best way to detect a software keylogger?",
+                o: ["Looking at the keyboard", "Running a scan with updated anti-malware/antivirus software", "Listening for clicking sounds", "Changing the desktop wallpaper"],
+                a: 1,
+                e: "Advanced keyloggers hide themselves from the Task Manager, so professional security software is needed."
+            },
+            {
+                q: "What is 'Form Grabbing'?",
+                o: ["Taking a paper form", "When a keylogger steals data as it is submitted in a browser form", "Closing a window", "Printing a webpage"],
+                a: 1,
+                e: "Form grabbers are sophisticated keyloggers that capture data before it is even sent over the network."
+            },
+            {
+                q: "Can keyloggers capture information from mobile phones?",
+                o: ["No, only PCs", "Yes, through infected apps or malicious keyboard replacements", "Only if the phone is charging", "Only if the phone has a physical keyboard"],
+                a: 1,
+                e: "Android and iOS can be infected by spyware that logs touch inputs and screen content."
+            },
+            {
+                q: "What should you do if you find a suspicious device plugged between your keyboard and PC?",
+                o: ["Clean it with a cloth", "Remove it immediately and report the security breach", "Ignore it, it's likely part of the PC", "Try to see what's inside it"],
+                a: 1,
+                e: "Any unknown hardware on the keyboard line is a massive security risk and should be treated as a keylogger."
+            }
+        ];
+
+        let questions = [], currentIdx = 0, score = 0, timeLeft = 30, timer, canClick = true, logs = [];
+        const clickSnd = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON' || e.target.closest('button')) { clickSnd.play(); } });
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        const uiIntro = document.getElementById('intro-screen'), uiQuiz = document.getElementById('quiz-screen'), uiResult = document.getElementById('result-screen'), uiQText = document.getElementById('q-text'), uiOptions = document.getElementById('options-list'), uiTimerBar = document.getElementById('timer-bar'), uiTimerTxt = document.getElementById('timer-text'), uiProgress = document.getElementById('progress-fill');
+
+        function startQuiz() {
+            questions = shuffle([...originalQuestions]).map(q => {
+                const opts = q.o.map((t, i) => ({ t, is: i === q.a }));
+                return { ...q, shuffled: shuffle(opts) };
+            }).slice(0, 10);
+            currentIdx = 0; score = 0; logs = [];
+            uiIntro.style.display = 'none'; uiResult.style.display = 'none'; uiQuiz.style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIdx >= 10) { endQuiz(); return; }
+            const q = questions[currentIdx];
+            uiQText.innerText = q.q;
+            document.getElementById('q-count').innerText = `TRACK ${currentIdx + 1}/10`;
+            uiProgress.style.width = ((currentIdx + 1) / 10 * 100) + '%';
+            uiOptions.innerHTML = '';
+            q.shuffled.forEach(opt => {
+                const d = document.createElement('div'); d.className = 'option'; d.innerText = opt.t;
+                d.onclick = () => handle(d, opt.is); uiOptions.appendChild(d);
+            });
+            canClick = true; resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(timer); timeLeft = 30; updateTimerUI();
+            timer = setInterval(() => {
+                timeLeft--; updateTimerUI();
+                if (timeLeft <= 0) { clearInterval(timer); timeout(); }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            uiTimerTxt.innerText = `${timeLeft}s`; uiTimerBar.style.width = (timeLeft / 30 * 100) + '%';
+            uiTimerBar.style.backgroundColor = timeLeft > 20 ? 'var(--accent-green)' : (timeLeft > 10 ? 'var(--accent-orange)' : 'var(--accent-red)');
+        }
+
+        function handle(el, is) {
+            if (!canClick) return; canClick = false; clearInterval(timer);
+            const q = questions[currentIdx];
+            logs.push({ q: q.q, is, correct: q.shuffled.find(o => o.is).t, exp: q.e });
+            if (is) { el.classList.add('correct'); score += 10; }
+            else { el.classList.add('wrong'); Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); }); }
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function timeout() {
+            canClick = false; const q = questions[currentIdx];
+            logs.push({ q: q.q, is: false, correct: q.shuffled.find(o => o.is).t, exp: q.e + " (TIMED OUT)" });
+            Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); });
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function endQuiz() {
+            uiQuiz.style.display = 'none'; uiResult.style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            const verdict = document.getElementById('verdict');
+            verdict.innerText = score >= 70 ? "SECURE: You can spot spyware from a mile away." : "INFECTED: You are vulnerable to silent data theft.";
+            const logView = document.getElementById('exp-log');
+            logView.innerHTML = '<h3 style="margin-bottom:15px; font-family:Orbitron; font-size:1rem;">Spyware Scan Log</h3>';
+            logs.forEach((item, idx) => {
+                const d = document.createElement('div'); d.className = `exp-item ${item.is ? '' : 'incorrect'}`;
+                d.innerHTML = `<strong>Q${idx + 1}: ${item.q}</strong><br><small>Verified: ${item.correct}</small><br><p style="font-size:0.85rem; margin-top:5px;">${item.exp}</p>`;
+                logView.appendChild(d);
+            });
+        }
+
+        document.getElementById('start-btn').onclick = startQuiz;
+        document.getElementById('retry-btn').onclick = startQuiz;
+    </script>
+</body>
+
+</html>

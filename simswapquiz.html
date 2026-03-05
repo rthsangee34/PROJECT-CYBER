@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIM Swap Fraud Awareness Quiz | Cyber Breaker</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #050208;
+            --card-bg: #0f0a14;
+            --accent-purple: #c000ff;
+            --accent-blue: #0084ff;
+            --accent-green: #00ff73;
+            --accent-red: #ff3c3c;
+            --text-main: #ffffff;
+            --glass: rgba(192, 0, 255, 0.05);
+            --border: rgba(192, 0, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 10% 90%, rgba(192, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 10%, rgba(0, 132, 255, 0.1) 0%, transparent 50%);
+            z-index: -2;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(192, 0, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .intro-box {
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent-purple);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .disclaimer {
+            color: var(--accent-red);
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        #quiz-screen {
+            display: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 224, 255, 0.3);
+            object-fit: cover;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .timer-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--accent-green);
+            transition: width 0.1s linear;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 2px;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-purple);
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(192, 0, 255, 0.1);
+            transform: translateX(10px);
+        }
+
+        .option.correct {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 115, 0.1);
+            color: var(--accent-green);
+        }
+
+        .option.wrong {
+            border-color: var(--accent-red);
+            background: rgba(255, 60, 60, 0.1);
+            color: var(--accent-red);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--accent-purple);
+            margin: 20px 0;
+        }
+
+        .exp-log {
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            margin: 25px 0;
+            padding-right: 10px;
+        }
+
+        .exp-item {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-purple);
+            font-size: 0.9rem;
+        }
+
+        .tips-box {
+            background: rgba(0, 255, 115, 0.05);
+            border: 1px dashed var(--accent-green);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--accent-purple);
+            color: var(--accent-purple);
+            padding: 12px 30px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--accent-purple);
+            color: #fff;
+            box-shadow: 0 0 20px var(--accent-purple);
+        }
+
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-purple);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='home.html'">Home</button>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='lessons.html'">Lessons</button>
+    </nav>
+
+    <div class="container">
+        <!-- Intro -->
+        <div id="intro-screen">
+            <div style="text-align: center; margin-bottom: 20px; font-size: 3rem; color: var(--accent-purple);">
+                <i class="fas fa-sim-card"></i> <i class="fas fa-mobile-alt" style="font-size: 1.5rem;"></i>
+            </div>
+            <h1 class="title">SIM Swap Alert</h1>
+            <div class="intro-box">
+                <p>
+                    <strong>What is SIM Swap Fraud?</strong><br>
+                    It is a type of account takeover fraud where a scammer tricks your mobile carrier into transferring
+                    your phone number to a SIM card they control.
+                    <br><br>
+                    <strong>The Danger:</strong><br>
+                    Once they have your number, they receive your <strong>SMS OTPs</strong> (One-Time Passwords) for
+                    your bank, email, and social media, allowing them to bypass security and steal your money or data.
+                </p>
+            </div>
+            <p class="disclaimer">Cyber Education Purposes Only</p>
+            <button class="btn" id="start-btn">Signal Recovery</button>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quiz-screen">
+            <div class="hud" style="display: flex; align-items: center; gap: 20px;">
+                <img src="logo.jpeg" alt="Logo" class="logo-img">
+                <div style="flex-grow: 1; display: flex; justify-content: space-between; align-items: center;">
+                    <div id="timer-text">30s</div>
+                    <div id="q-count">QUESTION 1/10</div>
+                </div>
+            </div>
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="quiz-content">
+                <h2 class="question-text" id="q-text">Connecting to carrier...</h2>
+                <div id="options-list"></div>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div id="result-screen">
+            <h1 class="title">Telecom Audit</h1>
+            <div class="score-display"><span id="final-score">0</span>%</div>
+            <p id="verdict">Analyzing mobile security...</p>
+            <div class="exp-log" id="exp-log"></div>
+            <div class="tips-box">
+                <h3 style="color:var(--accent-green); margin-bottom:10px;">🛡️ SIM Protection Tips</h3>
+                <ul style="list-style:none; font-size:0.85rem;">
+                    <li>• <strong>Carrier PIN:</strong> Set up a porting-out PIN or passcode with your mobile provider.
+                    </li>
+                    <li>• <strong>No SMS 2FA:</strong> Use authentication apps (Google Auth) instead of SMS OTPs where
+                        possible.</li>
+                    <li>• <strong>Signal Loss:</strong> If your phone suddenly loses signal while others have it,
+                        contact your carrier immediately.</li>
+                    <li>• <strong>Social Privacy:</strong> Don't link your phone number to public social media profiles.
+                    </li>
+                </ul>
+            </div>
+            <button class="btn" id="retry-btn">Re-Sync Line</button>
+            <button class="btn" onclick="location.href='lessons.html'">Back to Learn</button>
+        </div>
+    </div>
+
+    <script>
+        const originalQuestions = [
+            {
+                q: "What is the primary goal of SIM Swap Fraud?",
+                o: ["To get a cheaper mobile plan", "To intercept SMS-based One-Time Passwords (OTPs)", "To listen to your private calls", "To steal your physical SIM card"],
+                a: 1,
+                e: "By controlling your phone number, scammers can reset passwords and authorize bank transfers using SMS OTPs."
+            },
+            {
+                q: "Which of these is a major sign that you are a victim of a SIM swap?",
+                o: ["A lot of people are calling you", "Sudden loss of network service on your device", "Your phone battery drains faster", "You receive a lot of promotional SMS"],
+                a: 1,
+                e: "When the hacker activates their SIM card with your number, your physical SIM is deactivated, and you lose all network service."
+            },
+            {
+                q: "How does a hacker usually start a SIM swap attack?",
+                o: ["By stealing your phone", "By using social engineering to trick a mobile carrier's staff", "By hacking the satellite", "By sending you a new SIM card"],
+                a: 1,
+                e: "Scammers often use stolen personal info to pretend to be you and convince carrier support to 'port' your number."
+            }, {
+                q: "Why is app-based MFA (like Google Authenticator) safer than SMS OTP?",
+                o: ["It's faster to use", "It doesn't depend on your phone number or SIM card", "It's a newer technology", "It works without a battery"],
+                a: 1,
+                e: "App-based codes are generated locally on your device and cannot be intercepted by porting your phone number."
+            },
+            {
+                q: "True or False: A hacker only needs your phone number to perform a SIM swap.",
+                o: ["True", "False"],
+                a: 1,
+                e: "False. They usually need personal details (like your ID number or date of birth) to prove 'identity' to the carrier."
+            },
+            {
+                q: "What is a 'Carrier PIN' or 'Porting Passcode'?",
+                o: ["Your SIM card lock code", "An extra password required by the carrier before any account changes", "The code to unlock your phone screen", "Your voicemail password"],
+                a: 1,
+                e: "A carrier-level PIN prevents hackers from easily porting your number to a new SIM without knowing the secret code."
+            },
+            {
+                q: "Which accounts are MOST at risk during a SIM swap?",
+                o: ["Offline word documents", "Bank accounts and email accounts linked to your phone number", "Your calculator history", "Downloaded movies"],
+                a: 1,
+                e: "Any account that uses your phone number for 'Forgot Password' or 'Two-Factor Authentication' is at high risk."
+            },
+            {
+                q: "How can data breaches contribute to SIM swapping?",
+                o: ["They make SIM cards cheaper", "They provide attackers with the personal info needed to impersonate you", "They slow down the carrier's network", "They don't help hackers"],
+                a: 1,
+                e: "Breaches often leak names, addresses, and ID numbers which scammers use to trick customer service agents."
+            },
+            {
+                q: "What should you do immediately if you suspect a SIM swap?",
+                o: ["Wait for 24 hours to see if the signal returns", "Contact your mobile carrier and banks immediately", "Try to restart your phone repeatedly", "Buy a new SIM card online"],
+                a: 1,
+                e: "Speed is critical. Every minute you wait allows the attacker to drain your bank accounts or take over your digital identity."
+            },
+            {
+                q: "What is 'Port-Out' protection?",
+                o: ["A physical lock on the SIM slot", "A security feature that blocks unauthorized transfers of your phone number", "An antivirus for your phone", "A way to hide your phone number"],
+                a: 1,
+                e: "Port-out protection adds extra verification steps before your number can be moved to a different provider."
+            }
+        ];
+
+        let questions = [], currentIdx = 0, score = 0, timeLeft = 30, timer, canClick = true, logs = [];
+        const clickSnd = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON' || e.target.closest('button')) { clickSnd.play(); } });
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        const uiIntro = document.getElementById('intro-screen'), uiQuiz = document.getElementById('quiz-screen'), uiResult = document.getElementById('result-screen'), uiQText = document.getElementById('q-text'), uiOptions = document.getElementById('options-list'), uiTimerBar = document.getElementById('timer-bar'), uiTimerTxt = document.getElementById('timer-text'), uiProgress = document.getElementById('progress-fill');
+
+        function startQuiz() {
+            questions = shuffle([...originalQuestions]).map(q => {
+                const opts = q.o.map((t, i) => ({ t, is: i === q.a }));
+                return { ...q, shuffled: shuffle(opts) };
+            }).slice(0, 10);
+            currentIdx = 0; score = 0; logs = [];
+            uiIntro.style.display = 'none'; uiResult.style.display = 'none'; uiQuiz.style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIdx >= 10) { endQuiz(); return; }
+            const q = questions[currentIdx];
+            uiQText.innerText = q.q;
+            document.getElementById('q-count').innerText = `SIGNAL ${currentIdx + 1}/10`;
+            uiProgress.style.width = ((currentIdx + 1) / 10 * 100) + '%';
+            uiOptions.innerHTML = '';
+            q.shuffled.forEach(opt => {
+                const d = document.createElement('div'); d.className = 'option'; d.innerText = opt.t;
+                d.onclick = () => handle(d, opt.is); uiOptions.appendChild(d);
+            });
+            canClick = true; resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(timer); timeLeft = 30; updateTimerUI();
+            timer = setInterval(() => {
+                timeLeft--; updateTimerUI();
+                if (timeLeft <= 0) { clearInterval(timer); timeout(); }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            uiTimerTxt.innerText = `${timeLeft}s`; uiTimerBar.style.width = (timeLeft / 30 * 100) + '%';
+            uiTimerBar.style.backgroundColor = timeLeft > 20 ? 'var(--accent-green)' : (timeLeft > 10 ? 'var(--accent-blue)' : 'var(--accent-red)');
+        }
+
+        function handle(el, is) {
+            if (!canClick) return; canClick = false; clearInterval(timer);
+            const q = questions[currentIdx];
+            logs.push({ q: q.q, is, correct: q.shuffled.find(o => o.is).t, exp: q.e });
+            if (is) { el.classList.add('correct'); score += 10; }
+            else { el.classList.add('wrong'); Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); }); }
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function timeout() {
+            canClick = false; const q = questions[currentIdx];
+            logs.push({ q: q.q, is: false, correct: q.shuffled.find(o => o.is).t, exp: q.e + " (TIMED OUT)" });
+            Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); });
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function endQuiz() {
+            uiQuiz.style.display = 'none'; uiResult.style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            const verdict = document.getElementById('verdict');
+            verdict.innerText = score >= 70 ? "SECURE: Your network security is strong." : "WEAK SIGNAL: You are at high risk of SIM swapping.";
+            const logView = document.getElementById('exp-log');
+            logView.innerHTML = '<h3 style="margin-bottom:15px; font-family:Orbitron; font-size:1rem;">Carrier Audit</h3>';
+            logs.forEach((item, idx) => {
+                const d = document.createElement('div'); d.className = `exp-item ${item.is ? '' : 'incorrect'}`;
+                d.innerHTML = `<strong>Q${idx + 1}: ${item.q}</strong><br><small>Fact: ${item.correct}</small><br><p style="font-size:0.85rem; margin-top:5px;">${item.exp}</p>`;
+                logView.appendChild(d);
+            });
+        }
+
+        document.getElementById('start-btn').onclick = startQuiz;
+        document.getElementById('retry-btn').onclick = startQuiz;
+    </script>
+</body>
+
+</html>

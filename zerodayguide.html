@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero-Day Exploits Guide | CYBER BREAKER</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #020111;
+            --cyber-blue: #00d4ff;
+            --cyber-purple: #9d00ff;
+            --cyber-green: #00ffaa;
+            --aurora-green: #00ff88;
+            --aurora-purple: #8100ff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-silver: #e0e0e0;
+            --accent-gradient: linear-gradient(90deg, var(--cyber-blue), var(--cyber-purple));
+            --green-gradient: linear-gradient(90deg, var(--cyber-green), var(--cyber-blue));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-silver);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Aurora Borealis Green/Purple Animation */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: var(--bg-deep);
+            overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 170, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(157, 0, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 30% 70%, rgba(129, 0, 255, 0.15) 0%, transparent 30%);
+            filter: blur(80px);
+            animation: auroraMove 30s linear infinite;
+        }
+
+        @keyframes auroraMove {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.2);
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            background: rgba(2, 1, 17, 0.85);
+            backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--aurora-green);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .logo:hover {
+            color: var(--cyber-purple);
+            text-shadow: 0 0 10px var(--cyber-purple);
+        }
+
+        .logo img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid var(--aurora-green);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-silver);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--green-gradient);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--aurora-green);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 100px 20px 60px;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(32px, 5vw, 56px);
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, var(--cyber-green), var(--cyber-blue), var(--cyber-purple), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 5s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 170, 0.3));
+        }
+
+        @keyframes textShimmer {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .card-section {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 45px;
+            margin-bottom: 50px;
+            backdrop-filter: blur(10px);
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .card-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-section:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 255, 170, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--green-gradient);
+            opacity: 0.7;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-header i {
+            font-size: 32px;
+            background: var(--green-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        /* Highlight & Lists */
+        strong {
+            color: var(--cyber-green);
+            font-weight: 600;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .comp-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+
+        .comp-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 15px;
+            color: var(--cyber-green);
+        }
+
+        .comp-card.known h3 {
+            color: var(--cyber-blue);
+        }
+
+        /* Types Grid */
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .type-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 3px solid var(--cyber-green);
+        }
+
+        .type-item i {
+            font-size: 20px;
+            color: var(--cyber-green);
+            margin-top: 4px;
+        }
+
+        /* Step List */
+        .step-list {
+            list-style: none;
+            counter-reset: steps;
+        }
+
+        .step-list li {
+            counter-increment: steps;
+            margin-bottom: 20px;
+            padding-left: 60px;
+            position: relative;
+        }
+
+        .step-list li::before {
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background: var(--green-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Best Practices Bullet Points */
+        .practices-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            list-style: none;
+        }
+
+        .practice-bullet {
+            background: rgba(0, 255, 170, 0.05);
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .practice-bullet:hover {
+            background: rgba(0, 255, 170, 0.1);
+            transform: translateX(10px);
+        }
+
+        .practice-bullet i {
+            color: var(--cyber-green);
+        }
+
+        /* Tone & Footer */
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 40px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 80px;
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyber-green);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .card-section {
+                padding: 30px 20px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aurora-container">
+        <div class="aurora"></div>
+    </div>
+
+    <nav>
+        <a href="home.html" class="logo">
+            <img src="logo.jpeg" alt="Cyber Breaker Logo">
+            CYBER BREAKER
+        </a>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="lessons.html">Lessons</a>
+            <a href="home.html#about">About</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1 class="hero-title">Zero-Day Exploits</h1>
+        <p class="hero-subtitle">Complete Student Guide: Understanding the Unseen Threats of the Digital World</p>
+    </header>
+
+    <div class="container">
+        <!-- 1. What is a Zero-Day Exploit -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-biohazard"></i>
+                <h2>1. What is a Zero-Day Exploit?</h2>
+            </div>
+            <p class="intro-text">
+                A <strong>Zero-Day Exploit</strong> is a cyberattack that targets a software vulnerability that is
+                unknown to the software vendor or the public.
+                Because the creators of the software are unaware of the flaw, they have had <strong>"zero days"</strong>
+                to fix it with a patch.
+            </p>
+            <p>
+                These exploits are extremely dangerous because they can bypass traditional security measures. Since no
+                defense exists yet, hackers can
+                slip into systems unnoticed, making them one of the most powerful tools in a cybercriminal's arsenal.
+            </p>
+        </div>
+
+        <!-- 2. Difference -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-columns"></i>
+                <h2>2. Zero-Day vs. Known Vulnerabilities</h2>
+            </div>
+            <div class="comparison-grid">
+                <div class="comp-card">
+                    <h3>Zero-Day Vulnerabilities</h3>
+                    <p>Unknown to the developer. No patch or fix is available. Highly difficult to detect since there is
+                        no "signature" for security tools to find.</p>
+                </div>
+                <div class="comp-card known">
+                    <h3>Known Vulnerabilities</h3>
+                    <p>Already discovered and documented. A **patch or update** usually exists. Most security software
+                        can block attacks targeting these flaws if the system is updated.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Types -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-layer-group"></i>
+                <h2>3. Types of Zero-Day Exploit Attacks</h2>
+            </div>
+            <div class="types-grid">
+                <div class="type-item">
+                    <i class="fas fa-globe"></i>
+                    <div><strong>Browser Attacks:</strong> Targets flaws in Chrome, Safari, or Firefox to run malicious
+                        code when you visit a website.</div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-desktop"></i>
+                    <div><strong>OS Attacks:</strong> Targets Windows, macOS, or Linux to gain deep control over the
+                        entire computer.</div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-window-restore"></i>
+                    <div><strong>Software Attacks:</strong> Targets popular apps like Word, PDF readers, or Zoom to
+                        steal data.</div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-network-wired"></i>
+                    <div><strong>Network Attacks:</strong> Targets routers or servers to intercept internet traffic.
+                    </div>
+                </div>
+                <div class="type-item">
+                    <i class="fas fa-mobile-alt"></i>
+                    <div><strong>Mobile Attacks:</strong> Targets Android or iOS to spy on messages, calls, and
+                        location.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. How Hackers Perform them -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-user-secret"></i>
+                <h2>4. How Hackers Perform Zero-Day Exploits</h2>
+            </div>
+            <ul class="step-list">
+                <li><strong>Discovery:</strong> Hackers spend months digging through software code to find a hidden
+                    "hole" or buy one from underground markets.</li>
+                <li><strong>Exploit Creation:</strong> They write a specific piece of code (the exploit) designed to
+                    walk right through that hole.</li>
+                <li><strong>Delivery:</strong> The exploit is sent via phishing emails, hidden in malicious websites, or
+                    attached to seemingly safe files.</li>
+                <li><strong>Execution:</strong> Once the victim opens the file or link, the exploit runs, giving the
+                    hacker unauthorized access.</li>
+            </ul>
+        </div>
+
+        <!-- 5. What Hackers Gain -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-briefcase"></i>
+                <h2>5. What Hackers Gain from Zero-Day Attacks</h2>
+            </div>
+            <div class="types-grid">
+                <div class="type-item"><i class="fas fa-user-shield"></i> <span><strong>Data Theft:</strong> Stealing
+                        personal details, bank info, and private files.</span></div>
+                <div class="type-item"><i class="fas fa-bug"></i> <span><strong>Malware Injection:</strong> Silently
+                        installing spyware or ransomware.</span></div>
+                <div class="type-item"><i class="fas fa-terminal"></i> <span><strong>Full Control:</strong> Taking over
+                        the device to use it for other crimes.</span></div>
+                <div class="type-item"><i class="fas fa-money-bill-wave"></i> <span><strong>Profit:</strong> Selling the
+                        exploit to other criminals for millions of dollars.</span></div>
+                <div class="type-item"><i class="fas fa-fist-raised"></i> <span><strong>Espionage:</strong> Spying on
+                        governments or large companies.</span></div>
+            </div>
+        </div>
+
+        <!-- 6. Risks and Damage -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>6. Risks and Damage Caused</h2>
+            </div>
+            <ul style="margin-left:25px; display:grid; gap:12px;">
+                <li><strong>Massive Data Breaches:</strong> Millions of people's private info can be leaked at once.
+                </li>
+                <li><strong>Financial Disaster:</strong> Costs billions in repairs, legal fees, and stolen money.</li>
+                <li><strong>Identity Theft:</strong> Hackers use stolen info to pretend to be the victim.</li>
+                <li><strong>System Crashes:</strong> Critical infrastructure like hospitals or power grids can be shut
+                    down.</li>
+                <li><strong>Loss of Trust:</strong> People lose confidence in the software and companies they rely on.
+                </li>
+            </ul>
+        </div>
+
+        <!-- 7. Roles -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-users-cog"></i>
+                <h2>7. Role of Hackers, Vendors, and Researchers</h2>
+            </div>
+            <div class="comparison-grid">
+                <div class="comp-card">
+                    <h3>The Good Side</h3>
+                    <p><strong>Ethical Hackers</strong> and <strong>Security Researchers</strong> find flaws and report
+                        them privately to help fix them.</p>
+                </div>
+                <div class="comp-card known">
+                    <h3>The Bad Side</h3>
+                    <p><strong>Malicious Hackers</strong> keep flaws secret to use them for harm or profit.</p>
+                </div>
+            </div>
+            <p style="margin-top:20px;"><strong>Software Vendors:</strong> Once notified, they race to create a "patch"
+                to protect their users.</p>
+        </div>
+
+        <!-- 8. Importance of Patching -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-tools"></i>
+                <h2>8. Why Patching and Updates are Critical</h2>
+            </div>
+            <p>
+                A patch is like a <strong>digital band-aid</strong> for software. When you click "Update Now," you are
+                closing the holes that hackers use to get in.
+                Staying updated is the #1 way to turn a "Zero-Day" vulnerability into a "Closed" one.
+            </p>
+        </div>
+
+        <!-- 9. Impact -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-chart-line"></i>
+                <h2>9. Impact on Individuals and Organizations</h2>
+            </div>
+            <div class="types-grid">
+                <div class="comp-card">
+                    <h3>For Individuals</h3>
+                    <p>Loss of privacy, stolen banking funds, hijacked webcams, and identity fraud.</p>
+                </div>
+                <div class="comp-card known">
+                    <h3>For Organizations</h3>
+                    <p>Business downtime, massive lawsuits, theft of trade secrets, and permanent damage to reputation.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. Detection -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-radar"></i>
+                <h2>10. Detection and Mitigation Strategies</h2>
+            </div>
+            <div class="types-grid">
+                <div class="type-item"><span><strong>Advanced Antivirus:</strong> Using AI to spot "weird" behavior
+                        instead of just known viruses.</span></div>
+                <div class="type-item"><span><strong>Firewalls:</strong> Monitoring traffic to block suspicious
+                        connections.</span></div>
+                <div class="type-item"><span><strong>Network Segmentation:</strong> Keeping different parts of a network
+                        separate so a hack can't spread.</span></div>
+                <div class="type-item"><span><strong>Behavior Monitoring:</strong> Alerting admins when a user does
+                        something they never normally do.</span></div>
+            </div>
+        </div>
+
+        <!-- 11. Ethical Concerns -->
+        <div class="card-section">
+            <div class="section-header">
+                <i class="fas fa-gavel"></i>
+                <h2>11. Ethical and Legal Concerns</h2>
+            </div>
+            <p>
+                <strong>Responsible Disclosure:</strong> Researchers are encouraged to tell the vendor first, giving
+                them time to fix it before telling the public.
+                Many companies offer <strong>Bug Bounties</strong> (cash rewards) for this. Selling exploits to
+                criminals is <strong>illegal</strong> and can lead to prison.
+            </p>
+        </div>
+
+        <!-- 12. Best Practices -->
+        <div class="card-section" style="border-left: 5px solid var(--cyber-green);">
+            <div class="section-header">
+                <i class="fas fa-shield-virus"></i>
+                <h2>12. Best Practices to Reduce Your Risk</h2>
+            </div>
+            <ul class="practices-list">
+                <li class="practice-bullet"><i class="fas fa-sync"></i> Always keep systems updated.</li>
+                <li class="practice-bullet"><i class="fas fa-key"></i> Use strong, unique passwords.</li>
+                <li class="practice-bullet"><i class="fas fa-fire"></i> Keep your Firewall enabled.</li>
+                <li class="practice-bullet"><i class="fas fa-user-shield"></i> Use premium antivirus software.</li>
+                <li class="practice-bullet"><i class="fas fa-link-slash"></i> Never click suspicious links.</li>
+                <li class="practice-bullet"><i class="fas fa-hdd"></i> Regularly backup your data.</li>
+                <li class="practice-bullet"><i class="fas fa-graduation-cap"></i> Stay educated and alert!</li>
+            </ul>
+        </div>
+
+        <div class="disclaimer">
+            "Education is the best defense against the unknown."
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">CYBER BREAKER</div>
+        <p>© CYBER BREAKER – Cybersecurity Learning Platform</p>
+    </footer>
+
+    <script>
+        // Scroll Animation logic
+        const sections = document.querySelectorAll('.card-section');
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Dynamic Glow Effect on Header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.hero-title');
+            const scroll = window.scrollY;
+            header.style.filter = `drop-shadow(0 0 ${Math.min(20, scroll / 10)}px rgba(0, 255, 170, 0.5))`;
+        });
+    </script>
+</body>
+
+</html>

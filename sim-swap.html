@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER | SIM Swap Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;600&family=Fira+Code:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00ffff;
+            --neon-rose: #f43f5e;
+            --dark-bg: #020617;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-bg);
+            color: #e2e8f0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Aurora Borealis Background */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #0b1120 0%, #020617 100%);
+            overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(244, 63, 94, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+            filter: blur(80px);
+            animation: rotateAurora 25s linear infinite;
+        }
+
+        @keyframes rotateAurora {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .terminal {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .sim-card {
+            width: 80px;
+            height: 110px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            position: relative;
+            clip-path: polygon(0 0, 75% 0, 100% 20%, 100% 100%, 0 100%);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sim-card.active {
+            background: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            transform: translateY(-10px) scale(1.05);
+        }
+
+        .chip {
+            width: 30px;
+            height: 25px;
+            background: #d4d4d8;
+            border: 1px solid #a1a1aa;
+            border-radius: 4px;
+            position: absolute;
+            top: 20px;
+            left: 25px;
+        }
+
+        .phone-frame {
+            width: 260px;
+            height: 520px;
+            background: #111;
+            border: 10px solid #222;
+            border-radius: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .phone-display {
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            color: #fff;
+        }
+
+        .sms-toast {
+            animation: slideDown 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div class="aurora-container">
+        <div class="aurora"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="max-w-7xl mx-auto flex justify-between items-center mb-10 px-8 py-4 glass rounded-[2rem]">
+        <div class="flex items-center gap-4">
+            <img src="../logo.jpeg" alt="Logo" class="logo-img">
+            <div class="orbitron text-2xl font-black text-[#00ffff] tracking-[0.2em] uppercase">Cyber Breaker</div>
+        </div>
+        <ul class="flex gap-8 list-none font-semibold text-xs tracking-widest uppercase">
+            <li><a href="../home.html" class="hover:text-[#00ffff] transition-all duration-300">Home</a></li>
+            <li><a href="../lessons.html" class="hover:text-[#00ffff] transition-all duration-300">Lessons</a></li>
+            <li><a href="../simulators.html" class="text-[#00ffff]">Labs</a></li>
+        </ul>
+    </nav>
+
+    <header class="max-w-7xl mx-auto text-center mb-16">
+        <h1 class="orbitron text-4xl font-black text-white mb-4 tracking-tighter">SIM SWAP & MFA LAB</h1>
+        <p class="text-xs text-[#00ffff] font-bold uppercase tracking-[0.5em]">Identity Hijacking Simulation</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+        <!-- Phase 1: Social Engineering -->
+        <div class="lg:col-span-4 space-y-8">
+            <div class="glass p-8 rounded-[2.5rem]">
+                <h2 class="orbitron text-sm font-bold text-[#00ffff] uppercase mb-6 flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full bg-[#00ffff] animate-pulse"></span>
+                    Step 1: Port Selection
+                </h2>
+
+                <div id="callControl" class="space-y-6">
+                    <button onclick="runSocialEngineering()"
+                        class="w-full py-4 bg-[#00ffff] text-slate-900 rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-[1.02] transition-transform">
+                        📞 Initial Response-Script
+                    </button>
+
+                    <div id="callInterface"
+                        class="hidden terminal text-[11px] space-y-3 bg-black/40 p-6 rounded-2xl border border-white/5">
+                        <p class="text-white/40 italic">// Connected to Secure-Port Support</p>
+                        <div id="dialogueBox" class="space-y-4">
+                            <!-- Dialogue lines -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="glass p-8 rounded-[2.5rem] border-rose-500/10">
+                <h3 class="orbitron text-[10px] text-rose-500 font-bold uppercase mb-4">Tactical briefing</h3>
+                <p class="text-xs text-slate-400 leading-relaxed italic">
+                    "SIM swapping relies on manipulating cellular provider policies. By posing as the victim, we
+                    transfer their identity to a device under our control."
+                </p>
+            </div>
+        </div>
+
+        <!-- Phase 2: The Physical Swap -->
+        <div class="lg:col-span-4 flex flex-col items-center justify-center">
+            <div class="relative w-full aspect-square flex items-center justify-center">
+                <div id="victimSim" class="sim-card absolute transform -translate-x-12 opacity-80 scale-90">
+                    <div class="chip"></div>
+                    <span
+                        class="absolute bottom-4 left-0 w-full text-center text-[8px] font-bold text-slate-600">VICTIM</span>
+                </div>
+
+                <div id="burnerSim" class="sim-card absolute transform translate-x-12">
+                    <div class="chip"></div>
+                    <span
+                        class="absolute bottom-4 left-0 w-full text-center text-[8px] font-bold text-slate-800">BURNER</span>
+                </div>
+
+                <div id="swapLine"
+                    class="absolute w-full h-[1px] border-t border-dashed border-[#00ffff]/30 top-1/2 -z-10"></div>
+            </div>
+
+            <button id="swapBtn" disabled onclick="executeSwap()"
+                class="mt-8 px-10 py-4 glass border-[#00ffff]/20 rounded-2xl orbitron text-[10px] text-slate-500 font-bold uppercase tracking-widest cursor-not-allowed">
+                Perform Secure Transfer
+            </button>
+        </div>
+
+        <!-- Phase 3: The Interception -->
+        <div class="lg:col-span-4 flex justify-center">
+            <div class="phone-frame">
+                <div class="phone-display">
+                    <!-- Status -->
+                    <div class="p-6 flex justify-between items-center text-[10px] font-bold">
+                        <span id="pTime">12:00</span>
+                        <div id="signalArea" class="flex gap-1">
+                            <div class="w-1 h-2 bg-slate-700"></div>
+                            <div class="w-1 h-3 bg-slate-700"></div>
+                            <div class="w-1 h-4 bg-slate-700"></div>
+                        </div>
+                    </div>
+
+                    <!-- Screen -->
+                    <div id="phoneScreen" class="flex-1 p-6 flex flex-col items-center justify-center text-center">
+                        <div class="w-16 h-16 rounded-3xl bg-slate-900 mb-4 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-4.44-2.03c.596-.807 1.077-1.747 1.442-2.748M14.64 4.14c-.952-.351-1.97-.57-3.028-.628m-2.433 1.25c.346.452.617.961.803 1.516">
+                                </path>
+                            </svg>
+                        </div>
+                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest">No Active Service</p>
+                    </div>
+
+                    <!-- SMS Toast -->
+                    <div id="toast"
+                        class="hidden absolute top-20 left-4 right-4 bg-white rounded-2xl p-4 shadow-2xl sms-toast">
+                        <div class="flex items-center gap-3 mb-1">
+                            <div
+                                class="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-[8px] font-bold">
+                                BK</div>
+                            <span class="text-[10px] text-slate-800 font-bold uppercase">Chase Alert</span>
+                        </div>
+                        <p id="toastBody" class="text-xs text-slate-600">Your verification code is:
+                            <strong>832-901</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="max-w-7xl mx-auto mt-20 grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="glass p-10 rounded-[3rem]">
+            <h3 class="orbitron text-lg font-black text-rose-500 mb-6 uppercase">How it works</h3>
+            <div class="space-y-4 text-sm text-slate-400 leading-relaxed">
+                <p><strong class="text-white">1. Information Gathering:</strong> Attackers find victim details (SSN,
+                    Phone, DOB) via data breaches or phishing.</p>
+                <p><strong class="text-white">2. The Social Engineering:</strong> By calling support centers and
+                    impersonating the victim, they convince agents to swap the SIM card.</p>
+                <p><strong class="text-white">3. Identity Theft:</strong> Once the phone number is ported, the attacker
+                    triggers password resets for bank and social media accounts.</p>
+            </div>
+        </div>
+        <div class="glass p-10 rounded-[3rem]">
+            <h3 class="orbitron text-lg font-black text-emerald-500 mb-6 uppercase">Prevention</h3>
+            <div class="space-y-4 text-sm text-slate-400 leading-relaxed">
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>Enable a <strong class="text-white">Transfer Lock</strong> or PIN on your cellular account.</li>
+                    <li>Avoid SMS-based 2FA; use app-based authenticators (Authy, Google Auth).</li>
+                    <li>Be wary of social engineering phishing calls from "support."</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const script = [
+            { t: "Support: Thank you for calling Secure-Port. How can I help you?", s: "Attacker: Hi, I'm Alex. I've lost my SIM card while traveling and need to activate a new one urgently." },
+            { t: "Support: I understand. Can you verify your account PIN?", s: "Attacker: I'm locked out of my email too... I have my SSN and DOB though." },
+            { t: "Support: ...Verification complete. One moment while I port the number to your new ICCID.", s: "Attacker: Thank you so much, you're a lifesaver." }
+        ];
+
+        let line = 0;
+
+        function runSocialEngineering() {
+            document.getElementById('callInterface').classList.remove('hidden');
+            if (line < script.length) {
+                const box = document.getElementById('dialogueBox');
+                const tP = document.createElement('p');
+                tP.className = 'text-emerald-400';
+                tP.innerHTML = `> ${script[line].t}`;
+                box.appendChild(tP);
+
+                setTimeout(() => {
+                    const sP = document.createElement('p');
+                    sP.className = 'text-white font-bold pl-4';
+                    sP.innerHTML = `> ${script[line].s}`;
+                    box.appendChild(sP);
+                    line++;
+                    box.scrollTop = box.scrollHeight;
+                    if (line === script.length) enableSwap();
+                }, 1000);
+            }
+        }
+
+        function enableSwap() {
+            const btn = document.getElementById('swapBtn');
+            btn.disabled = false;
+            btn.className = "mt-8 px-10 py-4 glass border-[#00ffff] bg-[#00ffff]/10 rounded-2xl orbitron text-[10px] text-[#00ffff] font-black uppercase tracking-widest cursor-pointer hover:scale-105 transition-all";
+            btn.innerHTML = "🔗 INITIATE PORT REQUEST";
+        }
+
+        function executeSwap() {
+            const victim = document.getElementById('victimSim');
+            const burner = document.getElementById('burnerSim');
+
+            victim.style.transition = "all 1.5s ease-in";
+            burner.style.transition = "all 1.5s ease-in";
+
+            victim.classList.add('opacity-0', 'translate-y-20');
+            burner.classList.add('active');
+            burner.style.transform = "translateX(0) scale(1.1)";
+
+            setTimeout(() => {
+                activatePhone();
+            }, 1500);
+        }
+
+        function activatePhone() {
+            const screen = document.getElementById('phoneScreen');
+            const signals = document.querySelectorAll('#signalArea div');
+
+            signals.forEach(s => s.classList.replace('bg-slate-700', 'bg-[#00ffff]'));
+            screen.innerHTML = `
+                <div class="w-16 h-16 rounded-3xl bg-[#00ffff]/20 mb-4 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-[#00ffff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <p class="text-xs text-white font-black uppercase tracking-tighter">Connection Verified</p>
+                <p class="text-[9px] text-slate-400 mt-2">Active Number: (555) 012-9842</p>
+                <button onclick="initiateBankReset()" class="mt-6 px-4 py-2 bg-indigo-600 rounded-lg text-[10px] font-bold uppercase tracking-widest">Trigger Bank MFA</button>
+            `;
+        }
+
+        function initiateBankReset() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                alert("CRITICAL ALERT:\n\nMFA Intercepted! Bank account takeover successful.\n\nSimulated theft: $12,402.00");
+            }, 2000);
+        }
+
+        setInterval(() => {
+            document.getElementById('pTime').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }, 1000);
+    </script>
+</body>
+
+</html>

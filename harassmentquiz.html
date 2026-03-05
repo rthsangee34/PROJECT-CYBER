@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Harassment Quiz | Cyber Breaker</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #020205;
+            --card-bg: #0a0a14;
+            --accent-blue: #008cff;
+            --accent-purple: #7a00ff;
+            --accent-green: #00ffa2;
+            --accent-red: #ff3c3c;
+            --text-main: #ffffff;
+            --glass: rgba(122, 0, 255, 0.05);
+            --border: rgba(122, 0, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 50% 50%, rgba(122, 0, 255, 0.05) 0%, transparent 60%),
+                linear-gradient(rgba(0, 140, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 140, 255, 0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            z-index: -2;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .intro-box {
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent-blue);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .disclaimer {
+            color: var(--accent-red);
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        #quiz-screen {
+            display: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 224, 255, 0.3);
+            object-fit: cover;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .timer-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: var(--accent-green);
+            transition: width 0.1s linear;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 2px;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-purple);
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(0, 140, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .option.correct {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 162, 0.1);
+            color: var(--accent-green);
+        }
+
+        .option.wrong {
+            border-color: var(--accent-red);
+            background: rgba(255, 60, 60, 0.1);
+            color: var(--accent-red);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--accent-purple);
+            margin: 20px 0;
+        }
+
+        .exp-log {
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            margin: 25px 0;
+            padding-right: 10px;
+        }
+
+        .exp-item {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-purple);
+            font-size: 0.9rem;
+        }
+
+        .tips-box {
+            background: rgba(0, 255, 162, 0.05);
+            border: 1px dashed var(--accent-green);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--accent-purple);
+            color: var(--accent-purple);
+            padding: 12px 30px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--accent-purple);
+            color: #fff;
+            box-shadow: 0 0 20px var(--accent-purple);
+        }
+
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-purple);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='home.html'">Home</button>
+        <button class="btn" style="padding: 8px 15px; font-size: 0.7rem;"
+            onclick="location.href='lessons.html'">Lessons</button>
+    </nav>
+
+    <div class="container">
+        <!-- Intro -->
+        <div id="intro-screen">
+            <div style="text-align: center; margin-bottom: 20px; font-size: 3rem; color: var(--accent-purple);">
+                <i class="fas fa-comment-slash"></i> <i class="fas fa-shield-alt" style="font-size: 1.5rem;"></i>
+            </div>
+            <h1 class="title">Safe Space Simulation</h1>
+            <div class="intro-box">
+                <p>
+                    <strong>What is Online Harassment?</strong><br>
+                    It is the use of digital platforms to harass, intimidate, or bully individuals. This includes
+                    spreading rumors, doxxing, impersonation, and sending abusive messages.
+                    <br><br>
+                    <strong>Global Impact:</strong><br>
+                    Cyberbullying
+                    leads to severe emotional distress and can happen to anyone, anywhere. Awareness and knowing how to
+                    <strong>block and report</strong> are the best defenses.
+                </p>
+            </div>
+            <p class="disclaimer">Cyber Education Purposes Only</p>
+            <button class="btn" id="start-btn">Start Safe Training</button>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quiz-screen">
+            <div class="hud" style="display: flex; align-items: center; gap: 20px;">
+                <img src="logo.jpeg" alt="Logo" class="logo-img">
+                <div style="flex-grow: 1; display: flex; justify-content: space-between; align-items: center;">
+                    <div id="timer-text">30s</div>
+                    <div id="q-count">REPORT 1/10</div>
+                </div>
+            </div>
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="quiz-content">
+                <h2 class="question-text" id="q-text">Loading safety protocols...</h2>
+                <div id="options-list"></div>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div id="result-screen">
+            <h1 class="title">Digital Well-being Audit</h1>
+            <div class="score-display"><span id="final-score">0</span>%</div>
+            <p id="verdict">Evaluating online conduct...</p>
+            <div class="exp-log" id="exp-log"></div>
+            <div class="tips-box">
+                <h3 style="color:var(--accent-green); margin-bottom:10px;">🛡️ Online Safety Tips</h3>
+                <ul style="list-style:none; font-size:0.85rem;">
+                    <li>• <strong>Block & Report:</strong> Don't engage with bullies. Use platform tools to block them
+                        immediately.</li>
+                    <li>• <strong>Evidence:</strong> Take screenshots of harassment for reporting to authorities.</li>
+                    <li>• <strong>Privacy Settings:</strong> Keep your social media profiles private and limit who can
+                        message you.</li>
+                    <li>• <strong>Digital Footprint:</strong> Think carefully before posting personal info that could be
+                        used for doxxing.</li>
+                </ul>
+            </div>
+            <button class="btn" id="retry-btn">Re-Launch Protocol</button>
+            <button class="btn" onclick="location.href='lessons.html'"">Back to Learn</button>
+        </div>
+    </div>
+
+    <script>
+        const originalQuestions = [
+            {
+                q: "What is cyberbullying?",
+                o: ["Playing games online together", "Using digital tech to harass or intimidate people", "Helping friends with homework via chat", "Recording a funny video with permission"],
+                a: 1,
+                e: "Cyberbullying is targeted, repetitive harassment using messaging apps, social media, or gaming platforms."
+            },
+            {
+                q: "What is 'Doxxing'?",
+                o: ["Hacking a website", "Publishing private info about someone online without permission", "Deleting a social media account", "Updating your status"],
+                a: 1,
+                e: "Doxxing involves leaking addresses or phone numbers to encourage others to harass the victim."
+            },
+            {
+                q: "What should you do if someone sends you harassing messages?",
+                o: ["Send an angry message back", "Block the user and report them to the platform", "Delete your entire internet history", "Give them your school address to meet in person"],
+                a: 1,
+                e: "Engaging often makes it worse. Blocking and reporting are the most effective actions."
+            }, {
+                q: "What is 'Impersonation' in cyberbullying?",
+                o: ["Acting in a play", "Creating a fake profile using someone else's name/photo to ruin their reputation", "Using an avatar in a game", "Changing your name legally"],
+                a: 1,
+                e: "Attackers use fake profiles to post offensive content while pretending to be the victim."
+            },
+            {
+                q: "Is cyberbullying a legal offense?",
+                o: ["Yes, in many countries it can lead to legal action", "No, it's just 'being mean' online", "Only if it happens in an office", "Only if the bully is over 50 years old"],
+                a: 0,
+                e: "Many jurisdictions have specific laws against online harassment, stalking, and malicious communication."
+            },
+            {
+                q: "What is 'Trolling'?",
+                o: ["Searching for treasure", "Posting provocative or offensive messages to get an emotional reaction", "Buying stuff online", "Watching movies"],
+                a: 1,
+                e: "Trolling is meant to disrupt online communities and upset users for the troll's own amusement."
+            },
+            {
+                q: "Why is it important to keep evidence of online harassment?",
+                o: ["To show your friends", "For use in reporting to the platform or law enforcement", "To delete it later", "To sell it as an NFT"],
+                a: 1,
+                e: "Screenshots and links serve as critical proof of a bully's behavior when seeking help."
+            },
+            {
+                q: "What are privacy settings on social media used for?",
+                o: ["To make the apps faster", "To control who can see your posts and send you messages", "To change the theme color", "To hide the app from your parents"],
+                a: 1,
+                e: "Strong privacy settings prevent strangers and potential bullies from interacting with you."
+            },
+            {
+                q: "True or False: Cyberbullying only happens to teenagers.",
+                o: ["True", "False"],
+                a: 1,
+                e: "False. Adults can also be victims of online harassment, often called 'cyberstalking'."
+            },
+            {
+                q: "What is 'Digital Footprint'?",
+                o: ["A physical print of your foot", "The trail of data you leave behind on the internet", "A type of shoe", "Hacking a server"],
+                a: 1,
+                e: "Everything you post online creates a footprint that can be used or misused by others later."
+            }
+        ];
+
+        let questions = [], currentIdx = 0, score = 0, timeLeft = 30, timer, canClick = true, logs = [];
+        const clickSnd = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        document.addEventListener('click', e => { if (e.target.tagName === 'BUTTON' || e.target.closest('button')) { clickSnd.play(); } });
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        const uiIntro = document.getElementById('intro-screen'), uiQuiz = document.getElementById('quiz-screen'), uiResult = document.getElementById('result-screen'), uiQText = document.getElementById('q-text'), uiOptions = document.getElementById('options-list'), uiTimerBar = document.getElementById('timer-bar'), uiTimerTxt = document.getElementById('timer-text'), uiProgress = document.getElementById('progress-fill');
+
+        function startQuiz() {
+            questions = shuffle([...originalQuestions]).map(q => {
+                const opts = q.o.map((t, i) => ({ t, is: i === q.a }));
+                return { ...q, shuffled: shuffle(opts) };
+            }).slice(0, 10);
+            currentIdx = 0; score = 0; logs = [];
+            uiIntro.style.display = 'none'; uiResult.style.display = 'none'; uiQuiz.style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIdx >= 10) { endQuiz(); return; }
+            const q = questions[currentIdx];
+            uiQText.innerText = q.q;
+            document.getElementById('q-count').innerText = `SAFETY ${currentIdx + 1}/10`;
+            uiProgress.style.width = ((currentIdx + 1) / 10 * 100) + '%';
+            uiOptions.innerHTML = '';
+            q.shuffled.forEach(opt => {
+                const d = document.createElement('div'); d.className = 'option'; d.innerText = opt.t;
+                d.onclick = () => handle(d, opt.is); uiOptions.appendChild(d);
+            });
+            canClick = true; resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(timer); timeLeft = 30; updateTimerUI();
+            timer = setInterval(() => {
+                timeLeft--; updateTimerUI();
+                if (timeLeft <= 0) { clearInterval(timer); timeout(); }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            uiTimerTxt.innerText = `${timeLeft}s`; uiTimerBar.style.width = (timeLeft / 30 * 100) + '%';
+            uiTimerBar.style.backgroundColor = timeLeft > 20 ? 'var(--accent-green)' : (timeLeft > 10 ? 'var(--accent-blue)' : 'var(--accent-red)');
+        }
+
+        function handle(el, is) {
+            if (!canClick) return; canClick = false; clearInterval(timer);
+            const q = questions[currentIdx];
+            logs.push({ q: q.q, is, correct: q.shuffled.find(o => o.is).t, exp: q.e });
+            if (is) { el.classList.add('correct'); score += 10; }
+            else { el.classList.add('wrong'); Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); }); }
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function timeout() {
+            canClick = false; const q = questions[currentIdx];
+            logs.push({ q: q.q, is: false, correct: q.shuffled.find(o => o.is).t, exp: q.e + " (TIMED OUT)" });
+            Array.from(uiOptions.children).forEach(c => { if (c.innerText === q.shuffled.find(o => o.is).t) c.classList.add('correct'); });
+            setTimeout(() => { currentIdx++; loadQuestion(); }, 1500);
+        }
+
+        function endQuiz() {
+            uiQuiz.style.display = 'none'; uiResult.style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            const verdict = document.getElementById('verdict');
+            verdict.innerText = score >= 70 ? "KIND: You promote a safe digital environment." : "AWARENESS NEEDED: Learn how to better protect yourself and others.";
+            const logView = document.getElementById('exp-log');
+            logView.innerHTML = '<h3 style="margin-bottom:15px; font-family:Orbitron; font-size:1rem;">Safety Audit</h3>';
+            logs.forEach((item, idx) => {
+                const d = document.createElement('div'); d.className = `exp-item ${item.is ? '' : 'incorrect'}`;
+                d.innerHTML = `<strong>Q${idx + 1}: ${item.q}</strong><br><small>Safety Fact: ${item.correct}</small><br><p style="font-size:0.85rem; margin-top:5px;">${item.exp}</p>`;
+                logView.appendChild(d);
+            });
+        }
+
+        document.getElementById('start-btn').onclick = startQuiz;
+        document.getElementById('retry-btn').onclick = startQuiz;
+    </script>
+</body>
+
+</html>

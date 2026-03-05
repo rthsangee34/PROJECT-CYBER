@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER | Fraud Engineering Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00ffff;
+            --neon-amber: #f59e0b;
+            --dark-bg: #020617;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-bg);
+            color: #e2e8f0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Aurora Borealis Background */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #0b1120 0%, #020617 100%);
+            overflow: hidden;
+        }
+
+        .aurora {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(0, 255, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 70% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            filter: blur(80px);
+            animation: rotateAurora 20s linear infinite;
+        }
+
+        @keyframes rotateAurora {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .aurora-streak {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg,
+                    transparent,
+                    transparent 10%,
+                    rgba(0, 255, 255, 0.02) 10%,
+                    rgba(0, 255, 255, 0.02) 20%);
+            mask-image: radial-gradient(circle at 50% 50%, black, transparent 70%);
+            animation: pulseStream 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseStream {
+            0% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .mono {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .phone-frame {
+            width: 280px;
+            height: 560px;
+            background: #111;
+            border: 12px solid #222;
+            border-radius: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .phone-screen {
+            height: 100%;
+            display: flex;
+            flex-col;
+            background: #fff;
+        }
+
+        .fraud-status-pulse {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+            }
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+            object-fit: cover;
+        }
+
+        /* Scanline Effect */
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 255, 0.1);
+            animation: scan 4s linear infinite;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            from {
+                top: 0;
+            }
+
+            to {
+                top: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8">
+
+    <div class="aurora-container">
+        <div class="aurora"></div>
+        <div class="aurora-streak"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="max-w-7xl mx-auto flex justify-between items-center mb-10 px-8 py-4 glass rounded-[2rem]">
+        <div class="flex items-center gap-4">
+            <img src="../logo.jpeg" alt="Logo" class="logo-img">
+            <div class="orbitron text-2xl font-black text-[#00ffff] tracking-[0.2em] uppercase">Cyber Breaker</div>
+        </div>
+        <ul class="flex gap-8 list-none font-semibold text-xs tracking-widest uppercase">
+            <li><a href="../home.html" class="hover:text-[#00ffff] transition-all duration-300">Home</a></li>
+            <li><a href="../lessons.html" class="hover:text-[#00ffff] transition-all duration-300">Lessons</a></li>
+            <li><a href="../simulators.html" class="text-[#00ffff]">Labs</a></li>
+        </ul>
+    </nav>
+
+    <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-8">
+        <div class="flex items-center gap-6">
+            <div
+                class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-amber-900/40">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                    </path>
+                </svg>
+            </div>
+            <div>
+                <h1 class="orbitron text-2xl font-black text-white uppercase tracking-tighter leading-none">Fraud
+                    Engineering Lab</h1>
+                <p class="text-[10px] text-amber-500 font-bold uppercase tracking-[0.3em] mt-2">Cyber-Psychology &
+                    Social Tactics</p>
+            </div>
+        </div>
+
+        <div class="flex gap-6">
+            <div class="glass p-4 rounded-2xl min-w-[120px] text-center">
+                <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Target Yield</p>
+                <p id="valYield" class="text-xl font-black text-emerald-400">$0.00</p>
+            </div>
+            <div class="glass p-4 rounded-2xl min-w-[120px] text-center border-amber-500/20">
+                <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">Trust Matrix</p>
+                <div class="flex items-center justify-center gap-2">
+                    <div id="trustPulse" class="fraud-status-pulse bg-emerald-500"></div>
+                    <p id="valTrust" class="text-xl font-black text-white">0%</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- Left Column: Scenario Selector -->
+        <div class="lg:col-span-3 space-y-6">
+            <div class="glass-card p-6">
+                <h2 class="orbitron text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Attack Vectors</h2>
+
+                <div class="space-y-4">
+                    <button onclick="selectScenario('pig')"
+                        class="w-full text-left p-4 rounded-xl glass border-orange-500/20 hover:border-orange-500/50 transition-all group active">
+                        <span class="text-sm font-bold text-white block">Pig Butchering</span>
+                        <p class="text-[10px] text-slate-500 mt-1 leading-relaxed">Loneliness-based crypto investment
+                            scam.</p>
+                    </button>
+
+                    <button onclick="selectScenario('market')"
+                        class="w-full text-left p-4 rounded-xl glass border-blue-500/20 hover:border-blue-500/50 transition-all group">
+                        <span class="text-sm font-bold text-white block">Marketplace Phish</span>
+                        <p class="text-[10px] text-slate-500 mt-1 leading-relaxed">Fake buyer/seller payment
+                            verification scam.</p>
+                    </button>
+
+                    <button onclick="selectScenario('refund')"
+                        class="w-full text-left p-4 rounded-xl glass border-emerald-500/20 hover:border-emerald-500/50 transition-all group">
+                        <span class="text-sm font-bold text-white block">Refund Fraud</span>
+                        <p class="text-[10px] text-slate-500 mt-1 leading-relaxed">Tech support impersonation via remote
+                            access.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Victim Profile -->
+            <div class="glass-card p-6 border-amber-500/10">
+                <h2 class="orbitron text-[10px] font-bold text-amber-500/80 uppercase tracking-widest mb-4">Victim
+                    Profile</h2>
+                <div class="flex items-center gap-3 mb-4">
+                    <div id="vicAvatar"
+                        class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-white">
+                        A</div>
+                    <div>
+                        <p id="vicName" class="text-sm font-bold text-white">Alex Johnson</p>
+                        <p id="vicTag" class="text-[10px] text-slate-500 italic">Retired Accountant, 68</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between text-[9px] uppercase font-bold tracking-wider">
+                        <span class="text-slate-500">Vulnerability</span>
+                        <span id="vicVuln" class="text-rose-400">High (Loneliness)</span>
+                    </div>
+                    <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
+                        <div id="barVuln" class="h-full bg-rose-500 w-[85%]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Column: Interaction -->
+        <div class="lg:col-span-5 flex justify-center">
+            <div class="phone-frame">
+                <div class="scanline"></div>
+                <div class="phone-screen flex flex-col">
+                    <!-- App Status Bar -->
+                    <div
+                        class="bg-slate-900 px-6 py-3 flex justify-between items-center text-[10px] text-slate-400 font-bold">
+                        <span id="appTime">10:42 AM</span>
+                        <div class="flex gap-2">
+                            <span>LTE</span>
+                            <span>88%</span>
+                        </div>
+                    </div>
+
+                    <!-- App Content -->
+                    <div id="chatContent" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+                        <div class="text-center py-4">
+                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Conversation
+                                Started</p>
+                        </div>
+                    </div>
+
+                    <!-- Input Bar -->
+                    <div id="interactionBar" class="p-4 bg-white border-t border-slate-200">
+                        <div id="optionsContainer" class="flex flex-col gap-2">
+                            <!-- Options injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Operations -->
+        <div class="lg:col-span-4 space-y-6">
+            <div class="glass-card p-6 h-[400px] flex flex-col">
+                <h2 class="orbitron text-xs font-bold text-emerald-400 uppercase tracking-widest mb-4">Data Harvest
+                    Stream</h2>
+                <div id="terminal" class="flex-1 overflow-y-auto mono text-[10px] text-emerald-500/80 space-y-1">
+                    <p class="text-blue-400">> Establishing stealth relay...</p>
+                    <p class="text-blue-400">> Targeting Alex Johnson via Scenario: PIG_BUTCHERING</p>
+                    <p class="opacity-50">> Awaiting victim response...</p>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 bg-rose-950/20 border-rose-500/10">
+                <h2 class="orbitron text-xs font-bold text-rose-400 uppercase tracking-widest mb-4">Tactical Insights
+                </h2>
+                <p id="insightText" class="text-xs text-slate-400 leading-relaxed italic">
+                    "Building emotional rapport is critical. Do not mention the investment until Trust Matrix exceeds
+                    60%."
+                </p>
+                <div class="mt-4 flex gap-2">
+                    <span
+                        class="px-2 py-1 bg-rose-500/10 border border-rose-500/20 rounded text-[9px] font-bold text-rose-300">EMOTIONAL_HOOK</span>
+                    <span id="activeScenarioRef"
+                        class="px-2 py-1 bg-amber-500/10 border border-amber-500/20 rounded text-[9px] font-bold text-amber-300 uppercase">Pig
+                        Butchering</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const scenarios = {
+            pig: {
+                name: 'Alex Johnson',
+                tag: 'Retired Teacher, 65',
+                vuln: 'Loneliness',
+                vulnVal: 85,
+                yield: 45000,
+                script: [
+                    {
+                        msg: "Hi, is this Sarah from the art class? I think I have the wrong number!", options: [
+                            { text: "No, but I love art! Happy mistake :)", trust: 15, response: "Oh how kind! I was so worried about being rude." },
+                            { text: "Wrong number. Don't call again.", trust: -20, response: "I'm so sorry, truly." }
+                        ]
+                    },
+                    {
+                        msg: "I'm Chen from Singapore. I believe fate brought us together today. Are you a designer?", options: [
+                            { text: "In a way! I love beautiful things.", trust: 25, response: "I can tell. You have a very pure soul. My aunt says that's rare." },
+                            { text: "Why do you care what I do?", trust: -10, response: "Just curious! Harmony starts with understanding." }
+                        ]
+                    },
+                    {
+                        msg: "My life changed when I started focusing on my future. Have you ever heard of Crypto-Arbitrage?", options: [
+                            { text: "I've seen it on news, sounds risky.", trust: 20, response: "Risky if you don't have a plan. I use a private node. It helped me retire early." },
+                            { text: "Teach me how to make money like you!", trust: 35, response: "I usually don't share my secrets, but for you... I'll show you the platform." }
+                        ]
+                    }
+                ]
+            },
+            market: {
+                name: 'Sarah Miller',
+                tag: 'College Student, 21',
+                vuln: 'Urgency',
+                vulnVal: 60,
+                yield: 1200,
+                script: [
+                    {
+                        msg: "Is the camera still available for $800? I can pay now via SocialPay.", options: [
+                            { text: "Yes it is! I'll send the link.", trust: 20, response: "Perfect! But my SocialPay is acting up. Can you click this verification link first?" },
+                            { text: "I only take cash in person.", trust: -30, response: "Oh, I'm out of town but I really need it for class." }
+                        ]
+                    }
+                ]
+            },
+            refund: {
+                name: 'Bill Gates (Impersonation)',
+                tag: 'Tech Support Target',
+                vuln: 'Fear',
+                vulnVal: 75,
+                yield: 5000,
+                script: [
+                    {
+                        msg: "URGENT: Your account has been charged $499.99 for a subscription renewal.", options: [
+                            { text: "I never ordered this! Cancel it!", trust: 40, response: "I understand. Please download our secure support tool 'AnyDesk' for a refund." },
+                            { text: "This looks like a scam.", trust: -40, response: "Sir, this is a verified transaction. Please cooperate to avoid overdraft fees." }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        let currentScenario = 'pig';
+        let step = 0;
+        let trustValue = 0;
+        let totalYield = 0;
+
+        function addLog(msg, color = 'text-emerald-500/80') {
+            const terminal = document.getElementById('terminal');
+            const p = document.createElement('p');
+            p.className = color;
+            p.innerHTML = `<span class="opacity-30">[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}]</span> > ${msg}`;
+            terminal.appendChild(p);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function updateUI() {
+            const s = scenarios[currentScenario];
+            document.getElementById('vicName').innerText = s.name;
+            document.getElementById('vicTag').innerText = s.tag;
+            document.getElementById('vicVuln').innerText = `High (${s.vuln})`;
+            document.getElementById('barVuln').style.width = `${s.vulnVal}%`;
+            document.getElementById('valTrust').innerText = `${trustValue}%`;
+            document.getElementById('valYield').innerText = `$${totalYield.toLocaleString()}`;
+            document.getElementById('trustPulse').className = `fraud-status-pulse ${trustValue > 60 ? 'bg-emerald-500' : (trustValue > 30 ? 'bg-amber-500' : 'bg-rose-500')}`;
+            document.getElementById('activeScenarioRef').innerText = currentScenario.replace('pig', 'Pig Butchering').replace('market', 'Marketplace Phishing').replace('refund', 'Refund Scam');
+        }
+
+        function selectScenario(type) {
+            currentScenario = type;
+            step = 0;
+            trustValue = 0;
+            totalYield = 0;
+            document.getElementById('chatContent').innerHTML = '<div class="text-center py-4"><p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Conversation Started</p></div>';
+            addLog(`SWITCHOVER: Targeting ${scenarios[type].name} via ${type.toUpperCase()}`, 'text-blue-400');
+            updateUI();
+            renderStep();
+        }
+
+        function renderStep() {
+            const s = scenarios[currentScenario];
+            if (step >= s.script.length) {
+                if (trustValue > 60) {
+                    totalYield = s.yield;
+                    addLog(`SUCCESS: Victim transferred funds. Yield: $${totalYield}`, 'text-emerald-400 font-bold');
+                } else {
+                    addLog(`FAILED: Victim disconnected. Trust too low.`, 'text-rose-400 font-bold');
+                }
+                document.getElementById('optionsContainer').innerHTML = '<button onclick="selectScenario(\'' + currentScenario + '\')" class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold uppercase text-xs tracking-widest">Reset Analysis</button>';
+                updateUI();
+                return;
+            }
+
+            const currentData = s.script[step];
+            injectChat('victim', currentData.msg);
+
+            const optionsDiv = document.getElementById('optionsContainer');
+            optionsDiv.innerHTML = '';
+            currentData.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-left text-xs font-semibold transition-all";
+                btn.innerText = opt.text;
+                btn.onclick = () => handleChoice(opt);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function handleChoice(opt) {
+            injectChat('self', opt.text);
+            trustValue = Math.max(0, trustValue + opt.trust);
+            addLog(`ACTION: "${opt.text.substring(0, 20)}..." | Trust Delta: ${opt.trust > 0 ? '+' : ''}${opt.trust}%`);
+
+            setTimeout(() => {
+                injectChat('victim', opt.response);
+                step++;
+                updateUI();
+                renderStep();
+            }, 800);
+        }
+
+        function injectChat(type, text) {
+            const chat = document.getElementById('chatContent');
+            const div = document.createElement('div');
+            div.className = `flex ${type === 'self' ? 'justify-end' : 'justify-start'}`;
+            div.innerHTML = `
+                <div class="max-w-[80%] p-3 rounded-2xl text-xs font-medium shadow-sm ${type === 'self' ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-slate-200 text-slate-800 rounded-tl-none'}">
+                    ${text}
+                </div>
+            `;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        updateUI();
+        renderStep();
+    </script>
+</body>
+
+</html>
