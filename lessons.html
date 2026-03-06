@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Breaker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --aurora-deep: #010a14;
+            --aurora-teal: #00ffcc;
+            --aurora-purple: #9d00ff;
+            --aurora-cyan: #00d4ff;
+            --glass-card: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #ffffff;
+            --text-accent: #00ffcc;
+            --shine: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2) 50%, transparent);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #010a14;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Aurora Borealis Container */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: blur(100px);
+            opacity: 0.6;
+            overflow: hidden;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, #010a14 0%, #000 100%);
+        }
+
+        .aurora {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            mix-blend-mode: screen;
+        }
+
+        .aurora-item {
+            position: absolute;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            filter: blur(80px);
+            animation: auroraWarp 120s infinite alternate ease-in-out;
+            opacity: 0.15;
+        }
+
+        .aurora-1 {
+            width: 1200px;
+            height: 800px;
+            background: linear-gradient(45deg, var(--aurora-teal), var(--aurora-cyan));
+            top: -10%;
+            left: -10%;
+            animation-duration: 150s;
+        }
+
+        .aurora-2 {
+            width: 1000px;
+            height: 1000px;
+            background: linear-gradient(-45deg, var(--aurora-purple), var(--aurora-cyan));
+            bottom: -10%;
+            right: -10%;
+            animation-duration: 160s;
+            animation-delay: -7s;
+        }
+
+        .aurora-3 {
+            width: 1400px;
+            height: 600px;
+            background: linear-gradient(90deg, var(--aurora-teal), var(--aurora-purple));
+            top: 30%;
+            left: 10%;
+            animation-duration: 180s;
+            animation-delay: -15s;
+        }
+
+        .aurora-4 {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, var(--aurora-cyan), transparent);
+            top: 50%;
+            right: 20%;
+            animation: auroraWarp 140s infinite alternate-reverse ease-in-out;
+            opacity: 0.1;
+        }
+
+        @keyframes auroraWarp {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            }
+
+            33% {
+                transform: translate(10%, 5%) scale(1.1) rotate(10deg);
+                border-radius: 60% 40% 30% 70% / 50% 60% 40% 60%;
+            }
+
+            66% {
+                transform: translate(-5%, 15%) scale(0.9) rotate(-10deg);
+                border-radius: 30% 70% 50% 50% / 60% 30% 70% 40%;
+            }
+
+            100% {
+                transform: translate(15%, -10%) scale(1.2) rotate(20deg);
+                border-radius: 50% 50% 20% 80% / 40% 70% 30% 60%;
+            }
+        }
+
+        /* Starry Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.3;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 60px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--aurora-teal);
+            box-shadow: 0 0 20px var(--aurora-teal);
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(16px, 3vw, 22px);
+            font-weight: 700;
+            color: var(--aurora-teal);
+            text-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav button {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+        }
+
+        nav button:hover {
+            border-color: var(--aurora-teal);
+            color: var(--aurora-teal);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            text-align: center;
+            padding: 80px 20px 40px;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(30px, 6vw, 56px);
+            letter-spacing: clamp(3px, 1vw, 8px);
+            background: linear-gradient(to right, #00ffcc, #9d00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            padding: 0 10px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--text-sub);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+
+        /* ===== CARDS GRID ===== */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 40px 10%;
+        }
+
+        .card {
+            position: relative;
+            background: var(--glass-card);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 35px;
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--aurora-teal);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            color: var(--aurora-teal);
+            margin-bottom: 25px;
+            letter-spacing: 1.5px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btns {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btns button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.3);
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .guide:hover {
+            background: rgba(0, 255, 204, 0.1);
+            border-color: var(--aurora-teal);
+            color: var(--aurora-teal);
+        }
+
+        .about:hover {
+            background: rgba(157, 0, 255, 0.1);
+            border-color: var(--aurora-purple);
+            color: var(--aurora-purple);
+        }
+
+        .quiz:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--aurora-cyan);
+            color: var(--aurora-cyan);
+        }
+
+        .big-lab-btn-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0 80px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .big-lab-btn {
+            position: relative;
+            background: var(--glass-card);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .big-lab-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--aurora-teal);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--aurora-teal);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-right {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            header h1 {
+                font-size: 32px;
+                letter-spacing: 4px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+
+        /* Hamburger Menu Icon */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--aurora-teal);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        /* Mobile Navigation Overlay */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 250px;
+            height: 100vh;
+            background: rgba(1, 10, 20, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            padding: 80px 20px 20px;
+            transition: left 0.4s ease;
+            z-index: 999;
+            border-right: 1px solid var(--glass-border);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .mobile-nav.open {
+            left: 0;
+        }
+
+        .mobile-nav button {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            margin-bottom: 15px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .mobile-nav button:hover {
+            border-color: var(--aurora-teal);
+            color: var(--aurora-teal);
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            width: auto;
+            text-align: center;
+        }
+
+        .close-menu:hover {
+            border-color: transparent;
+            color: var(--aurora-purple);
+        }
+    </style>
+</head>
+
+<div class="aurora-container">
+    <div class="aurora">
+        <div class="aurora-item aurora-1"></div>
+        <div class="aurora-item aurora-2"></div>
+        <div class="aurora-item aurora-3"></div>
+        <div class="aurora-item aurora-4"></div>
+    </div>
+</div>
+
+<nav>
+    <div class="logo-container">
+        <img src="logo.jpeg" alt="Logo" class="logo-img">
+        <div class="logo-text">CYBER BREAKER</div>
+    </div>
+    <div class="nav-right">
+        <button onclick="location.href='home.html'">Home</button>
+        <button onclick="location.href='simulators.html'">Labs</button>
+    </div>
+    <button class="menu-toggle" id="menuToggle">☰</button>
+</nav>
+
+<!-- Mobile Navigation Menu -->
+<div class="mobile-nav" id="mobileNav">
+    <button class="close-menu" id="closeMenu">&times;</button>
+    <button onclick="location.href='home.html'" class="mobile-link">Home</button>
+    <button onclick="location.href='simulators.html'" class="mobile-link">Labs</button>
+</div>
+
+<header>
+    <h1
+        style="background: linear-gradient(to right, #00ffcc, #00d4ff, #9d00ff); -webkit-background-clip: text; background-clip: text;">
+        CYBER SECURITY LESSONS</h1>
+    <p class="subtitle" style="color: #00ffcc; opacity: 0.8;">Learn About Cyber Security Threats and How to Protect
+        Yourself</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h3>1. PHISHING</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='pguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='phishingquiz.html'">QUIZ</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>2. PASSWORD ATTACKS</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='passwordguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='passwordquiz.html'">QUIZ</button>
+        </div>
+    </div>
+
+    <div class=" card">
+        <h3>3. SOCIAL ENGINEERING</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='socialengineeringguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='socialengineeringquiz.html'">QUIZ</button>
+        </div>
+    </div>
+
+    <div class=" card">
+        <h3>4. SOCIAL MEDIA HACKING</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='socialmediaguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='socialmediaquiz.html'">QUIZ</button>
+        </div>
+    </div>
+
+    <div class=" card">
+        <h3>5. KEY LOGGER ATTACKS</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='keyloggerguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='keyloggerquiz.html'">QUIZ</button>
+        </div>
+    </div>
+
+    <div class=" card">
+        <h3>6. WEBSITE DEFACEMENT</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='defacementguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='defacementquiz.html'">QUIZ</button>
+        </div>
+    </div>
+    <div class=" card">
+        <h3>7. DDoS ATTACK</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='ddosguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='ddosquiz.html'">QUIZ</button>
+        </div>
+    </div>
+    <div class=" card">
+        <h3>8. RANSOMWARE ATTACK</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='ransomwareguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='ransomwarequiz.html'">QUIZ</button>
+        </div>
+    </div>
+    <div class=" card">
+        <h3>9. ONLINE FRAUDS</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='onlinefraudguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='onlinefraudquiz.html'">QUIZ</button>
+        </div>
+    </div>
+    <div class=" card">
+        <h3>10. IDENTITY THEFT</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='identitytheftguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='identitytheftquiz.html'">QUIZ</button>
+        </div>
+    </div>
+
+    <div class=" card">
+        <h3>11. SIM SWAP FRAUD</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='simswapguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='simswapquiz.html'">QUIZ</button>
+        </div>
+    </div>
+    <div class=" card">
+        <h3>12. CYBER BULLYING & ONLINE HARASSMENT</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='cyberbullying.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='harassmentquiz.html'">QUIZ</button>
+        </div>
+    </div>
+
+    <div class=" card">
+        <h3>13. ZERO-DAY EXPLOITS</h3>
+        <div class="btns">
+            <button class="guide" onclick="location.href='zerodayguide.html'">GUIDE</button>
+            <button class="quiz" onclick="location.href='zerodatexpolitquiz.html'">QUIZ</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="big-lab-btn-container">
+    <button class="big-lab-btn" onclick="location.href='simulators.html'">Take To Lab</button>
+</div>
+
+<script>
+    // Global click sound
+    const btnClickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+    btnClickSound.preload = 'auto';
+
+    // Function to play sound
+    const playSound = () => {
+        btnClickSound.currentTime = 0;
+        btnClickSound.play().catch(err => console.log("Audio play blocked until user interacts: ", err));
+    };
+
+    // Global listener for all buttons
+    document.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+            playSound();
+        }
+    });
+
+    // "Unlocker" for browsers that block audio until first interaction
+    const unlockAudio = () => {
+        btnClickSound.play().then(() => {
+            btnClickSound.pause();
+            btnClickSound.currentTime = 0;
+        }).catch(() => { });
+        document.removeEventListener('click', unlockAudio);
+        document.removeEventListener('keydown', unlockAudio);
+    };
+
+    document.addEventListener('click', unlockAudio);
+    document.addEventListener('keydown', unlockAudio);
+
+    // Hamburger Menu Logic
+    const menuToggle = document.getElementById('menuToggle');
+    const closeMenu = document.getElementById('closeMenu');
+    const mobileNav = document.getElementById('mobileNav');
+
+    if (menuToggle && closeMenu && mobileNav) {
+        menuToggle.addEventListener('click', () => {
+            mobileNav.classList.add('open');
+            playSound();
+        });
+
+        closeMenu.addEventListener('click', () => {
+            mobileNav.classList.remove('open');
+            playSound();
+        });
+    }
+</script>
+</body>
+
+</html>
